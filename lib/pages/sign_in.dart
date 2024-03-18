@@ -1,4 +1,5 @@
 import 'package:enlight/components/enlight_app_bar.dart';
+import 'package:enlight/components/enlight_form_submission_button.dart';
 import 'package:enlight/components/enlight_text_form_field.dart';
 import 'package:flutter/material.dart';
 
@@ -41,44 +42,34 @@ class _SignInState extends State<SignIn> {
                   text: "Password",
                   controller: passwordController,
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: MaterialButton(
-                    onPressed: () {
-                      if (formKey.currentState!.validate()) {
-                        Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(
-                              builder: (context) => const Placeholder()),
-                          (route) => false,
-                        );
-                      }
-                    },
-                    minWidth: double.infinity,
-                    height: 50,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(10),
-                      ),
-                    ),
-                    color: Colors.grey.shade700,
-                    child: const Text(
-                      "Sign in",
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
+                EnlightFormSubmissionButton(
+                  text: "Sign in",
+                  formKey: formKey,
+                  onPressed: () {
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                          builder: (context) => const Placeholder()),
+                      (route) => false,
+                    );
+                  },
                 ),
                 TextButton(
                   onPressed: () {},
-                  child: const Text(
-                      "Forgot password?"),
+                  child: const Text("Forgot password?"),
                 )
               ],
             ),
           ),
         ],
       ),
+      persistentFooterButtons: <Widget>[
+        Center(
+          child: TextButton(
+            onPressed: () {},
+            child: const Text("Don't have an account? Sign up."),
+          ),
+        ),
+      ],
     );
   }
 }
