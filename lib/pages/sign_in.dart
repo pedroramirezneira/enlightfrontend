@@ -85,7 +85,14 @@ class _SignInState extends State<SignIn> {
       ),
     )
         .then((response) {
-      if (response.statusCode != 200) {
+      if (response.statusCode == 200) {
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => const Placeholder()),
+          (route) => false,
+        );
+        return;
+      }
+      if (response.statusCode == 401) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text("Wrong password. Please try again."),
@@ -93,10 +100,22 @@ class _SignInState extends State<SignIn> {
         );
         return;
       }
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => const Placeholder()),
-        (route) => false,
-      );
+      if (response.statusCode == 404) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Account doesn't exist."),
+          ),
+        );
+        return;
+      }
+      if (response.statusCode == 500) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Internal Server Error. Please try again."),
+          ),
+        );
+        return;
+      }
     });
     return null;
   }

@@ -59,6 +59,14 @@ class _SignUpState extends State<SignUp> {
                 EnlightTextFormField(
                   text: "Birth Date",
                   controller: birthDateController,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Birth Date cannot be empty.";
+                    }
+                    if (!RegExp(r'^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[01])$').hasMatch(value)) {
+                      return "Invalid date.";
+                    }
+                  },
                 ),
                 EnlightTextFormField(
                   text: "Address",
@@ -105,10 +113,10 @@ class _SignUpState extends State<SignUp> {
         return;
       }
       ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Account successfully created."),
-          ),
-        );
+        const SnackBar(
+          content: Text("Account successfully created."),
+        ),
+      );
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => const SignIn()),
         (route) => false,
