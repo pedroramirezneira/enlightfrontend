@@ -1,4 +1,4 @@
-package com.example.enlight
+package com.enlight.android
 
 import io.flutter.embedding.android.FlutterActivity
 
