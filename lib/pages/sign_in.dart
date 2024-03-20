@@ -1,5 +1,6 @@
 import 'package:enlight/components/enlight_app_bar.dart';
 import 'package:enlight/components/enlight_form_submission_button.dart';
+import 'package:enlight/components/enlight_loading_indicator.dart';
 import 'package:enlight/components/enlight_text_form_field.dart';
 import 'package:enlight/env.dart';
 import 'package:enlight/pages/sign_up.dart';
@@ -17,6 +18,7 @@ class _SignInState extends State<SignIn> {
   late final GlobalKey<FormState> formKey;
   late final TextEditingController emailController;
   late final TextEditingController passwordController;
+  var loading = false;
 
   @override
   void initState() {
@@ -30,33 +32,38 @@ class _SignInState extends State<SignIn> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const EnlightAppBar(),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Form(
-            key: formKey,
-            child: Column(
-              children: <Widget>[
-                EnlightTextFormField(
-                  text: "Email",
-                  controller: emailController,
+      body: Stack(
+        children: <Widget>[
+          Center(
+            child: SingleChildScrollView(
+              child: Form(
+                key: formKey,
+                child: Column(
+                  children: <Widget>[
+                    EnlightTextFormField(
+                      text: "Email",
+                      controller: emailController,
+                    ),
+                    EnlightTextFormField(
+                      text: "Password",
+                      controller: passwordController,
+                    ),
+                    EnlightFormSubmissionButton(
+                      text: "Sign in",
+                      formKey: formKey,
+                      onPressed: _onPressed,
+                    ),
+                    TextButton(
+                      onPressed: () {},
+                      child: const Text("Forgot password?"),
+                    )
+                  ],
                 ),
-                EnlightTextFormField(
-                  text: "Password",
-                  controller: passwordController,
-                ),
-                EnlightFormSubmissionButton(
-                  text: "Sign in",
-                  formKey: formKey,
-                  onPressed: _onPressed,
-                ),
-                TextButton(
-                  onPressed: () {},
-                  child: const Text("Forgot password?"),
-                )
-              ],
+              ),
             ),
           ),
-        ),
+          EnlightLoadingIndicator(visible: loading),
+        ],
       ),
       persistentFooterButtons: <Widget>[
         Center(
@@ -73,6 +80,9 @@ class _SignInState extends State<SignIn> {
   }
 
   void Function()? _onPressed() {
+    setState(() {
+      loading = true;
+    });
     http
         .get(
       Uri.http(
@@ -85,6 +95,9 @@ class _SignInState extends State<SignIn> {
       ),
     )
         .then((response) {
+      setState(() {
+        loading = false;
+      });
       if (response.statusCode == 200) {
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => const Placeholder()),
