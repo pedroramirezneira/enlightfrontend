@@ -56,7 +56,9 @@ class _SignInState extends State<SignIn> {
                     ),
                     TextButton(
                       onPressed: () {
-                        Navigator.of(context).push(MaterialPageRoute(builder: ((context) => const PasswordRecoveryPage())));
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: ((context) =>
+                                const PasswordRecoveryPage())));
                       },
                       child: const Text("Forgot password?"),
                     )
@@ -102,9 +104,10 @@ class _SignInState extends State<SignIn> {
         loading = false;
       });
       if (response.statusCode == 200) {
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => const Placeholder()),
-          (route) => false,
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Successful login."),
+          ),
         );
         return;
       }
@@ -127,7 +130,7 @@ class _SignInState extends State<SignIn> {
       if (response.statusCode == 500) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text("Internal Server Error. Please try again."),
+            content: Text("Internal server error. Please try again."),
           ),
         );
         return;
