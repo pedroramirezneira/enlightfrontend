@@ -1,1 +1,1 @@
-const server = "192.168.50.221";
+const server = "18.229.107.19";
