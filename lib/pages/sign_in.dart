@@ -3,6 +3,7 @@ import 'package:enlight/components/enlight_form_submission_button.dart';
 import 'package:enlight/components/enlight_loading_indicator.dart';
 import 'package:enlight/components/enlight_text_form_field.dart';
 import 'package:enlight/env.dart';
+import 'package:enlight/pages/recover_password.dart';
 import 'package:enlight/pages/sign_up.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -54,7 +55,9 @@ class _SignInState extends State<SignIn> {
                       onPressed: _onPressed,
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(builder: ((context) => const PasswordRecoveryPage())));
+                      },
                       child: const Text("Forgot password?"),
                     )
                   ],
