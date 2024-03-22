@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:enlight/components/enlight_app_bar.dart';
+import 'package:enlight/components/enlight_dropdown_button.dart';
 import 'package:enlight/components/enlight_form_submission_button.dart';
 import 'package:enlight/components/enlight_loading_indicator.dart';
 import 'package:enlight/components/enlight_text_form_field.dart';
@@ -23,6 +24,7 @@ class _SignUpState extends State<SignUp> {
   late final TextEditingController birthDateController;
   late final TextEditingController addressController;
   var loading = false;
+  var dropdownValue = "Role";
 
   @override
   void initState() {
@@ -80,6 +82,19 @@ class _SignUpState extends State<SignUp> {
                           text: "Address",
                           controller: addressController,
                         ),
+                        EnlightDropdownButton(
+                          value: dropdownValue,
+                          text: "Role",
+                          items: const <String>[
+                            "Student",
+                            "Teacher",
+                          ],
+                          onChanged: (value) {
+                            setState(() {
+                              dropdownValue = value!;
+                            });
+                          },
+                        ),
                         EnlightFormSubmissionButton(
                           text: "Sign up",
                           formKey: formKey,
@@ -99,6 +114,14 @@ class _SignUpState extends State<SignUp> {
   }
 
   void Function()? _onPressed() {
+    if (dropdownValue == "Role") {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Role cannot be empty."),
+        ),
+      );
+      return null;
+    }
     setState(() {
       loading = true;
     });
@@ -116,6 +139,7 @@ class _SignUpState extends State<SignUp> {
           "name": nameController.text,
           "birth_date": birthDateController.text,
           "address": addressController.text,
+          "role": dropdownValue.toLowerCase(),
         },
       ),
     )
