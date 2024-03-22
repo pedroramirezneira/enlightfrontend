@@ -37,60 +37,64 @@ class _SignUpState extends State<SignUp> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const EnlightAppBar(),
-      body: Stack(
-        children: <Widget>[
-          Center(
-            child: SingleChildScrollView(
-              child: Form(
-                key: formKey,
-                child: Column(
-                  children: <Widget>[
-                    EnlightTextFormField(
-                      text: "Email",
-                      controller: emailController,
+    return Stack(
+      children: <Widget>[
+        Scaffold(
+          appBar: const EnlightAppBar(),
+          body: Stack(
+            children: <Widget>[
+              Center(
+                child: SingleChildScrollView(
+                  child: Form(
+                    key: formKey,
+                    child: Column(
+                      children: <Widget>[
+                        EnlightTextFormField(
+                          text: "Email",
+                          controller: emailController,
+                        ),
+                        EnlightTextFormField(
+                          text: "Password",
+                          controller: passwordController,
+                        ),
+                        EnlightTextFormField(
+                          text: "Name",
+                          controller: nameController,
+                        ),
+                        EnlightTextFormField(
+                          text: "Birth Date",
+                          controller: birthDateController,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Birth Date cannot be empty.";
+                            }
+                            if (!RegExp(
+                                    r'^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[01])$')
+                                .hasMatch(value)) {
+                              return "Invalid date.";
+                            }
+                            return null;
+                          },
+                        ),
+                        EnlightTextFormField(
+                          text: "Address",
+                          controller: addressController,
+                        ),
+                        EnlightFormSubmissionButton(
+                          text: "Sign up",
+                          formKey: formKey,
+                          onPressed: _onPressed,
+                        ),
+                      ],
                     ),
-                    EnlightTextFormField(
-                      text: "Password",
-                      controller: passwordController,
-                    ),
-                    EnlightTextFormField(
-                      text: "Name",
-                      controller: nameController,
-                    ),
-                    EnlightTextFormField(
-                      text: "Birth Date",
-                      controller: birthDateController,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "Birth Date cannot be empty.";
-                        }
-                        if (!RegExp(
-                                r'^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[01])$')
-                            .hasMatch(value)) {
-                          return "Invalid date.";
-                        }
-                        return null;
-                      },
-                    ),
-                    EnlightTextFormField(
-                      text: "Address",
-                      controller: addressController,
-                    ),
-                    EnlightFormSubmissionButton(
-                      text: "Sign up",
-                      formKey: formKey,
-                      onPressed: _onPressed,
-                    ),
-                  ],
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
-          EnlightLoadingIndicator(visible: loading),
-        ],
-      ),
+        ),
+        EnlightLoadingIndicator(visible: loading),
+      ],
     );
   }
 

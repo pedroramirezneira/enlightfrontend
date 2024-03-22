@@ -16,7 +16,7 @@ class EnlightLoadingIndicator extends StatelessWidget {
         alignment: Alignment.center,
         children: <Widget>[
           Container(
-            color: Colors.black.withOpacity(0),
+            color: Colors.black.withOpacity(0.5),
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
           ),

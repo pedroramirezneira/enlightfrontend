@@ -31,55 +31,59 @@ class _SignInState extends State<SignIn> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const EnlightAppBar(),
-      body: Stack(
-        children: <Widget>[
-          Center(
-            child: SingleChildScrollView(
-              child: Form(
-                key: formKey,
-                child: Column(
-                  children: <Widget>[
-                    EnlightTextFormField(
-                      text: "Email",
-                      controller: emailController,
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: const EnlightAppBar(),
+          body: Stack(
+            children: <Widget>[
+              Center(
+                child: SingleChildScrollView(
+                  child: Form(
+                    key: formKey,
+                    child: Column(
+                      children: <Widget>[
+                        EnlightTextFormField(
+                          text: "Email",
+                          controller: emailController,
+                        ),
+                        EnlightTextFormField(
+                          text: "Password",
+                          controller: passwordController,
+                        ),
+                        EnlightFormSubmissionButton(
+                          text: "Sign in",
+                          formKey: formKey,
+                          onPressed: _onPressed,
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: ((context) =>
+                                    const PasswordRecoveryPage())));
+                          },
+                          child: const Text("Forgot password?"),
+                        )
+                      ],
                     ),
-                    EnlightTextFormField(
-                      text: "Password",
-                      controller: passwordController,
-                    ),
-                    EnlightFormSubmissionButton(
-                      text: "Sign in",
-                      formKey: formKey,
-                      onPressed: _onPressed,
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: ((context) =>
-                                const PasswordRecoveryPage())));
-                      },
-                      child: const Text("Forgot password?"),
-                    )
-                  ],
+                  ),
                 ),
               ),
+            ],
+          ),
+          persistentFooterButtons: <Widget>[
+            Center(
+              child: TextButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => const SignUp()));
+                },
+                child: const Text("Don't have an account? Sign up."),
+              ),
             ),
-          ),
-          EnlightLoadingIndicator(visible: loading),
-        ],
-      ),
-      persistentFooterButtons: <Widget>[
-        Center(
-          child: TextButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const SignUp()));
-            },
-            child: const Text("Don't have an account? Sign up."),
-          ),
+          ],
         ),
+        EnlightLoadingIndicator(visible: loading),
       ],
     );
   }
