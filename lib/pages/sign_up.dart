@@ -119,6 +119,26 @@ class _SignUpState extends State<SignUp> {
       setState(() {
         loading = false;
       });
+      if (response.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Account successfully created."),
+          ),
+        );
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => const SignIn()),
+          (route) => false,
+        );
+        return;
+      }
+      if (response.statusCode == 409) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Email already in use."),
+          ),
+        );
+        return;
+      }
       if (response.statusCode == 500) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -127,15 +147,6 @@ class _SignUpState extends State<SignUp> {
         );
         return;
       }
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Account successfully created."),
-        ),
-      );
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => const SignIn()),
-        (route) => false,
-      );
     });
     return null;
   }
