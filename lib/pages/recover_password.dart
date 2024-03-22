@@ -1,4 +1,8 @@
+import 'dart:convert';
+
+import 'package:enlight/env.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class PasswordRecoveryPage extends StatelessWidget {
   const PasswordRecoveryPage({super.key});
@@ -27,30 +31,49 @@ class _PasswordRecoveryFormState extends State<PasswordRecoveryForm> {
 
   void _sendPasswordResetEmail() {
     String email = _emailController.text;
-    // Aquí deberías agregar la lógica para enviar el correo electrónico de recuperación
-    // Puedes utilizar servicios como Firebase para manejar la autenticación y el envío de correos electrónicos.
-
-    // Por ejemplo, con Firebase Authentication, puedes usar:
-    // FirebaseAuth.instance.sendPasswordResetEmail(email: email);
-
-    // Una vez que se envíe el correo electrónico de recuperación, puedes mostrar un mensaje al usuario.
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Correo electrónico enviado'),
-          content: Text('Se ha enviado un correo electrónico de recuperación a $email.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Aceptar'),
-            ),
-          ],
+    http
+        .post(
+      Uri.http(
+        server,
+        '/password-reset/request',
+      ),
+      headers: Map.from({"Content-Type": "application/json"}),
+      body: json.encode(
+        {
+          "email": _emailController.text,
+        },
+      ),
+    )
+        .then((response) {
+      if (response.statusCode == 200) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Correo electrónico enviado'),
+              content: Text(
+                  'Se ha enviado un correo electrónico de recuperación a $email.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Aceptar'),
+                ),
+              ],
+            );
+          },
         );
-      },
-    );
+      }
+      if (response.statusCode == 500) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Wrong email. Please try again."),
+          ),
+        );
+        return;
+      }
+    });
   }
 
   @override
