@@ -58,6 +58,7 @@ class _SignUpState extends State<SignUp> {
                         EnlightTextFormField(
                           text: "Password",
                           controller: passwordController,
+                          password: true,
                         ),
                         EnlightTextFormField(
                           text: "Name",

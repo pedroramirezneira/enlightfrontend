@@ -50,6 +50,7 @@ class _SignInState extends State<SignIn> {
                         EnlightTextFormField(
                           text: "Password",
                           controller: passwordController,
+                          password: true,
                         ),
                         EnlightFormSubmissionButton(
                           text: "Sign in",
