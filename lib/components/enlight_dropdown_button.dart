@@ -16,9 +16,6 @@ class EnlightDropdownButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textStyle = TextStyle(
-      color: Colors.grey.shade400,
-    );
     return Padding(
       padding: const EdgeInsets.all(10),
       child: Container(
@@ -26,7 +23,7 @@ class EnlightDropdownButton extends StatelessWidget {
         decoration: BoxDecoration(
           shape: BoxShape.rectangle,
           border: Border.all(
-            color: Colors.grey,
+            color: Colors.white,
           ),
           borderRadius: BorderRadius.circular(10),
         ),
@@ -39,17 +36,11 @@ class EnlightDropdownButton extends StatelessWidget {
             (index) => index == 0
                 ? DropdownMenuItem(
                     value: text,
-                    child: Text(
-                      text,
-                      style: textStyle,
-                    ),
+                    child: Text(text),
                   )
                 : DropdownMenuItem(
                     value: items[index - 1],
-                    child: Text(
-                      items[index - 1],
-                      style: textStyle,
-                    ),
+                    child: Text(items[index - 1]),
                   ),
           ),
           onChanged: onChanged,

@@ -5,10 +5,7 @@ class EnlightAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      title: const Text("Enlight"),
-      centerTitle: true,
-    );
+    return AppBar(title: const Text("Enlight"));
   }
 
   @override

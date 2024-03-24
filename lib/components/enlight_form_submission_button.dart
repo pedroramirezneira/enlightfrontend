@@ -16,26 +16,13 @@ class EnlightFormSubmissionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(10),
-      child: MaterialButton(
+      child: ElevatedButton(
         onPressed: () {
           if (formKey.currentState!.validate()) {
             onPressed!();
           }
         },
-        minWidth: double.infinity,
-        height: 50,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(10),
-          ),
-        ),
-        color: Colors.grey.shade700,
-        child: Text(
-          text,
-          style: const TextStyle(
-            color: Colors.white,
-          ),
-        ),
+        child: Text(text),
       ),
     );
   }

@@ -12,8 +12,42 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData.dark(),
+      title: 'Enlight',
+      theme: ThemeData(
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.blue,
+          centerTitle: true,
+          titleTextStyle: TextStyle(
+            color: Colors.white,
+            fontSize: 22,
+          ),
+        ),
+        colorScheme: ColorScheme(
+          brightness: Brightness.dark,
+          primary: Colors.blue.shade100,
+          onPrimary: Colors.white,
+          secondary: Colors.blueAccent.shade100,
+          onSecondary: Colors.white,
+          error: Colors.red,
+          onError: Colors.white,
+          background: Colors.blue.shade900,
+          onBackground: Colors.white,
+          surface: Colors.blue,
+          onSurface: Colors.white,
+        ),
+        elevatedButtonTheme: const ElevatedButtonThemeData(
+          style: ButtonStyle(
+            fixedSize: MaterialStatePropertyAll(
+              Size(double.maxFinite, 50),
+            ),
+            shape: MaterialStatePropertyAll(
+              RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
+            ),
+            backgroundColor: MaterialStatePropertyAll(Colors.blue),
+          ),
+        ),
+      ),
       home: const SignIn(),
     );
   }
