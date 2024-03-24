@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
         ),
         colorScheme: ColorScheme(
           brightness: Brightness.dark,
-          primary: Colors.blue.shade100,
+          primary: Colors.purple.shade100,
           onPrimary: Colors.white,
           secondary: Colors.blueAccent.shade100,
           onSecondary: Colors.white,
@@ -45,6 +45,13 @@ class MyApp extends StatelessWidget {
                   borderRadius: BorderRadius.all(Radius.circular(10))),
             ),
             backgroundColor: MaterialStatePropertyAll(Colors.blue),
+            foregroundColor: MaterialStatePropertyAll(Colors.white),
+          ),
+        ),
+        snackBarTheme: const SnackBarThemeData(
+          backgroundColor: Colors.blue,
+          contentTextStyle: TextStyle(
+            color: Colors.white,
           ),
         ),
       ),
