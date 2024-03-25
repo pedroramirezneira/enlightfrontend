@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 class EnlightTextFormField extends StatefulWidget {
   final String text;
   final TextEditingController controller;
-  final String? Function(String?)? validator;
   final bool password;
   final bool date;
 
@@ -11,7 +10,6 @@ class EnlightTextFormField extends StatefulWidget {
     super.key,
     required this.text,
     required this.controller,
-    this.validator,
     this.password = false,
     this.date = false,
   });
@@ -36,13 +34,19 @@ class _EnlightTextFormFieldState extends State<EnlightTextFormField> {
       child: TextFormField(
         controller: widget.controller,
         obscureText: obscure,
-        validator: widget.validator ??
-            (value) {
-              if (value == null || value.isEmpty) {
-                return "${widget.text} cannot be empty.";
-              }
-              return null;
-            },
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return "${widget.text} cannot be empty.";
+          }
+          if (!widget.date) {
+            return null;
+          }
+          if (!RegExp(r'^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[01])$')
+              .hasMatch(value)) {
+            return "Invalid date.";
+          }
+          return null;
+        },
         decoration: InputDecoration(
           labelText: widget.text,
           border: const OutlineInputBorder(
