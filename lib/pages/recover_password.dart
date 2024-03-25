@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:enlight/components/enlight_form_submission_button.dart';
 import 'package:enlight/components/enlight_loading_indicator.dart';
+import 'package:enlight/components/enlight_text_form_field.dart';
 import 'package:enlight/env.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -15,11 +17,13 @@ class PasswordRecoveryPage extends StatefulWidget {
 class _PasswordRecoveryPageState extends State<PasswordRecoveryPage> {
   var loading = false;
   late final TextEditingController _emailController;
+  late final GlobalKey<FormState> formKey;
 
   @override
   void initState() {
     super.initState();
     _emailController = TextEditingController();
+    formKey = GlobalKey<FormState>();
   }
 
   @override
@@ -28,11 +32,12 @@ class _PasswordRecoveryPageState extends State<PasswordRecoveryPage> {
       children: <Widget>[
         Scaffold(
           appBar: AppBar(
-            title: const Text('Recuperar contraseña'),
+            title: const Text('Recover password'),
           ),
           body: PasswordRecoveryForm(
             onPressed: _sendPasswordResetEmail,
-            emailController: _emailController,
+            emailController: _emailController, 
+            formKey: formKey,
           ),
         ),
         EnlightLoadingIndicator(visible: loading)
@@ -105,10 +110,12 @@ class _PasswordRecoveryPageState extends State<PasswordRecoveryPage> {
 class PasswordRecoveryForm extends StatefulWidget {
   final void Function()? onPressed;
   final TextEditingController emailController;
+  final GlobalKey<FormState> formKey;
 
   const PasswordRecoveryForm({
     super.key,
     required this.onPressed,
+    required this.formKey,
     required this.emailController,
   });
 
@@ -127,16 +134,26 @@ class _PasswordRecoveryFormState extends State<PasswordRecoveryForm> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              TextField(
-                controller: widget.emailController,
-                decoration: const InputDecoration(
-                  labelText: 'Correo electrónico',
-                ),
+              const Text(
+                'Find your account',
+                style: TextStyle(
+                    fontSize: 20
+                 ),
               ),
-              const SizedBox(height: 20.0),
-              ElevatedButton(
-                onPressed: widget.onPressed,
-                child: const Text('Enviar correo de recuperación'),
+              const Text (
+                'Enter the email linked to your accont.',
+                style: TextStyle(
+                    fontSize: 16
+                 ),
+              ),
+              EnlightTextFormField(
+                 text: "Email",
+                 controller: widget.emailController,
+              ),
+              EnlightFormSubmissionButton(
+                 text: "Sign in",
+                 onPressed: widget.onPressed, 
+                 formKey: widget.formKey,
               ),
             ],
           ),
