@@ -5,6 +5,7 @@ class EnlightTextFormField extends StatefulWidget {
   final TextEditingController controller;
   final String? Function(String?)? validator;
   final bool password;
+  final bool date;
 
   const EnlightTextFormField({
     super.key,
@@ -12,6 +13,7 @@ class EnlightTextFormField extends StatefulWidget {
     required this.controller,
     this.validator,
     this.password = false,
+    this.date = false,
   });
 
   @override
@@ -61,6 +63,18 @@ class _EnlightTextFormFieldState extends State<EnlightTextFormField> {
                 )
               : null,
         ),
+        onTap: widget.date
+            ? () async {
+                FocusScope.of(context).requestFocus(FocusNode());
+                DateTime? dateTime = await showDatePicker(
+                  context: context,
+                  firstDate: DateTime(1900),
+                  lastDate: DateTime.now(),
+                );
+                widget.controller.text =
+                    dateTime != null ? dateTime.toString().split(" ")[0] : "";
+              }
+            : null,
       ),
     );
   }

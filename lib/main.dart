@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       title: 'Enlight',
       theme: ThemeData(
         appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.blue,
+          backgroundColor: Color.fromARGB(255, 100, 201, 169),
           centerTitle: true,
           titleTextStyle: TextStyle(
             color: Colors.white,
@@ -30,9 +30,9 @@ class MyApp extends StatelessWidget {
           onSecondary: Colors.white,
           error: Colors.red,
           onError: Colors.white,
-          background: Colors.blue.shade900,
+          background: const Color.fromARGB(255, 43, 57, 68),
           onBackground: Colors.white,
-          surface: Colors.blue,
+          surface: const Color.fromARGB(255, 100, 201, 169),
           onSurface: Colors.white,
         ),
         elevatedButtonTheme: const ElevatedButtonThemeData(
@@ -44,12 +44,12 @@ class MyApp extends StatelessWidget {
               RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(10))),
             ),
-            backgroundColor: MaterialStatePropertyAll(Colors.blue),
+            backgroundColor: MaterialStatePropertyAll(Color.fromARGB(255, 100, 201, 169)),
             foregroundColor: MaterialStatePropertyAll(Colors.white),
           ),
         ),
         snackBarTheme: const SnackBarThemeData(
-          backgroundColor: Colors.blue,
+          backgroundColor: Color.fromARGB(255, 100, 201, 169),
           contentTextStyle: TextStyle(
             color: Colors.white,
           ),

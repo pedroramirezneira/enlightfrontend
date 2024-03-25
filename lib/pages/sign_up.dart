@@ -68,6 +68,7 @@ class _SignUpState extends State<SignUp> {
                         EnlightTextFormField(
                           text: "Birth Date",
                           controller: birthDateController,
+                          date: true,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return "Birth Date cannot be empty.";
