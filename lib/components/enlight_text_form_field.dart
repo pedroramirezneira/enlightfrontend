@@ -45,6 +45,11 @@ class _EnlightTextFormFieldState extends State<EnlightTextFormField> {
               .hasMatch(value)) {
             return "Invalid date.";
           }
+          DateTime now = DateTime.now();
+          DateTime sixteenYearsAgo = DateTime(now.year - 16, now.month, now.day);
+          if (DateTime.parse(value).isAfter(sixteenYearsAgo)) {
+            return "You must be at least 16 years old to use Enlight.";
+          }
           return null;
         },
         decoration: InputDecoration(

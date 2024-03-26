@@ -46,7 +46,6 @@ class _PasswordRecoveryPageState extends State<PasswordRecoveryPage> {
   }
 
   void Function()? _onPressed() {
-    String email = _emailController.text;
     setState(() {
       loading = true;
     });
@@ -68,24 +67,13 @@ class _PasswordRecoveryPageState extends State<PasswordRecoveryPage> {
         loading = false;
       });
       if (response.statusCode == 200) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Correo electrónico enviado'),
-              content: Text(
-                  'Se ha enviado un correo electrónico de recuperación a $email.'),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('Aceptar'),
-                ),
-              ],
-            );
-          },
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("A recovery email has ben sent."),
+          ),
         );
+        Navigator.of(context).pop();
+        return;
       }
       if (response.statusCode == 404) {
         ScaffoldMessenger.of(context).showSnackBar(
