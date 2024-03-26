@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
 class EnlightAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const EnlightAppBar({super.key});
+  final String text;
+  const EnlightAppBar({super.key, required this.text});
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(title: const Text("Enlight"));
+    return AppBar(title: Text(text));
   }
 
   @override

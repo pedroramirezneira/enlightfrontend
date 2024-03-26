@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:enlight/components/enlight_app_bar.dart';
 import 'package:enlight/components/enlight_form_submission_button.dart';
 import 'package:enlight/components/enlight_loading_indicator.dart';
 import 'package:enlight/components/enlight_text_form_field.dart';
 import 'package:enlight/env.dart';
+import 'package:enlight/pages/profile.dart';
 import 'package:enlight/pages/recover_password.dart';
 import 'package:enlight/pages/sign_up.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +37,9 @@ class _SignInState extends State<SignIn> {
     return Stack(
       children: [
         Scaffold(
-          appBar: const EnlightAppBar(),
+          appBar: const EnlightAppBar(
+            text: "Enlight",
+          ),
           body: Stack(
             children: <Widget>[
               Center(
@@ -95,10 +100,13 @@ class _SignInState extends State<SignIn> {
       loading = true;
     });
     http
-        .get(
+        .post(
       Uri.http(
         server,
-        "/account",
+        "/login",
+      ),
+      headers: {"Content-Type": "application/json"},
+      body: json.encode(
         {
           "email": emailController.text,
           "password": passwordController.text,
@@ -114,6 +122,10 @@ class _SignInState extends State<SignIn> {
           const SnackBar(
             content: Text("Successful login."),
           ),
+        );
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => const Profile()),
+          (route) => false,
         );
         return;
       }
