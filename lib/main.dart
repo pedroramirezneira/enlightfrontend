@@ -1,12 +1,32 @@
 import 'package:enlight/pages/sign_in.dart';
+import 'package:enlight/util/token.dart';
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const MyApp());
+Future<void> main() async {
+  final token = await Token.getToken();
+  if (token == null) {
+    runApp(const MyApp(
+      home: SignIn(),
+    ));
+    return;
+  }
+  final valid = await Token.verifyToken(token);
+  valid
+      ? runApp(const MyApp(
+          home: Placeholder(),
+        ))
+      : runApp(const MyApp(
+          home: SignIn(),
+        ));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final Widget home;
+
+  const MyApp({
+    super.key,
+    required this.home,
+  });
 
   // This widget is the root of your application.
   @override
@@ -44,7 +64,8 @@ class MyApp extends StatelessWidget {
               RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(10))),
             ),
-            backgroundColor: MaterialStatePropertyAll(Color.fromARGB(255, 100, 201, 169)),
+            backgroundColor:
+                MaterialStatePropertyAll(Color.fromARGB(255, 100, 201, 169)),
             foregroundColor: MaterialStatePropertyAll(Colors.white),
           ),
         ),
@@ -55,7 +76,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const SignIn(),
+      home: home,
     );
   }
 }

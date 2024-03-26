@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:enlight/components/enlight_app_bar.dart';
 import 'package:enlight/components/enlight_form_submission_button.dart';
 import 'package:enlight/components/enlight_loading_indicator.dart';
@@ -5,6 +7,7 @@ import 'package:enlight/components/enlight_text_form_field.dart';
 import 'package:enlight/env.dart';
 import 'package:enlight/pages/recover_password.dart';
 import 'package:enlight/pages/sign_up.dart';
+import 'package:enlight/util/token.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -95,16 +98,20 @@ class _SignInState extends State<SignIn> {
       loading = true;
     });
     http
-        .get(
-      Uri.http(
-        server,
-        "/account",
-        {
-          "email": emailController.text,
-          "password": passwordController.text,
-        },
-      ),
-    )
+        .post(
+            Uri.http(
+              server,
+              "/login",
+            ),
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: json.encode(
+              {
+                "email": emailController.text,
+                "password": passwordController.text,
+              },
+            ))
         .then((response) {
       setState(() {
         loading = false;
@@ -115,6 +122,7 @@ class _SignInState extends State<SignIn> {
             content: Text("Successful login."),
           ),
         );
+        Token.setToken(response.body);
         return;
       }
       if (response.statusCode == 401) {
