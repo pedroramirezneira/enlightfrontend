@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:enlight/components/enlight_app_bar.dart';
 import 'package:enlight/components/enlight_form_submission_button.dart';
 import 'package:enlight/components/enlight_loading_indicator.dart';
@@ -37,7 +36,9 @@ class _SignInState extends State<SignIn> {
     return Stack(
       children: [
         Scaffold(
-          appBar: const EnlightAppBar(),
+          appBar: const EnlightAppBar(
+            text: "Enlight",
+          ),
           body: Stack(
             children: <Widget>[
               Center(

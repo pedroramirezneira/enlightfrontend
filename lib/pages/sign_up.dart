@@ -42,7 +42,7 @@ class _SignUpState extends State<SignUp> {
     return Stack(
       children: <Widget>[
         Scaffold(
-          appBar: const EnlightAppBar(),
+          appBar: const EnlightAppBar(text: 'Enlight',),
           body: Stack(
             children: <Widget>[
               Center(
