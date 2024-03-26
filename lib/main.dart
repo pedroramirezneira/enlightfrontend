@@ -1,8 +1,10 @@
+import 'package:enlight/pages/profile.dart';
 import 'package:enlight/pages/sign_in.dart';
 import 'package:enlight/util/token.dart';
 import 'package:flutter/material.dart';
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   final token = await Token.getToken();
   if (token == null) {
     runApp(const MyApp(
@@ -13,7 +15,7 @@ Future<void> main() async {
   final valid = await Token.verifyToken(token);
   valid
       ? runApp(const MyApp(
-          home: Placeholder(),
+          home: Profile(),
         ))
       : runApp(const MyApp(
           home: SignIn(),

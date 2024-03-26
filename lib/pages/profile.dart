@@ -2,7 +2,6 @@ import 'package:enlight/components/enlight_app_bar.dart';
 import 'package:enlight/components/enlight_loading_indicator.dart';
 import 'package:enlight/models/profile_data.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});

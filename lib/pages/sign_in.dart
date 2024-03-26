@@ -8,6 +8,7 @@ import 'package:enlight/env.dart';
 import 'package:enlight/pages/profile.dart';
 import 'package:enlight/pages/recover_password.dart';
 import 'package:enlight/pages/sign_up.dart';
+import 'package:enlight/util/token.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -118,6 +119,7 @@ class _SignInState extends State<SignIn> {
         loading = false;
       });
       if (response.statusCode == 200) {
+        Token.setToken(response.body);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text("Successful login."),
