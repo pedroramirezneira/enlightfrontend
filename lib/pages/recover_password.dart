@@ -35,7 +35,7 @@ class _PasswordRecoveryPageState extends State<PasswordRecoveryPage> {
             title: const Text('Recover password'),
           ),
           body: PasswordRecoveryForm(
-            onPressed: _sendPasswordResetEmail,
+            onPressed: _onPressed,
             emailController: _emailController, 
             formKey: formKey,
           ),
@@ -45,7 +45,7 @@ class _PasswordRecoveryPageState extends State<PasswordRecoveryPage> {
     );
   }
 
-  void Function()? _sendPasswordResetEmail() {
+  void Function()? _onPressed() {
     String email = _emailController.text;
     setState(() {
       loading = true;
@@ -131,31 +131,34 @@ class _PasswordRecoveryFormState extends State<PasswordRecoveryForm> {
       children: <Widget>[
         Padding(
           padding: const EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                'Find your account',
-                style: TextStyle(
-                    fontSize: 20
-                 ),
-              ),
-              const Text (
-                'Enter the email linked to your accont.',
-                style: TextStyle(
-                    fontSize: 16
-                 ),
-              ),
-              EnlightTextFormField(
-                 text: "Email",
-                 controller: widget.emailController,
-              ),
-              EnlightFormSubmissionButton(
-                 text: "Send recovery email",
-                 onPressed: widget.onPressed, 
-                 formKey: widget.formKey,
-              ),
-            ],
+          child: Form(
+            key: widget.formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'Find your account',
+                  style: TextStyle(
+                      fontSize: 20
+                   ),
+                ),
+                const Text (
+                  'Enter the email linked to your accont.',
+                  style: TextStyle(
+                      fontSize: 16
+                   ),
+                ),
+                EnlightTextFormField(
+                   text: "Email",
+                   controller: widget.emailController,
+                ),
+                EnlightFormSubmissionButton(
+                   text: "Send recovery email",
+                   onPressed: widget.onPressed, 
+                   formKey: widget.formKey,
+                ),
+              ],
+            ),
           ),
         ),
       ],
