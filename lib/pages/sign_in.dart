@@ -5,7 +5,7 @@ import 'package:enlight/components/enlight_form_submission_button.dart';
 import 'package:enlight/components/enlight_loading_indicator.dart';
 import 'package:enlight/components/enlight_text_form_field.dart';
 import 'package:enlight/env.dart';
-import 'package:enlight/pages/profile.dart';
+import 'package:enlight/pages/teacher_profile.dart';
 import 'package:enlight/pages/recover_password.dart';
 import 'package:enlight/pages/sign_up.dart';
 import 'package:enlight/util/token.dart';
@@ -126,7 +126,7 @@ class _SignInState extends State<SignIn> {
           ),
         );
         Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => const Profile()),
+          MaterialPageRoute(builder: (context) => const TeacherProfile()),
           (route) => false,
         );
         return;

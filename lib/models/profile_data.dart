@@ -29,7 +29,7 @@ class ProfileData {
   }
 
   static Future<ProfileData> getProfiles() async {
-    return ProfileData(rating: 10, name: "Xoaco", zone: "si", tags:  ["Matematica"], description: "me gusta el LoL");
+    return ProfileData(rating: 10, name: "Xoaco", zone: "si", tags:  ["Matematica", "Literatura", "Arte", "Prog", "Ingles", "PedroTv", "Lengua", "Etica", "Historia"], description: "Un profesor es un guía en el aprendizaje, inspirando, enseñando y formando a los estudiantes para un futuro prometedor.");
     /*
     final response = await http.get(Uri.http(
       server,

@@ -1,4 +1,4 @@
-import 'package:enlight/pages/profile.dart';
+import 'package:enlight/pages/teacher_profile.dart';
 import 'package:enlight/pages/sign_in.dart';
 import 'package:enlight/util/token.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +15,7 @@ Future<void> main() async {
   final valid = await Token.verifyToken(token);
   valid
       ? runApp(const MyApp(
-          home: Profile(),
+          home: TeacherProfile(),
         ))
       : runApp(const MyApp(
           home: SignIn(),
