@@ -1,5 +1,5 @@
 import "dart:convert";
-import "package:enlight/env.dart";
+import "package:flutter_dotenv/flutter_dotenv.dart";
 import "package:http/http.dart" as http;
 
 class ProfileData {
@@ -31,8 +31,8 @@ class ProfileData {
   static Future<ProfileData> getProfiles() async {
     return ProfileData(rating: 10, name: "Xoaco", zone: "si", tags:  ["Matematica", "Literatura", "Arte", "Prog", "Ingles", "PedroTv", "Lengua", "Etica", "Historia"], description: "Un profesor es un guía en el aprendizaje, inspirando, enseñando y formando a los estudiantes para un futuro prometedor.");
     /*
-    final response = await http.get(Uri.http(
-      server,
+    final response = await http.get(Uri.https(
+      dotenv.env["SERVER"]!,
       "/account",
       {"token":"Token"}
     ));

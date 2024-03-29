@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'package:enlight/components/enlight_form_submission_button.dart';
 import 'package:enlight/components/enlight_loading_indicator.dart';
 import 'package:enlight/components/enlight_text_form_field.dart';
-import 'package:enlight/env.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 class PasswordRecoveryPage extends StatefulWidget {
@@ -35,7 +35,7 @@ class _PasswordRecoveryPageState extends State<PasswordRecoveryPage> {
           ),
           body: PasswordRecoveryForm(
             onPressed: _onPressed,
-            emailController: _emailController, 
+            emailController: _emailController,
             formKey: formKey,
           ),
         ),
@@ -50,8 +50,8 @@ class _PasswordRecoveryPageState extends State<PasswordRecoveryPage> {
     });
     http
         .post(
-      Uri.http(
-        server,
+      Uri.https(
+        dotenv.env["SERVER"]!,
         '/password-reset/request',
       ),
       headers: Map.from({"Content-Type": "application/json"}),
@@ -125,24 +125,20 @@ class _PasswordRecoveryFormState extends State<PasswordRecoveryForm> {
               children: [
                 const Text(
                   'Find your account',
-                  style: TextStyle(
-                      fontSize: 20
-                   ),
+                  style: TextStyle(fontSize: 20),
                 ),
-                const Text (
+                const Text(
                   'Enter the email linked to your accont.',
-                  style: TextStyle(
-                      fontSize: 16
-                   ),
+                  style: TextStyle(fontSize: 16),
                 ),
                 EnlightTextFormField(
-                   text: "Email",
-                   controller: widget.emailController,
+                  text: "Email",
+                  controller: widget.emailController,
                 ),
                 EnlightFormSubmissionButton(
-                   text: "Send recovery email",
-                   onPressed: widget.onPressed, 
-                   formKey: widget.formKey,
+                  text: "Send recovery email",
+                  onPressed: widget.onPressed,
+                  formKey: widget.formKey,
                 ),
               ],
             ),

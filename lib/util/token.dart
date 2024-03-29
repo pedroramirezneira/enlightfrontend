@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:enlight/env.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -19,8 +19,8 @@ class Token {
 
   static Future<bool> verifyAccessToken(String token) async {
     final response = await http.get(
-        Uri.http(
-          server,
+        Uri.https(
+          dotenv.env["SERVER"]!,
           "/verify",
         ),
         headers: {"Authorization": "Bearer $token"});
@@ -62,7 +62,10 @@ class Token {
     }
     http
         .post(
-      Uri.http(server, "/refresh"),
+      Uri.https(
+        dotenv.env["SERVER"]!,
+        "/refresh",
+      ),
       headers: {
         "Content-Type": "application/json",
       },

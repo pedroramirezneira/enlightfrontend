@@ -1,13 +1,11 @@
-import 'dart:convert';
 import 'package:enlight/components/enlight_app_bar.dart';
 import 'package:enlight/components/enlight_dropdown_button.dart';
 import 'package:enlight/components/enlight_form_submission_button.dart';
 import 'package:enlight/components/enlight_loading_indicator.dart';
 import 'package:enlight/components/enlight_text_form_field.dart';
-import 'package:enlight/env.dart';
 import 'package:enlight/pages/sign_in.dart';
+import 'package:enlight/util/account.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -42,7 +40,9 @@ class _SignUpState extends State<SignUp> {
     return Stack(
       children: <Widget>[
         Scaffold(
-          appBar: const EnlightAppBar(text: 'Enlight',),
+          appBar: const EnlightAppBar(
+            text: 'Enlight',
+          ),
           body: Stack(
             children: <Widget>[
               Center(
@@ -117,29 +117,18 @@ class _SignUpState extends State<SignUp> {
     setState(() {
       loading = true;
     });
-    http
-        .post(
-      Uri.http(
-        server,
-        "/account",
-      ),
-      headers: Map.from({"Content-Type": "application/json"}),
-      body: json.encode(
-        {
-          "email": emailController.text,
-          "password": passwordController.text,
-          "name": nameController.text,
-          "birth_date": birthDateController.text,
-          "address": addressController.text,
-          "role": dropdownValue.toLowerCase(),
-        },
-      ),
-    )
-        .then((response) {
+    Account.signUp(
+      email: emailController.text,
+      password: passwordController.text,
+      name: nameController.text,
+      birthDate: birthDateController.text,
+      address: addressController.text,
+      role: dropdownValue.toLowerCase(),
+    ).then((code) {
       setState(() {
         loading = false;
       });
-      if (response.statusCode == 200) {
+      if (code == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text("Account successfully created."),
@@ -151,7 +140,7 @@ class _SignUpState extends State<SignUp> {
         );
         return;
       }
-      if (response.statusCode == 409) {
+      if (code == 409) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text("Email already in use."),
@@ -159,7 +148,7 @@ class _SignUpState extends State<SignUp> {
         );
         return;
       }
-      if (response.statusCode == 500) {
+      if (code == 500) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text("Internal server error. Please try again."),
