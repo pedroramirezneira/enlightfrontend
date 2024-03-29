@@ -5,21 +5,21 @@ import 'package:flutter/material.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final token = await Token.getToken();
-  if (token == null) {
+  final accessToken = await Token.getAccessToken();
+  final refreshToken = await Token.getRefreshToken();
+  if (refreshToken == null) {
     runApp(const MyApp(
       home: SignIn(),
     ));
     return;
   }
-  final valid = await Token.verifyToken(token);
-  valid
-      ? runApp(const MyApp(
-          home: TeacherProfile(),
-        ))
-      : runApp(const MyApp(
-          home: SignIn(),
-        ));
+  final valid = await Token.verifyAccessToken(accessToken!);
+  if (!valid) {
+    await Token.refreshAccessToken();
+  }
+  runApp(const MyApp(
+    home: TeacherProfile(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
