@@ -5,7 +5,7 @@ import 'package:enlight/components/enlight_text_form_field.dart';
 import 'package:enlight/pages/teacher_profile.dart';
 import 'package:enlight/pages/recover_password.dart';
 import 'package:enlight/pages/sign_up.dart';
-import 'package:enlight/util/account.dart';
+import 'package:enlight/util/account_ops.dart';
 import 'package:flutter/material.dart';
 
 class SignIn extends StatefulWidget {
@@ -96,7 +96,7 @@ class _SignInState extends State<SignIn> {
     setState(() {
       loading = true;
     });
-    Account.login(
+    AccountOps.login(
             email: emailController.text, password: passwordController.text)
         .then(
       (code) {

@@ -60,24 +60,18 @@ class Token {
     if (token == null) {
       return;
     }
-    http
-        .post(
+    final response = await http.get(
       Uri.https(
         dotenv.env["SERVER"]!,
         "/refresh",
       ),
       headers: {
-        "Content-Type": "application/json",
+        "Authorization": "Bearer $token",
       },
-      body: json.encode({
-        "refresh_token": token,
-      }),
-    )
-        .then((response) {
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        Token.setAccessToken(data["access_token"]);
-      }
-    });
+    );
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      await Token.setAccessToken(data["access_token"]);
+    }
   }
 }

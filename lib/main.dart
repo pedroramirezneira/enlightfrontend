@@ -1,5 +1,6 @@
-import 'package:enlight/pages/teacher_profile.dart';
+import 'package:enlight/pages/edit_account.dart';
 import 'package:enlight/pages/sign_in.dart';
+import 'package:enlight/pages/teacher_profile.dart';
 import 'package:enlight/util/token.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';

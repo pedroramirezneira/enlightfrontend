@@ -2,7 +2,7 @@ import 'package:enlight/components/enlight_app_bar.dart';
 import 'package:enlight/components/enlight_loading_indicator.dart';
 import 'package:enlight/models/profile_data.dart';
 import 'package:enlight/pages/sign_in.dart';
-import 'package:enlight/util/account.dart';
+import 'package:enlight/util/account_ops.dart';
 import 'package:flutter/material.dart';
 
 class TeacherProfile extends StatefulWidget {
@@ -35,6 +35,7 @@ class _TeacherProfileState extends State<TeacherProfile> {
                   showAdaptiveDialog(
                     context: context,
                     builder: (context) => AlertDialog.adaptive(
+                      title: const Text("Logout"),
                       actions: [
                         TextButton(
                           onPressed: () {
@@ -160,7 +161,7 @@ class _TeacherProfileState extends State<TeacherProfile> {
   }
 
   void Function()? _logout() {
-    Account.logout().then((success) {
+    AccountOps.logout().then((success) {
       if (success) {
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => const SignIn()),

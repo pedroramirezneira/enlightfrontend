@@ -1,9 +1,10 @@
 import 'dart:convert';
+import 'package:enlight/models/account_data.dart';
 import 'package:enlight/util/token.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
-class Account {
+class AccountOps {
   static Future<int> login({
     required String email,
     required String password,
@@ -51,7 +52,7 @@ class Account {
     required String email,
     required String password,
     required String name,
-    required String birthDate,
+    required String birthday,
     required String address,
     required String role,
   }) async {
@@ -66,12 +67,30 @@ class Account {
           "email": email,
           "password": password,
           "name": name,
-          "birth_date": birthDate,
+          "birthday": birthday,
           "address": address,
           "role": role,
         },
       ),
     );
     return response.statusCode;
+  }
+
+  static Future<AccountData> getAccount() async {
+    final token = await Token.getAccessToken();
+    final response = await http.get(
+      Uri.https(
+        dotenv.env["SERVER"]!,
+        "/account",
+      ),
+      headers: {
+        "Authorization": "Bearer $token",
+      },
+    );
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      return AccountData.fromJson(data);
+    }
+    throw response.statusCode;
   }
 }

@@ -4,7 +4,7 @@ import 'package:enlight/components/enlight_form_submission_button.dart';
 import 'package:enlight/components/enlight_loading_indicator.dart';
 import 'package:enlight/components/enlight_text_form_field.dart';
 import 'package:enlight/pages/sign_in.dart';
-import 'package:enlight/util/account.dart';
+import 'package:enlight/util/account_ops.dart';
 import 'package:flutter/material.dart';
 
 class SignUp extends StatefulWidget {
@@ -19,7 +19,7 @@ class _SignUpState extends State<SignUp> {
   late final TextEditingController emailController;
   late final TextEditingController passwordController;
   late final TextEditingController nameController;
-  late final TextEditingController birthDateController;
+  late final TextEditingController birthdayController;
   late final TextEditingController addressController;
   var loading = false;
   var dropdownValue = "Role";
@@ -31,7 +31,7 @@ class _SignUpState extends State<SignUp> {
     emailController = TextEditingController();
     passwordController = TextEditingController();
     nameController = TextEditingController();
-    birthDateController = TextEditingController();
+    birthdayController = TextEditingController();
     addressController = TextEditingController();
   }
 
@@ -55,6 +55,7 @@ class _SignUpState extends State<SignUp> {
                         EnlightTextFormField(
                           text: "Email",
                           controller: emailController,
+                          email: true,
                         ),
                         EnlightTextFormField(
                           text: "Password",
@@ -66,8 +67,8 @@ class _SignUpState extends State<SignUp> {
                           controller: nameController,
                         ),
                         EnlightTextFormField(
-                          text: "Birth Date",
-                          controller: birthDateController,
+                          text: "Birthday",
+                          controller: birthdayController,
                           date: true,
                         ),
                         EnlightTextFormField(
@@ -117,11 +118,11 @@ class _SignUpState extends State<SignUp> {
     setState(() {
       loading = true;
     });
-    Account.signUp(
+    AccountOps.signUp(
       email: emailController.text,
       password: passwordController.text,
       name: nameController.text,
-      birthDate: birthDateController.text,
+      birthday: birthdayController.text,
       address: addressController.text,
       role: dropdownValue.toLowerCase(),
     ).then((code) {

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class EnlightTextFormField extends StatefulWidget {
   final String text;
   final TextEditingController controller;
+  final bool email;
   final bool password;
   final bool date;
 
@@ -10,6 +11,7 @@ class EnlightTextFormField extends StatefulWidget {
     super.key,
     required this.text,
     required this.controller,
+    this.email = false,
     this.password = false,
     this.date = false,
   });
@@ -38,6 +40,14 @@ class _EnlightTextFormFieldState extends State<EnlightTextFormField> {
           if (value == null || value.isEmpty) {
             return "${widget.text} cannot be empty.";
           }
+          if (widget.email) {
+            if ("@".allMatches(widget.controller.text).length != 1) {
+              return "Invalid email.";
+            }
+            if (!widget.controller.text.split("@")[1].contains(".")) {
+              return "Invalid email.";
+            }
+          }
           if (!widget.date) {
             return null;
           }
@@ -46,7 +56,8 @@ class _EnlightTextFormFieldState extends State<EnlightTextFormField> {
             return "Invalid date.";
           }
           DateTime now = DateTime.now();
-          DateTime sixteenYearsAgo = DateTime(now.year - 16, now.month, now.day);
+          DateTime sixteenYearsAgo =
+              DateTime(now.year - 16, now.month, now.day);
           if (DateTime.parse(value).isAfter(sixteenYearsAgo)) {
             return "You must be at least 16 years old to use Enlight.";
           }
@@ -80,8 +91,9 @@ class _EnlightTextFormFieldState extends State<EnlightTextFormField> {
                   firstDate: DateTime(1900),
                   lastDate: DateTime.now(),
                 );
-                widget.controller.text =
-                    dateTime != null ? dateTime.toString().split(" ")[0] : "";
+                dateTime != null
+                    ? widget.controller.text = dateTime.toString().split(" ")[0]
+                    : null;
               }
             : null,
       ),
