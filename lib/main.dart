@@ -1,4 +1,3 @@
-import 'package:enlight/pages/edit_account.dart';
 import 'package:enlight/pages/sign_in.dart';
 import 'package:enlight/pages/teacher_profile.dart';
 import 'package:enlight/util/token.dart';

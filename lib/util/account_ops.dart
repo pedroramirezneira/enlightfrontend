@@ -93,4 +93,28 @@ class AccountOps {
     }
     throw response.statusCode;
   }
+
+  static Future<int> updateAccount({
+    required String name,
+    required String birthday,
+    required String address,
+  }) async {
+    final token = await Token.getAccessToken();
+    final response = await http.put(
+      Uri.https(
+        dotenv.env["SERVER"]!,
+        "/account",
+      ),
+      headers: {
+        "Authorization": "Bearer $token",
+        "Content-Type": "application/json",
+      },
+      body: json.encode({
+        "name": name,
+        "birthday": birthday,
+        "address": address,
+      }),
+    );
+    return response.statusCode;
+  }
 }

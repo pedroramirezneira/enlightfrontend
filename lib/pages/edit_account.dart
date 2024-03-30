@@ -20,6 +20,8 @@ class _EditAccountState extends State<EditAccount> {
   late final TextEditingController birthdayController;
   late final TextEditingController addressController;
   late Future<AccountData> data;
+  var loading = true;
+  var initialLoaded = false;
 
   @override
   void initState() {
@@ -34,59 +36,112 @@ class _EditAccountState extends State<EditAccount> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const EnlightAppBar(text: "Account"),
-      body: FutureBuilder(
-        future: data,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            emailController.text = snapshot.data!.email;
-            nameController.text = snapshot.data!.name;
-            birthdayController.text = snapshot.data!.birthday;
-            addressController.text = snapshot.data!.address;
-            return Center(
-              child: SingleChildScrollView(
-                child: Form(
-                  key: formKey,
-                  child: Column(
-                    children: <Widget>[
-                      EnlightTextFormField(
-                        text: "Name",
-                        controller: nameController,
+    return Stack(
+      children: <Widget>[
+        Scaffold(
+          appBar: const EnlightAppBar(text: "Account"),
+          body: FutureBuilder(
+            future: data,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                if (!initialLoaded) {
+                  emailController.text = snapshot.data!.email;
+                  nameController.text = snapshot.data!.name;
+                  birthdayController.text = snapshot.data!.birthday;
+                  addressController.text = snapshot.data!.address;
+                  WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                    setState(() {
+                      loading = false;
+                      initialLoaded = true;
+                    });
+                  });
+                }
+                return Center(
+                  child: SingleChildScrollView(
+                    child: Form(
+                      key: formKey,
+                      child: Column(
+                        children: <Widget>[
+                          EnlightTextFormField(
+                            text: "Name",
+                            controller: nameController,
+                          ),
+                          EnlightTextFormField(
+                            text: "Birthday",
+                            controller: birthdayController,
+                            date: true,
+                          ),
+                          EnlightTextFormField(
+                            text: "Address",
+                            controller: addressController,
+                          ),
+                          EnlightFormSubmissionButton(
+                            text: "Save",
+                            formKey: formKey,
+                            onPressed: _onPressed,
+                          ),
+                        ],
                       ),
-                      EnlightTextFormField(
-                        text: "Birthday",
-                        controller: birthdayController,
-                        date: true,
-                      ),
-                      EnlightTextFormField(
-                        text: "Address",
-                        controller: addressController,
-                      ),
-                      EnlightFormSubmissionButton(
-                        text: "Save",
-                        formKey: formKey,
-                        onPressed: () {},
-                      ),
-                    ],
+                    ),
                   ),
-                ),
-              ),
-            );
-          }
-          if (snapshot.hasError) {
-            return Container(
-              padding: const EdgeInsets.all(15),
-              child: Center(
-                child: Text(
-                  snapshot.error.toString(),
-                ),
-              ),
-            );
-          }
-          return const EnlightLoadingIndicator(visible: true);
-        },
-      ),
+                );
+              }
+              if (snapshot.hasError) {
+                WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                  setState(() {
+                    loading = false;
+                  });
+                });
+                return Container(
+                  padding: const EdgeInsets.all(15),
+                  child: Center(
+                    child: Text(
+                      snapshot.error.toString(),
+                    ),
+                  ),
+                );
+              }
+              return const EnlightLoadingIndicator(visible: false);
+            },
+          ),
+        ),
+        EnlightLoadingIndicator(visible: loading),
+      ],
     );
+  }
+
+  dynamic Function()? _onPressed() {
+    setState(() {
+      loading = true;
+    });
+    AccountOps.updateAccount(
+      name: nameController.text,
+      birthday: birthdayController.text,
+      address: addressController.text,
+    ).then((code) {
+      if (code == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              "Successful account update.",
+            ),
+          ),
+        );
+        Navigator.of(context).pop();
+      }
+      if (code == 401) {
+        // Logic to refresh access token once it has expired.
+      }
+      if (code == 500) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              "Internal server error. Please try again.",
+            ),
+          ),
+        );
+      }
+    });
+    return null;
   }
 }
