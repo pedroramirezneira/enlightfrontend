@@ -78,6 +78,9 @@ class MyApp extends StatelessWidget {
           behavior: SnackBarBehavior.floating,
           backgroundColor: Colors.transparent,
         ),
+        drawerTheme: const DrawerThemeData(
+          backgroundColor: Color.fromARGB(255, 43, 57, 68),
+        ),
       ),
       home: home,
     );

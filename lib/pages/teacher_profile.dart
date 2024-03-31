@@ -35,6 +35,15 @@ class _TeacherProfileState extends State<TeacherProfile> {
           endDrawer: Drawer(
             child: ListView(
               children: <Widget>[
+                DrawerHeader(
+                  child: ListTile(
+                    leading: IconButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      icon: const Icon(Icons.arrow_back),
+                    ),
+                    title: const Text("Settings"),
+                  ),
+                ),
                 ListTile(
                   title: const Text("Edit account"),
                   leading: const Icon(Icons.edit_rounded),
