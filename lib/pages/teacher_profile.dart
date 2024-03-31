@@ -36,10 +36,12 @@ class _TeacherProfileState extends State<TeacherProfile> {
             child: ListView(
               children: <Widget>[
                 DrawerHeader(
+                  padding: EdgeInsets.zero,
                   child: ListTile(
-                    leading: IconButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      icon: const Icon(Icons.arrow_back),
+                    leading: InkWell(
+                      borderRadius: BorderRadius.circular(100),
+                      onTap: () => Navigator.of(context).pop(),
+                      child: const Icon(Icons.arrow_back),
                     ),
                     title: const Text("Settings"),
                   ),
@@ -56,32 +58,33 @@ class _TeacherProfileState extends State<TeacherProfile> {
                   },
                 ),
                 ListTile(
-                    title: const Text("Logout"),
-                    leading: const Icon(Icons.logout),
-                    onTap: () {
-                      showAdaptiveDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog.adaptive(
-                            title: const Text("Logout"),
-                            content:
-                                const Text("Are you sure you want to logout?"),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: const Text("Cancel"),
-                              ),
-                              TextButton(
-                                onPressed: _logout,
-                                child: const Text("OK"),
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    }),
+                  title: const Text("Logout"),
+                  leading: const Icon(Icons.logout),
+                  onTap: () {
+                    showAdaptiveDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog.adaptive(
+                          title: const Text("Logout"),
+                          content:
+                              const Text("Are you sure you want to logout?"),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text("Cancel"),
+                            ),
+                            TextButton(
+                              onPressed: _logout,
+                              child: const Text("OK"),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                ),
               ],
             ),
           ),
