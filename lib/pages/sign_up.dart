@@ -1,3 +1,4 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:enlight/components/enlight_app_bar.dart';
 import 'package:enlight/components/enlight_dropdown_button.dart';
 import 'package:enlight/components/enlight_form_submission_button.dart';
@@ -109,8 +110,12 @@ class _SignUpState extends State<SignUp> {
   void Function()? _onPressed() {
     if (dropdownValue == "Role") {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Role cannot be empty."),
+        SnackBar(
+          content: AwesomeSnackbarContent(
+            title: "Watch out",
+            message: "Role cannot be empty.",
+            contentType: ContentType.help,
+          ),
         ),
       );
       return null;
@@ -131,8 +136,12 @@ class _SignUpState extends State<SignUp> {
       });
       if (code == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Account successfully created."),
+          SnackBar(
+            content: AwesomeSnackbarContent(
+              title: "Success",
+              message: "Your account has been successfully created.",
+              contentType: ContentType.success,
+            ),
           ),
         );
         Navigator.of(context).pushAndRemoveUntil(
@@ -143,16 +152,24 @@ class _SignUpState extends State<SignUp> {
       }
       if (code == 409) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Email already in use."),
+          SnackBar(
+            content: AwesomeSnackbarContent(
+              title: "Warning",
+              message: "This email is already in use.",
+              contentType: ContentType.warning,
+            ),
           ),
         );
         return;
       }
       if (code == 500) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Internal server error. Please try again."),
+          SnackBar(
+            content: AwesomeSnackbarContent(
+              title: "Error",
+              message: "Internal server error. Please try again.",
+              contentType: ContentType.failure,
+            ),
           ),
         );
         return;

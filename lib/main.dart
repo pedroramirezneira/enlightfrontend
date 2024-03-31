@@ -74,10 +74,9 @@ class MyApp extends StatelessWidget {
           ),
         ),
         snackBarTheme: const SnackBarThemeData(
-          backgroundColor: Color.fromARGB(255, 100, 201, 169),
-          contentTextStyle: TextStyle(
-            color: Colors.white,
-          ),
+          elevation: 0,
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.transparent,
         ),
       ),
       home: home,

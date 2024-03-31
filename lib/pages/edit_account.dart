@@ -1,3 +1,4 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:enlight/components/enlight_app_bar.dart';
 import 'package:enlight/components/enlight_form_submission_button.dart';
 import 'package:enlight/components/enlight_loading_indicator.dart';
@@ -121,9 +122,11 @@ class _EditAccountState extends State<EditAccount> {
     ).then((code) {
       if (code == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(
-              "Successful account update.",
+          SnackBar(
+            content: AwesomeSnackbarContent(
+              title: "Success",
+              message: "Your account was successfully updated.",
+              contentType: ContentType.success,
             ),
           ),
         );
@@ -134,9 +137,11 @@ class _EditAccountState extends State<EditAccount> {
       }
       if (code == 500) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(
-              "Internal server error. Please try again.",
+          SnackBar(
+            content: AwesomeSnackbarContent(
+              title: "Error",
+              message: "Internal server error. Please try again.",
+              contentType: ContentType.failure,
             ),
           ),
         );

@@ -1,3 +1,4 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:enlight/components/enlight_app_bar.dart';
 import 'package:enlight/components/enlight_form_submission_button.dart';
 import 'package:enlight/components/enlight_loading_indicator.dart';
@@ -105,8 +106,12 @@ class _SignInState extends State<SignIn> {
         });
         if (code == 200) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("Successful login."),
+            SnackBar(
+              content: AwesomeSnackbarContent(
+                title: "Success",
+                message: "You have successfully logged in.",
+                contentType: ContentType.success,
+              ),
             ),
           );
           Navigator.of(context).pushAndRemoveUntil(
@@ -117,16 +122,24 @@ class _SignInState extends State<SignIn> {
         }
         if (code == 401) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("Wrong password. Please try again."),
+            SnackBar(
+              content: AwesomeSnackbarContent(
+                title: "Warning",
+                message: "Incorrect password. Please try again.",
+                contentType: ContentType.warning,
+              ),
             ),
           );
           return;
         }
         if (code == 404) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("Account doesn't exist."),
+            SnackBar(
+              content: AwesomeSnackbarContent(
+                title: "Warning",
+                message: "This email is not registered. Please try again.",
+                contentType: ContentType.warning,
+              ),
             ),
           );
           return;
