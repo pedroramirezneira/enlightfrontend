@@ -6,6 +6,7 @@ import 'package:enlight/components/enlight_loading_indicator.dart';
 import 'package:enlight/components/enlight_text_form_field.dart';
 import 'package:enlight/pages/sign_in.dart';
 import 'package:enlight/util/account_ops.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class SignUp extends StatefulWidget {
@@ -48,7 +49,10 @@ class _SignUpState extends State<SignUp> {
             children: <Widget>[
               Center(
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(15),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 15,
+                    horizontal: kIsWeb ? 400 : 15,
+                  ),
                   child: Form(
                     key: formKey,
                     child: Column(

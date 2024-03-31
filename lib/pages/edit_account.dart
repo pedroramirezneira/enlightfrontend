@@ -5,6 +5,7 @@ import 'package:enlight/components/enlight_loading_indicator.dart';
 import 'package:enlight/components/enlight_text_form_field.dart';
 import 'package:enlight/models/account_data.dart';
 import 'package:enlight/util/account_ops.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class EditAccount extends StatefulWidget {
@@ -59,6 +60,10 @@ class _EditAccountState extends State<EditAccount> {
                 }
                 return Center(
                   child: SingleChildScrollView(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 15,
+                      horizontal: kIsWeb ? 400 : 15,
+                    ),
                     child: Form(
                       key: formKey,
                       child: Column(
@@ -120,6 +125,9 @@ class _EditAccountState extends State<EditAccount> {
       birthday: birthdayController.text,
       address: addressController.text,
     ).then((code) {
+      setState(() {
+        loading = false;
+      });
       if (code == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

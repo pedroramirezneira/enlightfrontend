@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:enlight/components/enlight_form_submission_button.dart';
 import 'package:enlight/components/enlight_loading_indicator.dart';
 import 'package:enlight/components/enlight_text_form_field.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
@@ -67,8 +69,12 @@ class _PasswordRecoveryPageState extends State<PasswordRecoveryPage> {
       });
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("A recovery email has ben sent."),
+          SnackBar(
+            content: AwesomeSnackbarContent(
+              title: "Success",
+              message: "A recovery email has ben sent.",
+              contentType: ContentType.success,
+            ),
           ),
         );
         Navigator.of(context).pop();
@@ -76,15 +82,23 @@ class _PasswordRecoveryPageState extends State<PasswordRecoveryPage> {
       }
       if (response.statusCode == 404) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Email does not exist. Please try again."),
+          SnackBar(
+            content: AwesomeSnackbarContent(
+              title: "Warning",
+              message: "Email does not exist. Please try again.",
+              contentType: ContentType.warning,
+            ),
           ),
         );
         return;
       } else if (response.statusCode == 500) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Internal Server Error. Please try again."),
+          SnackBar(
+            content: AwesomeSnackbarContent(
+              title: "Error",
+              message: "Internal server error. Please try again.",
+              contentType: ContentType.failure,
+            ),
           ),
         );
         return;
@@ -117,7 +131,10 @@ class _PasswordRecoveryFormState extends State<PasswordRecoveryForm> {
     return Stack(
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.symmetric(
+            vertical: 15,
+            horizontal: kIsWeb ? 400 : 15,
+          ),
           child: Form(
             key: widget.formKey,
             child: Column(

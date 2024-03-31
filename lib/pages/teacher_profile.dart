@@ -1,6 +1,8 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:enlight/components/enlight_app_bar.dart';
 import 'package:enlight/components/enlight_loading_indicator.dart';
 import 'package:enlight/models/profile_data.dart';
+import 'package:enlight/pages/edit_account.dart';
 import 'package:enlight/pages/sign_in.dart';
 import 'package:enlight/util/account_ops.dart';
 import 'package:flutter/material.dart';
@@ -27,42 +29,52 @@ class _TeacherProfileState extends State<TeacherProfile> {
     return Stack(
       children: [
         Scaffold(
-          appBar: EnlightAppBar(
+          appBar: const EnlightAppBar(
             text: "Profile",
-            actions: [
-              IconButton(
-                onPressed: () {
-                  showAdaptiveDialog(
-                    context: context,
-                    builder: (context) => AlertDialog.adaptive(
-                      title: const Text("Logout"),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: const Text("Cancel"),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            setState(() {
-                              loading = true;
-                            });
-                            _logout();
-                          },
-                          child: const Text("OK"),
-                        ),
-                      ],
-                      content: const Text("Are you sure you want to logout?"),
-                    ),
-                  );
-                },
-                icon: const Icon(
-                  Icons.logout,
+          ),
+          endDrawer: Drawer(
+            child: ListView(
+              children: <Widget>[
+                ListTile(
+                  title: const Text("Edit account"),
+                  leading: const Icon(Icons.edit_rounded),
+                  onTap: () {
+                    Navigator.of(context)
+                      ..pop()
+                      ..push(MaterialPageRoute(
+                        builder: (context) => const EditAccount(),
+                      ));
+                  },
                 ),
-              ),
-            ],
+                ListTile(
+                    title: const Text("Logout"),
+                    leading: const Icon(Icons.logout),
+                    onTap: () {
+                      showAdaptiveDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog.adaptive(
+                            title: const Text("Logout"),
+                            content:
+                                const Text("Are you sure you want to logout?"),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text("Cancel"),
+                              ),
+                              TextButton(
+                                onPressed: _logout,
+                                child: const Text("OK"),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }),
+              ],
+            ),
           ),
           body: FutureBuilder(
             future: data,
@@ -161,8 +173,26 @@ class _TeacherProfileState extends State<TeacherProfile> {
   }
 
   void Function()? _logout() {
+    Navigator.of(context)
+      ..pop()
+      ..pop();
+    setState(() {
+      loading = true;
+    });
     AccountOps.logout().then((success) {
+      setState(() {
+        loading = false;
+      });
       if (success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: AwesomeSnackbarContent(
+              title: "Success",
+              message: "You have successfully logged out.",
+              contentType: ContentType.success,
+            ),
+          ),
+        );
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => const SignIn()),
           (route) => false,

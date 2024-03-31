@@ -7,6 +7,7 @@ import 'package:enlight/pages/teacher_profile.dart';
 import 'package:enlight/pages/recover_password.dart';
 import 'package:enlight/pages/sign_up.dart';
 import 'package:enlight/util/account_ops.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class SignIn extends StatefulWidget {
@@ -42,7 +43,10 @@ class _SignInState extends State<SignIn> {
             children: <Widget>[
               Center(
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(15),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 15,
+                    horizontal: kIsWeb ? 400 : 15,
+                  ),
                   child: Form(
                     key: formKey,
                     child: Column(
