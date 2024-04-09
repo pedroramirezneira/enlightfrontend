@@ -49,6 +49,24 @@ class AccountOps {
     return false;
   }
 
+  static Future<bool> delete() async {
+    final token = await Token.getAccessToken();
+    final response = await http.delete(
+      Uri.https(
+        dotenv.env["SERVER"]!,
+        "/account",
+      ),
+      headers: {"Authorization": "Bearer $token"},
+    );
+    if (response.statusCode == 200) {
+      await Token.deleteRefreshToken();
+      return true;
+    }
+    return false;
+  }
+
+
+
   static Future<int> signUp({
     required String email,
     required String password,

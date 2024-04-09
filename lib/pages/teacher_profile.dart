@@ -97,6 +97,34 @@ class _TeacherProfileState extends State<TeacherProfile> {
                     );
                   },
                 ),
+                ListTile(
+                  title: const Text("Delete account"),
+                  leading: const Icon(Icons.edit_rounded),
+                  onTap: () {
+                    showAdaptiveDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog.adaptive(
+                          title: const Text("Delete Account"),
+                          content:
+                              const Text("Are you sure you want to delete the account?"),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text("Cancel"),
+                            ),
+                            TextButton(
+                              onPressed: _deleteAccount,
+                              child: const Text("OK"),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                ),
               ],
             ),
           ),
@@ -230,4 +258,42 @@ class _TeacherProfileState extends State<TeacherProfile> {
     });
     return null;
   }
+
+  void Function()? _deleteAccount() {
+    Navigator.of(context)
+      ..pop()
+      ..pop();
+    setState(() {
+      loading = true;
+    });
+    AccountOps.delete().then((success) {
+      setState(() {
+        loading = false;
+      });
+      if (success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: AwesomeSnackbarContent(
+              title: "Success",
+              message: "You have successfully deleted your account.",
+              contentType: ContentType.success,
+            ),
+          ),
+        );
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => const SignIn()),
+          (route) => false,
+        );
+        return;
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Internal server error. Please try again."),
+        ),
+      );
+    });
+    return null;
+  }
+
+
 }
