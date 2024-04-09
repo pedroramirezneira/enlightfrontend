@@ -1,8 +1,9 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:enlight/components/enlight_app_bar.dart';
 import 'package:enlight/components/enlight_loading_indicator.dart';
-import 'package:enlight/models/profile_data.dart';
+import 'package:enlight/models/teacher_profile_data.dart';
 import 'package:enlight/pages/edit_account.dart';
+import 'package:enlight/pages/edit_profile_teacher.dart';
 import 'package:enlight/pages/sign_in.dart';
 import 'package:enlight/util/account_ops.dart';
 import 'package:flutter/material.dart';
@@ -15,13 +16,13 @@ class TeacherProfile extends StatefulWidget {
 }
 
 class _TeacherProfileState extends State<TeacherProfile> {
-  late final Future<ProfileData> data;
+  late final Future<TeacherProfileData> data;
   var loading = false;
 
   @override
   void initState() {
     super.initState();
-    data = ProfileData.getProfiles();
+    data = AccountOps.getProfile();
   }
 
   @override
@@ -54,6 +55,17 @@ class _TeacherProfileState extends State<TeacherProfile> {
                       ..pop()
                       ..push(MaterialPageRoute(
                         builder: (context) => const EditAccount(),
+                      ));
+                  },
+                ),
+                ListTile(
+                  title: const Text("Edit profile"),
+                  leading: const Icon(Icons.edit_rounded),
+                  onTap: () {
+                    Navigator.of(context)
+                      ..pop()
+                      ..push(MaterialPageRoute(
+                        builder: (context) => const EditTeacherProfile(),
                       ));
                   },
                 ),
@@ -97,12 +109,11 @@ class _TeacherProfileState extends State<TeacherProfile> {
                   children: <Widget>[
                     Row(
                       children: <Widget>[
-                        const Padding(
-                          padding: EdgeInsets.all(10.0),
+                         Padding(
+                          padding: const EdgeInsets.all(10.0),
                           child: CircleAvatar(
                             radius: 50,
-                            backgroundImage: NetworkImage(
-                                "https://encrypted-tbn1.gstatic.com/licensed-image?q=tbn:ANd9GcREk1Vj4KOP3qRnDWzCesuSe_gD9vcwxfJKRjXJvgSdArSg_r2kfAD89ovRItu3onWPtm8fi_XriXW8QkU"),
+                            backgroundImage: NetworkImage(snapshot.data!.picture),
                           ),
                         ),
                         Padding(
