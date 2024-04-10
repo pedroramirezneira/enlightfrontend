@@ -1,5 +1,7 @@
 import 'package:enlight/pages/sign_in.dart';
+import 'package:enlight/pages/student_profile.dart';
 import 'package:enlight/pages/teacher_profile.dart';
+import 'package:enlight/util/io.dart';
 import 'package:enlight/util/token.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -9,6 +11,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final accessToken = await Token.getAccessToken();
   final refreshToken = await Token.getRefreshToken();
+  final role = await IO.getRole();
   if (refreshToken == null) {
     runApp(const MyApp(
       home: SignIn(),
@@ -19,8 +22,8 @@ Future<void> main() async {
   if (!valid) {
     await Token.refreshAccessToken();
   }
-  runApp(const MyApp(
-    home: TeacherProfile(),
+  runApp(MyApp(
+    home: role == "teacher" ? const TeacherProfile() : const StudentProfile(),
   ));
 }
 

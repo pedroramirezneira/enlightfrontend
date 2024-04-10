@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:enlight/models/account_data.dart';
+import 'package:enlight/models/student_profile_data.dart';
 import 'package:enlight/models/teacher_profile_data.dart';
+import 'package:enlight/util/io.dart';
 import 'package:enlight/util/token.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
@@ -29,6 +31,8 @@ class AccountOps {
       final data = json.decode(response.body);
       await Token.setAccessToken(data["access_token"]);
       await Token.setRefreshToken(data["refresh_token"]);
+      await IO.setRole(data["role"]);
+      return response.statusCode;
     }
     return response.statusCode;
   }
@@ -64,8 +68,6 @@ class AccountOps {
     }
     return false;
   }
-
-
 
   static Future<int> signUp({
     required String email,
@@ -137,7 +139,7 @@ class AccountOps {
     return response.statusCode;
   }
 
-  static Future<TeacherProfileData> getProfile() async {
+  static Future<TeacherProfileData> getTeacherProfile() async {
     final token = await Token.getAccessToken();
     final response = await http.get(
       Uri.https(
@@ -148,14 +150,24 @@ class AccountOps {
     );
     if (response.statusCode == 200) {
       final dynamic profile = json.decode(response.body);
-      profile["tags"] = ["Matematica", "Literatura", "Arte", "Prog", "Ingles", "PedroTv", "Lengua", "Etica", "Historia"]; //temporal
+      profile["tags"] = [
+        "Matematica",
+        "Literatura",
+        "Arte",
+        "Prog",
+        "Ingles",
+        "PedroTv",
+        "Lengua",
+        "Etica",
+        "Historia"
+      ]; //temporal
       profile["rating"] = 10.0; //temporal
       return TeacherProfileData.fromJson(profile);
     }
     throw response.statusCode;
   }
 
-  static Future<int> updateProfile({
+  static Future<int> updateTeacherProfile({
     required String description,
     required String picture,
   }) async {
@@ -177,4 +189,39 @@ class AccountOps {
     return response.statusCode;
   }
 
+  static Future<StudentProfileData> getStudentProfile() async {
+    final token = await Token.getAccessToken();
+    final response = await http.get(
+      Uri.https(
+        dotenv.env["SERVER"]!,
+        "/student",
+      ),
+      headers: {"Authorization": "Bearer $token"},
+    );
+    if (response.statusCode == 200) {
+      final dynamic profile = json.decode(response.body);
+      return StudentProfileData.fromJson(profile);
+    }
+    throw response.statusCode;
+  }
+
+  static Future<int> updateStudentProfile({
+    required String picture,
+  }) async {
+    final token = await Token.getAccessToken();
+    final response = await http.put(
+      Uri.https(
+        dotenv.env["SERVER"]!,
+        "/student",
+      ),
+      headers: {
+        "Authorization": "Bearer $token",
+        "Content-Type": "application/json",
+      },
+      body: json.encode({
+        "profile_picture": picture,
+      }),
+    );
+    return response.statusCode;
+  }
 }

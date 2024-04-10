@@ -27,7 +27,7 @@ class _EditAccountState extends State<EditTeacherProfile> {
   void initState() {
     super.initState();
     formKey = GlobalKey<FormState>();
-    data = AccountOps.getProfile();
+    data = AccountOps.getTeacherProfile();
     descriptionController = TextEditingController();
     pictureController = TextEditingController();
   }
@@ -109,7 +109,7 @@ class _EditAccountState extends State<EditTeacherProfile> {
     setState(() {
       loading = true;
     });
-    AccountOps.updateProfile(
+    AccountOps.updateTeacherProfile(
       description: descriptionController.text,
       picture: pictureController.text,
     ).then((code) {

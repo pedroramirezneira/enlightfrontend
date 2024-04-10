@@ -3,10 +3,12 @@ import 'package:enlight/components/enlight_app_bar.dart';
 import 'package:enlight/components/enlight_form_submission_button.dart';
 import 'package:enlight/components/enlight_loading_indicator.dart';
 import 'package:enlight/components/enlight_text_form_field.dart';
+import 'package:enlight/pages/student_profile.dart';
 import 'package:enlight/pages/teacher_profile.dart';
 import 'package:enlight/pages/recover_password.dart';
 import 'package:enlight/pages/sign_up.dart';
 import 'package:enlight/util/account_ops.dart';
+import 'package:enlight/util/io.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -104,11 +106,11 @@ class _SignInState extends State<SignIn> {
     AccountOps.login(
             email: emailController.text, password: passwordController.text)
         .then(
-      (code) {
+      (code) async {
         setState(() {
           loading = false;
         });
-        if (code == 200) {
+        if (code == 200)  {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: AwesomeSnackbarContent(
@@ -118,11 +120,19 @@ class _SignInState extends State<SignIn> {
               ),
             ),
           );
-          Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => const TeacherProfile()),
-            (route) => false,
-          );
-          return;
+          if ((await IO.getRole()) == "student") {
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => const StudentProfile()),
+              (route) => false,
+            );
+            return;
+          } else {
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => const TeacherProfile()),
+              (route) => false,
+            );
+            return;
+          }
         }
         if (code == 401) {
           ScaffoldMessenger.of(context).showSnackBar(
