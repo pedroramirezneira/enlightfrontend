@@ -5,7 +5,6 @@ import 'package:enlight/components/enlight_loading_indicator.dart';
 import 'package:enlight/components/enlight_text_form_field.dart';
 import 'package:enlight/models/account_data.dart';
 import 'package:enlight/util/account_ops.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class EditAccount extends StatefulWidget {
@@ -62,31 +61,34 @@ class _EditAccountState extends State<EditAccount> {
                   child: SingleChildScrollView(
                     padding: const EdgeInsets.symmetric(
                       vertical: 15,
-                      horizontal: kIsWeb ? 400 : 15,
+                      horizontal: 15,
                     ),
                     child: Form(
                       key: formKey,
-                      child: Column(
-                        children: <Widget>[
-                          EnlightTextFormField(
-                            text: "Name",
-                            controller: nameController,
-                          ),
-                          EnlightTextFormField(
-                            text: "Birthday",
-                            controller: birthdayController,
-                            date: true,
-                          ),
-                          EnlightTextFormField(
-                            text: "Address",
-                            controller: addressController,
-                          ),
-                          EnlightFormSubmissionButton(
-                            text: "Save",
-                            formKey: formKey,
-                            onPressed: _onPressed,
-                          ),
-                        ],
+                      child: SizedBox(
+                        width: 500,
+                        child: Column(
+                          children: <Widget>[
+                            EnlightTextFormField(
+                              text: "Name",
+                              controller: nameController,
+                            ),
+                            EnlightTextFormField(
+                              text: "Birthday",
+                              controller: birthdayController,
+                              date: true,
+                            ),
+                            EnlightTextFormField(
+                              text: "Address",
+                              controller: addressController,
+                            ),
+                            EnlightFormSubmissionButton(
+                              text: "Save",
+                              formKey: formKey,
+                              onPressed: _onPressed,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

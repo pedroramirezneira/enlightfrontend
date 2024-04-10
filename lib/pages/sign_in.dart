@@ -9,7 +9,6 @@ import 'package:enlight/pages/recover_password.dart';
 import 'package:enlight/pages/sign_up.dart';
 import 'package:enlight/util/account_ops.dart';
 import 'package:enlight/util/io.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class SignIn extends StatefulWidget {
@@ -47,35 +46,38 @@ class _SignInState extends State<SignIn> {
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.symmetric(
                     vertical: 15,
-                    horizontal: kIsWeb ? 400 : 15,
+                    horizontal: 15,
                   ),
                   child: Form(
                     key: formKey,
-                    child: Column(
-                      children: <Widget>[
-                        EnlightTextFormField(
-                          text: "Email",
-                          controller: emailController,
-                        ),
-                        EnlightTextFormField(
-                          text: "Password",
-                          controller: passwordController,
-                          password: true,
-                        ),
-                        EnlightFormSubmissionButton(
-                          text: "Sign in",
-                          formKey: formKey,
-                          onPressed: _onPressed,
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: ((context) =>
-                                    const PasswordRecoveryPage())));
-                          },
-                          child: const Text("Forgot password?"),
-                        )
-                      ],
+                    child: SizedBox(
+                      width: 500,
+                      child: Column(
+                        children: <Widget>[
+                          EnlightTextFormField(
+                            text: "Email",
+                            controller: emailController,
+                          ),
+                          EnlightTextFormField(
+                            text: "Password",
+                            controller: passwordController,
+                            password: true,
+                          ),
+                          EnlightFormSubmissionButton(
+                            text: "Sign in",
+                            formKey: formKey,
+                            onPressed: _onPressed,
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: ((context) =>
+                                      const PasswordRecoveryPage())));
+                            },
+                            child: const Text("Forgot password?"),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -106,11 +108,11 @@ class _SignInState extends State<SignIn> {
     AccountOps.login(
             email: emailController.text, password: passwordController.text)
         .then(
-      (code) async {
+      (code) {
         setState(() {
           loading = false;
         });
-        if (code == 200)  {
+        if (code == 200) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: AwesomeSnackbarContent(
@@ -120,19 +122,20 @@ class _SignInState extends State<SignIn> {
               ),
             ),
           );
-          if ((await IO.getRole()) == "student") {
-            Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => const StudentProfile()),
-              (route) => false,
-            );
-            return;
-          } else {
+          IO.getRole().then((value) {
+            if (value == "student") {
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => const StudentProfile()),
+                (route) => false,
+              );
+              return;
+            }
             Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(builder: (context) => const TeacherProfile()),
               (route) => false,
             );
             return;
-          }
+          });
         }
         if (code == 401) {
           ScaffoldMessenger.of(context).showSnackBar(

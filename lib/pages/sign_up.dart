@@ -6,7 +6,6 @@ import 'package:enlight/components/enlight_loading_indicator.dart';
 import 'package:enlight/components/enlight_text_form_field.dart';
 import 'package:enlight/pages/sign_in.dart';
 import 'package:enlight/util/account_ops.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class SignUp extends StatefulWidget {
@@ -51,54 +50,57 @@ class _SignUpState extends State<SignUp> {
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.symmetric(
                     vertical: 15,
-                    horizontal: kIsWeb ? 400 : 15,
+                    horizontal: 15,
                   ),
                   child: Form(
                     key: formKey,
-                    child: Column(
-                      children: <Widget>[
-                        EnlightTextFormField(
-                          text: "Email",
-                          controller: emailController,
-                          email: true,
-                        ),
-                        EnlightTextFormField(
-                          text: "Password",
-                          controller: passwordController,
-                          password: true,
-                        ),
-                        EnlightTextFormField(
-                          text: "Name",
-                          controller: nameController,
-                        ),
-                        EnlightTextFormField(
-                          text: "Birthday",
-                          controller: birthdayController,
-                          date: true,
-                        ),
-                        EnlightTextFormField(
-                          text: "Address",
-                          controller: addressController,
-                        ),
-                        EnlightDropdownButton(
-                          value: dropdownValue,
-                          text: "Role",
-                          items: const <String>[
-                            "Student",
-                            "Teacher",
-                          ],
-                          onChanged: (value) {
-                            setState(() {
-                              dropdownValue = value!;
-                            });
-                          },
-                        ),
-                        EnlightFormSubmissionButton(
-                          text: "Sign up",
-                          formKey: formKey,
-                          onPressed: _onPressed,
-                        ),
-                      ],
+                    child: SizedBox(
+                      width: 500,
+                      child: Column(
+                        children: <Widget>[
+                          EnlightTextFormField(
+                            text: "Email",
+                            controller: emailController,
+                            email: true,
+                          ),
+                          EnlightTextFormField(
+                            text: "Password",
+                            controller: passwordController,
+                            password: true,
+                          ),
+                          EnlightTextFormField(
+                            text: "Name",
+                            controller: nameController,
+                          ),
+                          EnlightTextFormField(
+                            text: "Birthday",
+                            controller: birthdayController,
+                            date: true,
+                          ),
+                          EnlightTextFormField(
+                            text: "Address",
+                            controller: addressController,
+                          ),
+                          EnlightDropdownButton(
+                            value: dropdownValue,
+                            text: "Role",
+                            items: const <String>[
+                              "Student",
+                              "Teacher",
+                            ],
+                            onChanged: (value) {
+                              setState(() {
+                                dropdownValue = value!;
+                              });
+                            },
+                          ),
+                          EnlightFormSubmissionButton(
+                            text: "Sign up",
+                            formKey: formKey,
+                            onPressed: _onPressed,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
