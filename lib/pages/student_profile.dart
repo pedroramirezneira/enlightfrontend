@@ -1,10 +1,11 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:enlight/components/enlight_app_bar.dart';
 import 'package:enlight/components/enlight_loading_indicator.dart';
 import 'package:enlight/models/account_data.dart';
 import 'package:enlight/models/student_profile_data.dart';
 import 'package:enlight/pages/edit_account.dart';
-import 'package:enlight/pages/edit_profile_teacher.dart';
+import 'package:enlight/pages/edit_student_profile.dart';
 import 'package:enlight/pages/sign_in.dart';
 import 'package:enlight/util/account_ops.dart';
 import 'package:flutter/material.dart';
@@ -78,7 +79,7 @@ class _StudentProfileState extends State<StudentProfile> {
                     Navigator.of(context)
                       ..pop()
                       ..push(MaterialPageRoute(
-                        builder: (context) => const EditTeacherProfile(),
+                        builder: (context) => const EditStudentProfile(),
                       ));
                   },
                 ),
@@ -153,28 +154,37 @@ class _StudentProfileState extends State<StudentProfile> {
                     });
                   });
                 }
-                return Stack(
-                  children: [
-                    Scaffold(
-                      body: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                return Scaffold(
+                  body: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          top:
+                              100), 
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
+                          SizedBox(
+                              height: MediaQuery.of(context)
+                                  .padding
+                                  .top), 
                           CircleAvatar(
-                            radius: 50,
-                            backgroundImage:
-                                NetworkImage(snapshot.data!.picture),
+                            radius: 100,
+                            backgroundImage: CachedNetworkImageProvider(
+                              snapshot.data!.picture,
+                            ),
                           ),
                           const SizedBox(height: 10),
                           Text(
                             snapshot.data!.name,
                             style: const TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
+                                fontSize: 25, fontWeight: FontWeight.bold),
                           ),
+                          const Spacer(), 
                         ],
                       ),
                     ),
-                  ],
+                  ),
                 );
               }
               if (snapshot.hasError) {
