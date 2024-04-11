@@ -1,8 +1,8 @@
 class AccountData {
   final String email;
   String name;
-  final String birthday;
-  final String address;
+  String birthday;
+  String address;
 
   AccountData({
     required this.email,

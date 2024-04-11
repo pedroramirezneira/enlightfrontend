@@ -99,6 +99,8 @@ class _EditAccountState extends State<EditAccount> {
       if (code == 200) {
         widget.onUpdate != null ? widget.onUpdate!() : null;
         widget.data.name = nameController.text;
+        widget.data.birthday = birthdayController.text;
+        widget.data.address = birthdayController.text;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: AwesomeSnackbarContent(
