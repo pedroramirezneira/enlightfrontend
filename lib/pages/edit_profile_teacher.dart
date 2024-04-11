@@ -8,7 +8,12 @@ import 'package:enlight/util/account_ops.dart';
 import 'package:flutter/material.dart';
 
 class EditTeacherProfile extends StatefulWidget {
-  const EditTeacherProfile({super.key});
+  final Function()? onUpdate;
+
+  const EditTeacherProfile({
+    super.key,
+    this.onUpdate,
+  });
 
   @override
   State<EditTeacherProfile> createState() => _EditAccountState();
@@ -115,10 +120,8 @@ class _EditAccountState extends State<EditTeacherProfile> {
       description: descriptionController.text,
       picture: pictureController.text,
     ).then((code) {
-      setState(() {
-        loading = false;
-      });
       if (code == 200) {
+        widget.onUpdate != null ? widget.onUpdate!() : null;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: AwesomeSnackbarContent(

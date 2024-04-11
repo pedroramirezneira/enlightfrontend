@@ -1,6 +1,7 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:enlight/components/enlight_app_bar.dart';
 import 'package:enlight/components/enlight_loading_indicator.dart';
+import 'package:enlight/models/account_data.dart';
 import 'package:enlight/models/student_profile_data.dart';
 import 'package:enlight/pages/edit_account.dart';
 import 'package:enlight/pages/edit_profile_teacher.dart';
@@ -16,13 +17,16 @@ class StudentProfile extends StatefulWidget {
 }
 
 class _StudentProfileState extends State<StudentProfile> {
-  late final Future<StudentProfileData> data;
-  var loading = false;
+  late Future<StudentProfileData> data;
+  var loading = true;
+  var initialLoaded = false;
+  late Future<AccountData> accountData;
 
   @override
   void initState() {
     super.initState();
     data = AccountOps.getStudentProfile();
+    accountData = AccountOps.getAccount();
   }
 
   @override
@@ -51,11 +55,20 @@ class _StudentProfileState extends State<StudentProfile> {
                   title: const Text("Edit account"),
                   leading: const Icon(Icons.edit_rounded),
                   onTap: () {
-                    Navigator.of(context)
-                      ..pop()
-                      ..push(MaterialPageRoute(
-                        builder: (context) => const EditAccount(),
-                      ));
+                    accountData.then((data) {
+                      Navigator.of(context)
+                        ..pop()
+                        ..push(MaterialPageRoute(
+                          builder: (context) => EditAccount(
+                            data: data,
+                            onUpdate: () {
+                              setState(() {
+                                this.data = AccountOps.getStudentProfile();
+                              });
+                            },
+                          ),
+                        ));
+                    });
                   },
                 ),
                 ListTile(
@@ -132,6 +145,14 @@ class _StudentProfileState extends State<StudentProfile> {
             future: data,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
+                if (!initialLoaded) {
+                  WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                    setState(() {
+                      loading = false;
+                      initialLoaded = true;
+                    });
+                  });
+                }
                 return Stack(
                   children: [
                     Scaffold(
@@ -156,8 +177,14 @@ class _StudentProfileState extends State<StudentProfile> {
                   ],
                 );
               }
-              if (snapshot.hasError) {}
-              return const EnlightLoadingIndicator(visible: true);
+              if (snapshot.hasError) {
+                WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                  setState(() {
+                    loading = false;
+                  });
+                });
+              }
+              return const EnlightLoadingIndicator(visible: false);
             },
           ),
         ),

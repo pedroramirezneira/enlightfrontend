@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class IO {
   static Future<bool> setRole(int id) async {
     final prefs = await SharedPreferences.getInstance();
-    final saved = await prefs.setString("role", id == 1 ? "student" : "teacher");
+    final saved = await prefs.setString("role", id == 1 ? "student" : id == 2 ? "teacher" : "");
     return saved;
   }
 

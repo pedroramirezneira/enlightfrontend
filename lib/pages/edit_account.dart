@@ -8,7 +8,14 @@ import 'package:enlight/util/account_ops.dart';
 import 'package:flutter/material.dart';
 
 class EditAccount extends StatefulWidget {
-  const EditAccount({super.key});
+  final AccountData data;
+  final Function()? onUpdate;
+
+  const EditAccount({
+    super.key,
+    required this.data,
+    this.onUpdate,
+  });
 
   @override
   State<EditAccount> createState() => _EditAccountState();
@@ -20,19 +27,16 @@ class _EditAccountState extends State<EditAccount> {
   late final TextEditingController nameController;
   late final TextEditingController birthdayController;
   late final TextEditingController addressController;
-  late Future<AccountData> data;
-  var loading = true;
-  var initialLoaded = false;
+  var loading = false;
 
   @override
   void initState() {
     super.initState();
     formKey = GlobalKey<FormState>();
-    data = AccountOps.getAccount();
-    emailController = TextEditingController();
-    nameController = TextEditingController();
-    birthdayController = TextEditingController();
-    addressController = TextEditingController();
+    emailController = TextEditingController(text: widget.data.email);
+    nameController = TextEditingController(text: widget.data.name);
+    birthdayController = TextEditingController(text: widget.data.birthday);
+    addressController = TextEditingController(text: widget.data.address);
   }
 
   @override
@@ -41,76 +45,41 @@ class _EditAccountState extends State<EditAccount> {
       children: <Widget>[
         Scaffold(
           appBar: const EnlightAppBar(text: "Account"),
-          body: FutureBuilder(
-            future: data,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                if (!initialLoaded) {
-                  emailController.text = snapshot.data!.email;
-                  nameController.text = snapshot.data!.name;
-                  birthdayController.text = snapshot.data!.birthday;
-                  addressController.text = snapshot.data!.address;
-                  WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                    setState(() {
-                      loading = false;
-                      initialLoaded = true;
-                    });
-                  });
-                }
-                return Center(
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 15,
-                      horizontal: 15,
-                    ),
-                    child: Form(
-                      key: formKey,
-                      child: SizedBox(
-                        width: 500,
-                        child: Column(
-                          children: <Widget>[
-                            EnlightTextFormField(
-                              text: "Name",
-                              controller: nameController,
-                            ),
-                            EnlightTextFormField(
-                              text: "Birthday",
-                              controller: birthdayController,
-                              date: true,
-                            ),
-                            EnlightTextFormField(
-                              text: "Address",
-                              controller: addressController,
-                            ),
-                            EnlightFormSubmissionButton(
-                              text: "Save",
-                              formKey: formKey,
-                              onPressed: _onPressed,
-                            ),
-                          ],
-                        ),
+          body: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(
+                vertical: 15,
+                horizontal: 15,
+              ),
+              child: Form(
+                key: formKey,
+                child: SizedBox(
+                  width: 500,
+                  child: Column(
+                    children: <Widget>[
+                      EnlightTextFormField(
+                        text: "Name",
+                        controller: nameController,
                       ),
-                    ),
+                      EnlightTextFormField(
+                        text: "Birthday",
+                        controller: birthdayController,
+                        date: true,
+                      ),
+                      EnlightTextFormField(
+                        text: "Address",
+                        controller: addressController,
+                      ),
+                      EnlightFormSubmissionButton(
+                        text: "Save",
+                        formKey: formKey,
+                        onPressed: _onPressed,
+                      ),
+                    ],
                   ),
-                );
-              }
-              if (snapshot.hasError) {
-                WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                  setState(() {
-                    loading = false;
-                  });
-                });
-                return Container(
-                  padding: const EdgeInsets.all(15),
-                  child: Center(
-                    child: Text(
-                      snapshot.error.toString(),
-                    ),
-                  ),
-                );
-              }
-              return const EnlightLoadingIndicator(visible: false);
-            },
+                ),
+              ),
+            ),
           ),
         ),
         EnlightLoadingIndicator(visible: loading),
@@ -127,10 +96,9 @@ class _EditAccountState extends State<EditAccount> {
       birthday: birthdayController.text,
       address: addressController.text,
     ).then((code) {
-      setState(() {
-        loading = false;
-      });
       if (code == 200) {
+        widget.onUpdate != null ? widget.onUpdate!() : null;
+        widget.data.name = nameController.text;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: AwesomeSnackbarContent(

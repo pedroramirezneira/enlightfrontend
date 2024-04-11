@@ -1,6 +1,8 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:enlight/components/enlight_app_bar.dart';
 import 'package:enlight/components/enlight_loading_indicator.dart';
+import 'package:enlight/models/account_data.dart';
 import 'package:enlight/models/teacher_profile_data.dart';
 import 'package:enlight/pages/edit_account.dart';
 import 'package:enlight/pages/edit_profile_teacher.dart';
@@ -16,13 +18,16 @@ class TeacherProfile extends StatefulWidget {
 }
 
 class _TeacherProfileState extends State<TeacherProfile> {
-  late final Future<TeacherProfileData> data;
-  var loading = false;
+  late Future<TeacherProfileData> data;
+  var loading = true;
+  var initialLoaded = false;
+  late Future<AccountData> accountData;
 
   @override
   void initState() {
     super.initState();
     data = AccountOps.getTeacherProfile();
+    accountData = AccountOps.getAccount();
   }
 
   @override
@@ -51,11 +56,20 @@ class _TeacherProfileState extends State<TeacherProfile> {
                   title: const Text("Edit account"),
                   leading: const Icon(Icons.edit_rounded),
                   onTap: () {
-                    Navigator.of(context)
-                      ..pop()
-                      ..push(MaterialPageRoute(
-                        builder: (context) => const EditAccount(),
-                      ));
+                    accountData.then((data) {
+                      Navigator.of(context)
+                        ..pop()
+                        ..push(MaterialPageRoute(
+                          builder: (context) => EditAccount(
+                            data: data,
+                            onUpdate: () {
+                              setState(() {
+                                this.data = AccountOps.getTeacherProfile();
+                              });
+                            },
+                          ),
+                        ));
+                    });
                   },
                 ),
                 ListTile(
@@ -65,7 +79,13 @@ class _TeacherProfileState extends State<TeacherProfile> {
                     Navigator.of(context)
                       ..pop()
                       ..push(MaterialPageRoute(
-                        builder: (context) => const EditTeacherProfile(),
+                        builder: (context) => EditTeacherProfile(
+                          onUpdate: () {
+                            setState(() {
+                              data = AccountOps.getTeacherProfile();
+                            });
+                          },
+                        ),
                       ));
                   },
                 ),
@@ -106,8 +126,8 @@ class _TeacherProfileState extends State<TeacherProfile> {
                       builder: (context) {
                         return AlertDialog.adaptive(
                           title: const Text("Delete Account"),
-                          content:
-                              const Text("Are you sure you want to delete the account?"),
+                          content: const Text(
+                              "Are you sure you want to delete the account?"),
                           actions: [
                             TextButton(
                               onPressed: () {
@@ -132,16 +152,26 @@ class _TeacherProfileState extends State<TeacherProfile> {
             future: data,
             builder: ((context, snapshot) {
               if (snapshot.hasData) {
+                if (!initialLoaded) {
+                  WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                    setState(() {
+                      loading = false;
+                      initialLoaded = true;
+                    });
+                  });
+                }
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Row(
                       children: <Widget>[
-                         Padding(
+                        Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: CircleAvatar(
                             radius: 50,
-                            backgroundImage: NetworkImage(snapshot.data!.picture),
+                            backgroundImage: CachedNetworkImageProvider(
+                              snapshot.data!.picture,
+                            ),
                           ),
                         ),
                         Padding(
@@ -213,8 +243,14 @@ class _TeacherProfileState extends State<TeacherProfile> {
                   ],
                 );
               }
-              if (snapshot.hasError) {}
-              return const EnlightLoadingIndicator(visible: true);
+              if (snapshot.hasError) {
+                WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                  setState(() {
+                    loading = false;
+                  });
+                });
+              }
+              return const EnlightLoadingIndicator(visible: false);
             }),
           ),
         ),
@@ -294,6 +330,4 @@ class _TeacherProfileState extends State<TeacherProfile> {
     });
     return null;
   }
-
-
 }

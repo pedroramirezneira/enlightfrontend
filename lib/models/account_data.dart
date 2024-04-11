@@ -1,10 +1,10 @@
 class AccountData {
   final String email;
-  final String name;
+  String name;
   final String birthday;
   final String address;
 
-  const AccountData({
+  AccountData({
     required this.email,
     required this.name,
     required this.birthday,
