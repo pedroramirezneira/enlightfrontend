@@ -130,10 +130,7 @@ class _PasswordRecoveryFormState extends State<PasswordRecoveryForm> {
     return Stack(
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: 15,
-            horizontal: 15,
-          ),
+          padding: const EdgeInsets.all(15),
           child: Form(
             key: widget.formKey,
             child: SizedBox(

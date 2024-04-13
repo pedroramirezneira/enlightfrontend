@@ -23,7 +23,7 @@ Future<void> main() async {
     await Token.refreshAccessToken();
   }
   runApp(MyApp(
-    home: switch (role!) {
+    home: switch (role ?? "") {
       "teacher" => const TeacherProfile(),
       "student" => const StudentProfile(),
       String() => const SignIn(),

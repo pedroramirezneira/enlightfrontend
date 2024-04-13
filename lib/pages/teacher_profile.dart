@@ -1,11 +1,13 @@
+import 'dart:convert';
+
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:enlight/components/enlight_app_bar.dart';
 import 'package:enlight/components/enlight_loading_indicator.dart';
 import 'package:enlight/models/account_data.dart';
 import 'package:enlight/models/teacher_profile_data.dart';
 import 'package:enlight/pages/edit_account.dart';
 import 'package:enlight/pages/edit_profile_teacher.dart';
+import 'package:enlight/pages/image_test.dart';
 import 'package:enlight/pages/sign_in.dart';
 import 'package:enlight/util/account_ops.dart';
 import 'package:flutter/material.dart';
@@ -145,6 +147,15 @@ class _TeacherProfileState extends State<TeacherProfile> {
                     );
                   },
                 ),
+                ListTile(
+                  leading: const Icon(Icons.health_and_safety),
+                  title: const Text("Test"),
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const ImageTest(),
+                    ));
+                  },
+                )
               ],
             ),
           ),
@@ -169,9 +180,8 @@ class _TeacherProfileState extends State<TeacherProfile> {
                           padding: const EdgeInsets.all(10.0),
                           child: CircleAvatar(
                             radius: 50,
-                            backgroundImage: CachedNetworkImageProvider(
-                              snapshot.data!.picture,
-                            ),
+                            backgroundImage: MemoryImage(
+                                base64.decode(snapshot.data!.picture)),
                           ),
                         ),
                         Padding(

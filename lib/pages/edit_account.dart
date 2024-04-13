@@ -23,7 +23,6 @@ class EditAccount extends StatefulWidget {
 
 class _EditAccountState extends State<EditAccount> {
   late final GlobalKey<FormState> formKey;
-  late final TextEditingController emailController;
   late final TextEditingController nameController;
   late final TextEditingController birthdayController;
   late final TextEditingController addressController;
@@ -33,7 +32,6 @@ class _EditAccountState extends State<EditAccount> {
   void initState() {
     super.initState();
     formKey = GlobalKey<FormState>();
-    emailController = TextEditingController(text: widget.data.email);
     nameController = TextEditingController(text: widget.data.name);
     birthdayController = TextEditingController(text: widget.data.birthday);
     addressController = TextEditingController(text: widget.data.address);
@@ -47,10 +45,7 @@ class _EditAccountState extends State<EditAccount> {
           appBar: const EnlightAppBar(text: "Account"),
           body: Center(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(
-                vertical: 15,
-                horizontal: 15,
-              ),
+              padding: const EdgeInsets.all(15),
               child: Form(
                 key: formKey,
                 child: SizedBox(
@@ -100,7 +95,7 @@ class _EditAccountState extends State<EditAccount> {
         widget.onUpdate != null ? widget.onUpdate!() : null;
         widget.data.name = nameController.text;
         widget.data.birthday = birthdayController.text;
-        widget.data.address = birthdayController.text;
+        widget.data.address = addressController.text;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: AwesomeSnackbarContent(

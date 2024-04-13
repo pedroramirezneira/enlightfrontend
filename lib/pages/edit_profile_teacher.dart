@@ -48,7 +48,7 @@ class _EditAccountState extends State<EditTeacherProfile> {
               if (snapshot.hasData) {
                 if (!initialLoaded) {
                   descriptionController.text = snapshot.data!.description;
-                  pictureController.text = snapshot.data!.picture;
+                  pictureController.text = "si";
                   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
                     setState(() {
                       loading = false;
@@ -58,10 +58,7 @@ class _EditAccountState extends State<EditTeacherProfile> {
                 }
                 return Center(
                   child: SingleChildScrollView(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 15,
-                      horizontal: 15,
-                    ),
+                    padding: const EdgeInsets.all(15),
                     child: Form(
                       key: formKey,
                       child: SizedBox(

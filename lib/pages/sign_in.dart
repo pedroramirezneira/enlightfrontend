@@ -44,10 +44,7 @@ class _SignInState extends State<SignIn> {
             children: <Widget>[
               Center(
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 15,
-                    horizontal: 15,
-                  ),
+                  padding: const EdgeInsets.all(15),
                   child: Form(
                     key: formKey,
                     child: SizedBox(
