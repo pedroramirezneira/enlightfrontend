@@ -149,6 +149,7 @@ class _PasswordRecoveryFormState extends State<PasswordRecoveryForm> {
                   EnlightTextFormField(
                     text: "Email",
                     controller: widget.emailController,
+                    email: true,
                   ),
                   EnlightFormSubmissionButton(
                     text: "Send recovery email",

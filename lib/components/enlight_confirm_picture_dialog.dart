@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 class EnlightConfirmPictureDialog extends StatelessWidget {
   final Uint8List bytes;
   final void Function()? onConfirm;
+  final void Function()? onCancel;
 
   const EnlightConfirmPictureDialog({
     super.key,
     required this.bytes,
     this.onConfirm,
+    this.onCancel,
   });
 
   @override
@@ -31,9 +33,7 @@ class EnlightConfirmPictureDialog extends StatelessWidget {
       ),
       actions: [
         TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
+          onPressed: onCancel,
           child: const Text("Cancel"),
         ),
         TextButton(

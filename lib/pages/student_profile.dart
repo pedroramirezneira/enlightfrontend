@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:enlight/components/enlight_app_bar.dart';
+import 'package:enlight/components/enlight_bottom_sheet.dart';
 import 'package:enlight/components/enlight_confirm_picture_dialog.dart';
 import 'package:enlight/components/enlight_loading_indicator.dart';
-import 'package:enlight/components/enlight_select_picture_dialog.dart';
 import 'package:enlight/models/account_data.dart';
 import 'package:enlight/pages/edit_account.dart';
 import 'package:enlight/pages/sign_in.dart';
@@ -158,10 +158,9 @@ class _StudentProfileState extends State<StudentProfile> {
                           InkWell(
                             borderRadius: BorderRadius.circular(100),
                             onTap: () {
-                              showAdaptiveDialog(
+                              showModalBottomSheet(
                                 context: context,
-                                builder: (context) =>
-                                    EnlightSelectPictureDialog(
+                                builder: (context) => EnlightBottomSheet(
                                   selectFromGallery: selectFromGallery,
                                   takePhoto: takePhoto,
                                 ),
@@ -172,7 +171,7 @@ class _StudentProfileState extends State<StudentProfile> {
                               backgroundImage:
                                   hasImage ? MemoryImage(decoded) : null,
                               child: !hasImage
-                                  ? Text(snapshot.data!.name[0])
+                                  ? Text(snapshot.data!.name[0].toUpperCase())
                                   : null,
                             ),
                           ),
@@ -290,10 +289,17 @@ class _StudentProfileState extends State<StudentProfile> {
         });
         Navigator.of(context).pop();
         showAdaptiveDialog(
+          barrierDismissible: false,
           context: context,
           builder: (context) => EnlightConfirmPictureDialog(
             bytes: selectedImage!,
             onConfirm: updatePicture,
+            onCancel: () {
+              Navigator.of(context).pop();
+              setState(() {
+                selectedImage = null;
+              });
+            },
           ),
         );
       });
@@ -313,10 +319,17 @@ class _StudentProfileState extends State<StudentProfile> {
         });
         Navigator.of(context).pop();
         showAdaptiveDialog(
+          barrierDismissible: false,
           context: context,
           builder: (context) => EnlightConfirmPictureDialog(
             bytes: selectedImage!,
             onConfirm: updatePicture,
+            onCancel: () {
+              Navigator.of(context).pop();
+              setState(() {
+                selectedImage = null;
+              });
+            },
           ),
         );
       });

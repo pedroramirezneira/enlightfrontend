@@ -88,6 +88,12 @@ class MyApp extends StatelessWidget {
         drawerTheme: const DrawerThemeData(
           backgroundColor: Color.fromARGB(255, 43, 57, 68),
         ),
+        datePickerTheme: const DatePickerThemeData(
+          backgroundColor: Color.fromARGB(255, 43, 57, 68),
+        ),
+        bottomSheetTheme: const BottomSheetThemeData(
+          backgroundColor: Color.fromARGB(255, 43, 57, 68),
+        ),
       ),
       home: home,
     );

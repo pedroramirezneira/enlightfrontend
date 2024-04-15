@@ -36,6 +36,7 @@ class _EnlightTextFormFieldState extends State<EnlightTextFormField> {
       child: TextFormField(
         controller: widget.controller,
         obscureText: obscure,
+        readOnly: widget.date,
         validator: (value) {
           if (value == null || value.isEmpty) {
             return "${widget.text} cannot be empty.";

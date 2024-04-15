@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:enlight/components/enlight_app_bar.dart';
 import 'package:enlight/components/enlight_loading_indicator.dart';
