@@ -98,13 +98,14 @@ class _SignInState extends State<SignIn> {
     );
   }
 
-  void Function()? _onPressed() {
+  void _onPressed() {
     setState(() {
       loading = true;
     });
     AccountOps.login(
-            email: emailController.text, password: passwordController.text)
-        .then(
+      email: emailController.text,
+      password: passwordController.text,
+    ).then(
       (code) {
         setState(() {
           loading = false;
@@ -125,13 +126,13 @@ class _SignInState extends State<SignIn> {
                 MaterialPageRoute(builder: (context) => const StudentProfile()),
                 (route) => false,
               );
-              return;
             }
-            Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => const TeacherProfile()),
-              (route) => false,
-            );
-            return;
+            if (value == "teacher") {
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => const TeacherProfile()),
+                (route) => false,
+              );
+            }
           });
         }
         if (code == 401) {
@@ -144,7 +145,6 @@ class _SignInState extends State<SignIn> {
               ),
             ),
           );
-          return;
         }
         if (code == 404) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -156,7 +156,6 @@ class _SignInState extends State<SignIn> {
               ),
             ),
           );
-          return;
         }
         if (code == 500) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -164,11 +163,8 @@ class _SignInState extends State<SignIn> {
               content: Text("Internal server error. Please try again."),
             ),
           );
-          return;
         }
-        return null;
       },
     );
-    return null;
   }
 }

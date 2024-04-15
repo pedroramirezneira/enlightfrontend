@@ -1,14 +1,17 @@
+import 'dart:convert';
+import 'dart:typed_data';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:enlight/components/enlight_app_bar.dart';
+import 'package:enlight/components/enlight_confirm_picture_dialog.dart';
 import 'package:enlight/components/enlight_loading_indicator.dart';
+import 'package:enlight/components/enlight_select_picture_dialog.dart';
 import 'package:enlight/models/account_data.dart';
-import 'package:enlight/models/student_profile_data.dart';
 import 'package:enlight/pages/edit_account.dart';
-import 'package:enlight/pages/edit_student_profile.dart';
 import 'package:enlight/pages/sign_in.dart';
 import 'package:enlight/util/account_ops.dart';
+import 'package:enlight/util/token.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class StudentProfile extends StatefulWidget {
   const StudentProfile({super.key});
@@ -18,16 +21,15 @@ class StudentProfile extends StatefulWidget {
 }
 
 class _StudentProfileState extends State<StudentProfile> {
-  late Future<StudentProfileData> data;
+  late Future<AccountData> data;
   var loading = true;
   var initialLoaded = false;
-  late Future<AccountData> accountData;
+  Uint8List? selectedImage;
 
   @override
   void initState() {
     super.initState();
-    data = AccountOps.getStudentProfile();
-    accountData = AccountOps.getAccount();
+    data = AccountOps.getAccounWithPicture();
   }
 
   @override
@@ -56,7 +58,7 @@ class _StudentProfileState extends State<StudentProfile> {
                   title: const Text("Edit account"),
                   leading: const Icon(Icons.edit_rounded),
                   onTap: () {
-                    accountData.then((data) {
+                    data.then((data) {
                       Navigator.of(context)
                         ..pop()
                         ..push(MaterialPageRoute(
@@ -64,23 +66,12 @@ class _StudentProfileState extends State<StudentProfile> {
                             data: data,
                             onUpdate: () {
                               setState(() {
-                                this.data = AccountOps.getStudentProfile();
+                                data;
                               });
                             },
                           ),
                         ));
                     });
-                  },
-                ),
-                ListTile(
-                  title: const Text("Edit profile"),
-                  leading: const Icon(Icons.edit_rounded),
-                  onTap: () {
-                    Navigator.of(context)
-                      ..pop()
-                      ..push(MaterialPageRoute(
-                        builder: (context) => const EditStudentProfile(),
-                      ));
                   },
                 ),
                 ListTile(
@@ -154,24 +145,35 @@ class _StudentProfileState extends State<StudentProfile> {
                     });
                   });
                 }
+                final hasImage = snapshot.data!.picture != null;
+                final decoded = base64.decode(snapshot.data!.picture!);
                 return Scaffold(
                   body: Center(
                     child: Padding(
-                      padding: const EdgeInsets.only(
-                          top:
-                              100), 
+                      padding: const EdgeInsets.only(top: 100),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          SizedBox(
-                              height: MediaQuery.of(context)
-                                  .padding
-                                  .top), 
-                          CircleAvatar(
-                            radius: 100,
-                            backgroundImage: CachedNetworkImageProvider(
-                              snapshot.data!.picture,
+                          InkWell(
+                            borderRadius: BorderRadius.circular(100),
+                            onTap: () {
+                              showAdaptiveDialog(
+                                context: context,
+                                builder: (context) =>
+                                    EnlightSelectPictureDialog(
+                                  selectFromGallery: selectFromGallery,
+                                  takePhoto: takePhoto,
+                                ),
+                              );
+                            },
+                            child: CircleAvatar(
+                              radius: 100,
+                              backgroundImage:
+                                  hasImage ? MemoryImage(decoded) : null,
+                              child: !hasImage
+                                  ? Text(snapshot.data!.name[0])
+                                  : null,
                             ),
                           ),
                           const SizedBox(height: 10),
@@ -180,7 +182,7 @@ class _StudentProfileState extends State<StudentProfile> {
                             style: const TextStyle(
                                 fontSize: 25, fontWeight: FontWeight.bold),
                           ),
-                          const Spacer(), 
+                          const Spacer(),
                         ],
                       ),
                     ),
@@ -273,5 +275,96 @@ class _StudentProfileState extends State<StudentProfile> {
       );
     });
     return null;
+  }
+
+  void selectFromGallery() {
+    final picker = ImagePicker();
+    picker.pickImage(source: ImageSource.gallery).then((image) {
+      if (image == null) {
+        Navigator.of(context).pop();
+        return;
+      }
+      image.readAsBytes().then((bytes) {
+        setState(() {
+          selectedImage = bytes;
+        });
+        Navigator.of(context).pop();
+        showAdaptiveDialog(
+          context: context,
+          builder: (context) => EnlightConfirmPictureDialog(
+            bytes: selectedImage!,
+            onConfirm: updatePicture,
+          ),
+        );
+      });
+    });
+  }
+
+  void takePhoto() {
+    final picker = ImagePicker();
+    picker.pickImage(source: ImageSource.camera).then((image) {
+      if (image == null) {
+        Navigator.of(context).pop();
+        return;
+      }
+      image.readAsBytes().then((bytes) {
+        setState(() {
+          selectedImage = bytes;
+        });
+        Navigator.of(context).pop();
+        showAdaptiveDialog(
+          context: context,
+          builder: (context) => EnlightConfirmPictureDialog(
+            bytes: selectedImage!,
+            onConfirm: updatePicture,
+          ),
+        );
+      });
+    });
+  }
+
+  void updatePicture() {
+    Navigator.of(context).pop();
+    setState(() {
+      loading = true;
+    });
+    AccountOps.insertPicture(picture: base64.encode(selectedImage!))
+        .then((code) {
+      if (code == 200) {
+        setState(() {
+          loading = false;
+          data.then((value) {
+            value.picture = base64.encode(selectedImage!);
+            selectedImage = null;
+          });
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: AwesomeSnackbarContent(
+              title: "Success",
+              message: "Successful update.",
+              contentType: ContentType.success,
+            ),
+          ),
+        );
+      }
+      if (code == 400) {
+        Token.refreshAccessToken().then((_) => updatePicture());
+      }
+      if (code == 500) {
+        setState(() {
+          loading = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: AwesomeSnackbarContent(
+              title: "Error",
+              message: "Internal server error.",
+              contentType: ContentType.failure,
+            ),
+          ),
+        );
+      }
+    });
   }
 }

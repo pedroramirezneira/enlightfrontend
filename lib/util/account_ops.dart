@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:enlight/models/account_data.dart';
-import 'package:enlight/models/student_profile_data.dart';
 import 'package:enlight/models/teacher_profile_data.dart';
 import 'package:enlight/util/io.dart';
 import 'package:enlight/util/token.dart';
@@ -115,6 +114,27 @@ class AccountOps {
     throw response.statusCode;
   }
 
+  static Future<AccountData> getAccounWithPicture() async {
+    final token = await Token.getAccessToken();
+    final response = await http.get(
+      Uri.https(
+        dotenv.env["SERVER"]!,
+        "/account",
+        {
+          "include_picture": "true",
+        },
+      ),
+      headers: {
+        "Authorization": "Bearer $token",
+      },
+    );
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      return AccountData.fromJson(data);
+    }
+    throw response.statusCode;
+  }
+
   static Future<int> updateAccount({
     required String name,
     required String birthday,
@@ -135,6 +155,23 @@ class AccountOps {
         "birthday": birthday,
         "address": address,
       }),
+    );
+    return response.statusCode;
+  }
+
+  static Future<int> insertPicture({required String picture}) async {
+    final token = await Token.getAccessToken();
+    final response = await http.put(
+      Uri.https(dotenv.env["SERVER"]!, "account/picture"),
+      headers: {
+        "Authorization": "Bearer $token",
+        "Content-Type": "application/json",
+      },
+      body: json.encode(
+        {
+          "picture": picture,
+        },
+      ),
     );
     return response.statusCode;
   }
@@ -183,42 +220,6 @@ class AccountOps {
       },
       body: json.encode({
         "description": description,
-        "profile_picture": picture,
-      }),
-    );
-    return response.statusCode;
-  }
-
-  static Future<StudentProfileData> getStudentProfile() async {
-    final token = await Token.getAccessToken();
-    final response = await http.get(
-      Uri.https(
-        dotenv.env["SERVER"]!,
-        "/student",
-      ),
-      headers: {"Authorization": "Bearer $token"},
-    );
-    if (response.statusCode == 200) {
-      final dynamic profile = json.decode(response.body);
-      return StudentProfileData.fromJson(profile);
-    }
-    throw response.statusCode;
-  }
-
-  static Future<int> updateStudentProfile({
-    required String picture,
-  }) async {
-    final token = await Token.getAccessToken();
-    final response = await http.put(
-      Uri.https(
-        dotenv.env["SERVER"]!,
-        "/student",
-      ),
-      headers: {
-        "Authorization": "Bearer $token",
-        "Content-Type": "application/json",
-      },
-      body: json.encode({
         "profile_picture": picture,
       }),
     );

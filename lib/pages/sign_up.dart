@@ -110,7 +110,7 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
-  void Function()? _onPressed() {
+  void _onPressed() {
     if (dropdownValue == "Role") {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -121,7 +121,7 @@ class _SignUpState extends State<SignUp> {
           ),
         ),
       );
-      return null;
+      return;
     }
     setState(() {
       loading = true;
@@ -151,7 +151,6 @@ class _SignUpState extends State<SignUp> {
           MaterialPageRoute(builder: (context) => const SignIn()),
           (route) => false,
         );
-        return;
       }
       if (code == 409) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -163,7 +162,6 @@ class _SignUpState extends State<SignUp> {
             ),
           ),
         );
-        return;
       }
       if (code == 500) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -175,9 +173,7 @@ class _SignUpState extends State<SignUp> {
             ),
           ),
         );
-        return;
       }
     });
-    return null;
   }
 }

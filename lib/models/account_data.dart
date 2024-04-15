@@ -3,12 +3,14 @@ class AccountData {
   String name;
   String birthday;
   String address;
+  String? picture;
 
   AccountData({
     required this.email,
     required this.name,
     required this.birthday,
     required this.address,
+    this.picture,
   });
 
   factory AccountData.fromJson(Map<String, dynamic> json) {
@@ -17,6 +19,7 @@ class AccountData {
       name: json["name"],
       birthday: (json["birthday"] as String).split("T")[0],
       address: json["address"],
+      picture: json["picture"],
     );
   }
 }

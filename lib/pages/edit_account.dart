@@ -5,11 +5,12 @@ import 'package:enlight/components/enlight_loading_indicator.dart';
 import 'package:enlight/components/enlight_text_form_field.dart';
 import 'package:enlight/models/account_data.dart';
 import 'package:enlight/util/account_ops.dart';
+import 'package:enlight/util/token.dart';
 import 'package:flutter/material.dart';
 
 class EditAccount extends StatefulWidget {
   final AccountData data;
-  final Function()? onUpdate;
+  final void Function()? onUpdate;
 
   const EditAccount({
     super.key,
@@ -82,7 +83,7 @@ class _EditAccountState extends State<EditAccount> {
     );
   }
 
-  dynamic Function()? _onPressed() {
+  void _onPressed() {
     setState(() {
       loading = true;
     });
@@ -92,10 +93,10 @@ class _EditAccountState extends State<EditAccount> {
       address: addressController.text,
     ).then((code) {
       if (code == 200) {
-        widget.onUpdate != null ? widget.onUpdate!() : null;
         widget.data.name = nameController.text;
         widget.data.birthday = birthdayController.text;
         widget.data.address = addressController.text;
+        widget.onUpdate != null ? widget.onUpdate!() : null;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: AwesomeSnackbarContent(
@@ -108,7 +109,7 @@ class _EditAccountState extends State<EditAccount> {
         Navigator.of(context).pop();
       }
       if (code == 401) {
-        // Logic to refresh access token once it has expired.
+        Token.refreshAccessToken().then((_) => _onPressed());
       }
       if (code == 500) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -122,6 +123,5 @@ class _EditAccountState extends State<EditAccount> {
         );
       }
     });
-    return null;
   }
 }
