@@ -22,7 +22,6 @@ class EditTeacherProfile extends StatefulWidget {
 class _EditAccountState extends State<EditTeacherProfile> {
   late final GlobalKey<FormState> formKey;
   late final TextEditingController descriptionController;
-  late final TextEditingController pictureController;
   late Future<TeacherData> data;
   late String encoded;
   var loading = true;
@@ -34,7 +33,6 @@ class _EditAccountState extends State<EditTeacherProfile> {
     formKey = GlobalKey<FormState>();
     data = AccountOps.getTeacher();
     descriptionController = TextEditingController();
-    pictureController = TextEditingController();
   }
 
   @override
@@ -49,7 +47,6 @@ class _EditAccountState extends State<EditTeacherProfile> {
               if (snapshot.hasData) {
                 if (!initialLoaded) {
                   descriptionController.text = snapshot.data!.description;
-                  pictureController.text = "si";
                   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
                     setState(() {
                       loading = false;
@@ -69,13 +66,6 @@ class _EditAccountState extends State<EditTeacherProfile> {
                             EnlightTextFormField(
                               text: "Description",
                               controller: descriptionController,
-                            ),
-                            EnlightFormSubmissionButton(
-                              text: "Add tags",
-                              formKey: formKey,
-                              onPressed: () {
-                                print("hola");
-                              },
                             ),
                             EnlightFormSubmissionButton(
                               text: "Save",
