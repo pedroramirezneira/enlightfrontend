@@ -1,15 +1,19 @@
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:enlight/components/enlight_app_bar.dart';
+import 'package:enlight/components/enlight_bottom_sheet.dart';
+import 'package:enlight/components/enlight_confirm_picture_dialog.dart';
 import 'package:enlight/components/enlight_loading_indicator.dart';
 import 'package:enlight/models/account_data.dart';
-import 'package:enlight/models/teacher_profile_data.dart';
+import 'package:enlight/models/teacher_data.dart';
 import 'package:enlight/pages/edit_account.dart';
 import 'package:enlight/pages/edit_profile_teacher.dart';
-import 'package:enlight/pages/image_test.dart';
 import 'package:enlight/pages/sign_in.dart';
 import 'package:enlight/util/account_ops.dart';
+import 'package:enlight/util/token.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class TeacherProfile extends StatefulWidget {
   const TeacherProfile({super.key});
@@ -19,16 +23,15 @@ class TeacherProfile extends StatefulWidget {
 }
 
 class _TeacherProfileState extends State<TeacherProfile> {
-  late Future<TeacherProfileData> data;
+  late Future<TeacherData> data;
   var loading = true;
   var initialLoaded = false;
-  late Future<AccountData> accountData;
+  Uint8List? selectedImage;
 
   @override
   void initState() {
     super.initState();
-    data = AccountOps.getTeacherProfile();
-    accountData = AccountOps.getAccount();
+    data = AccountOps.getTeacher();
   }
 
   @override
@@ -57,12 +60,17 @@ class _TeacherProfileState extends State<TeacherProfile> {
                   title: const Text("Edit account"),
                   leading: const Icon(Icons.edit_rounded),
                   onTap: () {
-                    accountData.then((data) {
+                    data.then((value) {
                       Navigator.of(context)
                         ..pop()
                         ..push(MaterialPageRoute(
                           builder: (context) => EditAccount(
-                            data: data,
+                            data: value as AccountData,
+                            onUpdate: () {
+                              setState(() {
+                                data;
+                              });
+                            },
                           ),
                         ));
                     });
@@ -78,7 +86,7 @@ class _TeacherProfileState extends State<TeacherProfile> {
                         builder: (context) => EditTeacherProfile(
                           onUpdate: () {
                             setState(() {
-                              data = AccountOps.getTeacherProfile();
+                              data = AccountOps.getTeacher();
                             });
                           },
                         ),
@@ -141,15 +149,6 @@ class _TeacherProfileState extends State<TeacherProfile> {
                     );
                   },
                 ),
-                ListTile(
-                  leading: const Icon(Icons.health_and_safety),
-                  title: const Text("Test"),
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const ImageTest(),
-                    ));
-                  },
-                )
               ],
             ),
           ),
@@ -165,6 +164,8 @@ class _TeacherProfileState extends State<TeacherProfile> {
                     });
                   });
                 }
+                final hasImage = snapshot.data!.picture != null;
+                final decoded = base64.decode(snapshot.data!.picture ?? "");
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
@@ -172,10 +173,22 @@ class _TeacherProfileState extends State<TeacherProfile> {
                       children: <Widget>[
                         Padding(
                           padding: const EdgeInsets.all(10.0),
-                          child: CircleAvatar(
-                            radius: 50,
-                            backgroundImage: MemoryImage(
-                                base64.decode(snapshot.data!.picture)),
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(100),
+                            onTap: () {
+                              showModalBottomSheet(
+                                context: context,
+                                builder: (context) => EnlightBottomSheet(
+                                  selectFromGallery: selectFromGallery,
+                                  takePhoto: takePhoto,
+                                ),
+                              );
+                            },
+                            child: CircleAvatar(
+                              radius: 50,
+                              backgroundImage:
+                                  hasImage ? MemoryImage(decoded) : null,
+                            ),
                           ),
                         ),
                         Padding(
@@ -263,6 +276,66 @@ class _TeacherProfileState extends State<TeacherProfile> {
     );
   }
 
+  void selectFromGallery() {
+    final picker = ImagePicker();
+    picker.pickImage(source: ImageSource.gallery).then((image) {
+      if (image == null) {
+        Navigator.of(context).pop();
+        return;
+      }
+      image.readAsBytes().then((bytes) {
+        setState(() {
+          selectedImage = bytes;
+        });
+        Navigator.of(context).pop();
+        showAdaptiveDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (context) => EnlightConfirmPictureDialog(
+            bytes: selectedImage!,
+            onConfirm: updatePicture,
+            onCancel: () {
+              Navigator.of(context).pop();
+              setState(() {
+                selectedImage = null;
+              });
+            },
+          ),
+        );
+      });
+    });
+  }
+
+  void takePhoto() {
+    final picker = ImagePicker();
+    picker.pickImage(source: ImageSource.camera).then((image) {
+      if (image == null) {
+        Navigator.of(context).pop();
+        return;
+      }
+      image.readAsBytes().then((bytes) {
+        setState(() {
+          selectedImage = bytes;
+        });
+        Navigator.of(context).pop();
+        showAdaptiveDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (context) => EnlightConfirmPictureDialog(
+            bytes: selectedImage!,
+            onConfirm: updatePicture,
+            onCancel: () {
+              Navigator.of(context).pop();
+              setState(() {
+                selectedImage = null;
+              });
+            },
+          ),
+        );
+      });
+    });
+  }
+
   void Function()? _logout() {
     Navigator.of(context)
       ..pop()
@@ -297,6 +370,51 @@ class _TeacherProfileState extends State<TeacherProfile> {
       );
     });
     return null;
+  }
+
+  void updatePicture() {
+    Navigator.of(context).pop();
+    setState(() {
+      loading = true;
+    });
+    AccountOps.insertPicture(picture: base64.encode(selectedImage!))
+        .then((code) {
+      if (code == 200) {
+        setState(() {
+          loading = false;
+          data.then((value) {
+            value.picture = base64.encode(selectedImage!);
+            selectedImage = null;
+          });
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: AwesomeSnackbarContent(
+              title: "Success",
+              message: "Successful update.",
+              contentType: ContentType.success,
+            ),
+          ),
+        );
+      }
+      if (code == 400) {
+        Token.refreshAccessToken().then((_) => updatePicture());
+      }
+      if (code == 500) {
+        setState(() {
+          loading = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: AwesomeSnackbarContent(
+              title: "Error",
+              message: "Internal server error.",
+              contentType: ContentType.failure,
+            ),
+          ),
+        );
+      }
+    });
   }
 
   void Function()? _deleteAccount() {

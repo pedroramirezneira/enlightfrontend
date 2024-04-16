@@ -3,7 +3,7 @@ import 'package:enlight/components/enlight_app_bar.dart';
 import 'package:enlight/components/enlight_form_submission_button.dart';
 import 'package:enlight/components/enlight_loading_indicator.dart';
 import 'package:enlight/components/enlight_text_form_field.dart';
-import 'package:enlight/models/teacher_profile_data.dart';
+import 'package:enlight/models/teacher_data.dart';
 import 'package:enlight/util/account_ops.dart';
 import 'package:flutter/material.dart';
 
@@ -23,7 +23,8 @@ class _EditAccountState extends State<EditTeacherProfile> {
   late final GlobalKey<FormState> formKey;
   late final TextEditingController descriptionController;
   late final TextEditingController pictureController;
-  late Future<TeacherProfileData> data;
+  late Future<TeacherData> data;
+  late String encoded;
   var loading = true;
   var initialLoaded = false;
 
@@ -31,7 +32,7 @@ class _EditAccountState extends State<EditTeacherProfile> {
   void initState() {
     super.initState();
     formKey = GlobalKey<FormState>();
-    data = AccountOps.getTeacherProfile();
+    data = AccountOps.getTeacher();
     descriptionController = TextEditingController();
     pictureController = TextEditingController();
   }
@@ -69,14 +70,17 @@ class _EditAccountState extends State<EditTeacherProfile> {
                               text: "Description",
                               controller: descriptionController,
                             ),
-                            EnlightTextFormField(
-                              text: "Profile Picture",
-                              controller: pictureController,
+                            EnlightFormSubmissionButton(
+                              text: "Add tags",
+                              formKey: formKey,
+                              onPressed: () {
+                                print("hola");
+                              },
                             ),
                             EnlightFormSubmissionButton(
                               text: "Save",
                               formKey: formKey,
-                              onPressed: _onPressed,
+                              onPressed: save,
                             ),
                           ],
                         ),
@@ -109,13 +113,12 @@ class _EditAccountState extends State<EditTeacherProfile> {
     );
   }
 
-  dynamic Function()? _onPressed() {
+  dynamic Function()? save() {
     setState(() {
       loading = true;
     });
     AccountOps.updateTeacherProfile(
       description: descriptionController.text,
-      picture: pictureController.text,
     ).then((code) {
       if (code == 200) {
         widget.onUpdate != null ? widget.onUpdate!() : null;

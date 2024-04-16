@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:enlight/models/account_data.dart';
-import 'package:enlight/models/teacher_profile_data.dart';
+import 'package:enlight/models/teacher_data.dart';
 import 'package:enlight/util/io.dart';
 import 'package:enlight/util/token.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -176,12 +176,15 @@ class AccountOps {
     return response.statusCode;
   }
 
-  static Future<TeacherProfileData> getTeacherProfile() async {
+  static Future<TeacherData> getTeacher() async {
     final token = await Token.getAccessToken();
     final response = await http.get(
       Uri.https(
         dotenv.env["SERVER"]!,
-        "/teacher",
+        "/account",
+        {
+          "include_picture": "true",
+        }
       ),
       headers: {"Authorization": "Bearer $token"},
     );
@@ -199,14 +202,13 @@ class AccountOps {
         "Historia"
       ]; //temporal
       profile["rating"] = 10.0; //temporal
-      return TeacherProfileData.fromJson(profile);
+      return TeacherData.fromJson(profile);
     }
     throw response.statusCode;
   }
 
   static Future<int> updateTeacherProfile({
     required String description,
-    required String picture,
   }) async {
     final token = await Token.getAccessToken();
     final response = await http.put(
@@ -220,7 +222,6 @@ class AccountOps {
       },
       body: json.encode({
         "description": description,
-        "profile_picture": picture,
       }),
     );
     return response.statusCode;
