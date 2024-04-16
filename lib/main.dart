@@ -5,6 +5,7 @@ import 'package:enlight/util/io.dart';
 import 'package:enlight/util/token.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 Future<void> main() async {
   await dotenv.load();
@@ -45,14 +46,15 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Enlight',
       theme: ThemeData(
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Color.fromARGB(255, 100, 201, 169),
-          centerTitle: true,
-          titleTextStyle: TextStyle(
-            color: Colors.white,
-            fontSize: 22,
-          ),
-        ),
+        appBarTheme: AppBarTheme(
+            backgroundColor: const Color.fromARGB(255, 43, 57, 68),
+            centerTitle: true,
+            titleTextStyle: GoogleFonts.getFont(
+              "Montserrat",
+              color: Colors.white,
+              fontSize: 22,
+            )),
+        fontFamily: GoogleFonts.montserrat().fontFamily,
         colorScheme: ColorScheme(
           brightness: Brightness.dark,
           primary: Colors.purple.shade100,

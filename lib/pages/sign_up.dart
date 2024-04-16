@@ -1,5 +1,4 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'package:enlight/components/enlight_app_bar.dart';
 import 'package:enlight/components/enlight_dropdown_button.dart';
 import 'package:enlight/components/enlight_form_submission_button.dart';
 import 'package:enlight/components/enlight_loading_indicator.dart';
@@ -7,6 +6,7 @@ import 'package:enlight/components/enlight_text_form_field.dart';
 import 'package:enlight/pages/sign_in.dart';
 import 'package:enlight/util/account_ops.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -41,70 +41,99 @@ class _SignUpState extends State<SignUp> {
     return Stack(
       children: <Widget>[
         Scaffold(
-          appBar: const EnlightAppBar(
-            text: 'Enlight',
-          ),
-          body: Stack(
-            children: <Widget>[
-              Center(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(15),
-                  child: Form(
-                    key: formKey,
-                    child: SizedBox(
-                      width: 500,
-                      child: Column(
-                        children: <Widget>[
-                          EnlightTextFormField(
-                            text: "Email",
-                            controller: emailController,
-                            email: true,
+            body: CustomScrollView(
+          slivers: [
+            const SliverAppBar(),
+            SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  Column(
+                    mainAxisSize: MainAxisSize.max,
+                    children: <Widget>[
+                      Align(
+                        alignment: const AlignmentDirectional(0, 0),
+                        child: Padding(
+                          padding:
+                              const EdgeInsetsDirectional.fromSTEB(0, 5, 0, 0),
+                          child: SizedBox(
+                            width: 308,
+                            height: 100,
+                            child: Align(
+                                alignment: const AlignmentDirectional(0, 0),
+                                child: Text(
+                                  'ENLIGHT',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.getFont(
+                                    'Montserrat',
+                                    color: const Color.fromARGB(
+                                        255, 100, 201, 169),
+                                    fontSize: 50,
+                                  ),
+                                )),
                           ),
-                          EnlightTextFormField(
-                            text: "Password",
-                            controller: passwordController,
-                            password: true,
-                          ),
-                          EnlightTextFormField(
-                            text: "Name",
-                            controller: nameController,
-                          ),
-                          EnlightTextFormField(
-                            text: "Birthday",
-                            controller: birthdayController,
-                            date: true,
-                          ),
-                          EnlightTextFormField(
-                            text: "Address",
-                            controller: addressController,
-                          ),
-                          EnlightDropdownButton(
-                            value: dropdownValue,
-                            text: "Role",
-                            items: const <String>[
-                              "Student",
-                              "Teacher",
-                            ],
-                            onChanged: (value) {
-                              setState(() {
-                                dropdownValue = value!;
-                              });
-                            },
-                          ),
-                          EnlightFormSubmissionButton(
-                            text: "Sign up",
-                            formKey: formKey,
-                            onPressed: _onPressed,
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
+                      Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Form(
+                          key: formKey,
+                          child: SizedBox(
+                            width: 500,
+                            child: Column(
+                              children: <Widget>[
+                                EnlightTextFormField(
+                                  text: "Email",
+                                  controller: emailController,
+                                  email: true,
+                                ),
+                                EnlightTextFormField(
+                                  text: "Password",
+                                  controller: passwordController,
+                                  password: true,
+                                ),
+                                EnlightTextFormField(
+                                  text: "Name",
+                                  controller: nameController,
+                                ),
+                                EnlightTextFormField(
+                                  text: "Birthday",
+                                  controller: birthdayController,
+                                  date: true,
+                                ),
+                                EnlightTextFormField(
+                                  text: "Address",
+                                  controller: addressController,
+                                ),
+                                EnlightDropdownButton(
+                                  value: dropdownValue,
+                                  text: "Role",
+                                  items: const <String>[
+                                    "Student",
+                                    "Teacher",
+                                  ],
+                                  onChanged: (value) {
+                                    setState(() {
+                                      dropdownValue = value!;
+                                    });
+                                  },
+                                ),
+                                EnlightFormSubmissionButton(
+                                  text: "Sign up",
+                                  formKey: formKey,
+                                  onPressed: _onPressed,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
+                ],
               ),
-            ],
-          ),
-        ),
+            ),
+          ],
+        )),
         EnlightLoadingIndicator(visible: loading),
       ],
     );
