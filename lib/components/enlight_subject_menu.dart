@@ -1,16 +1,20 @@
+import 'package:enlight/components/enlight_autocomplete_field.dart';
 import 'package:enlight/components/enlight_form_submission_button.dart';
 import 'package:enlight/components/enlight_loading_indicator.dart';
 import 'package:enlight/components/enlight_text_form_field.dart';
+import 'package:enlight/models/category_data.dart';
 import 'package:enlight/util/teacher_ops.dart';
 import 'package:enlight/util/token.dart';
 import 'package:flutter/material.dart';
 
 class EnlightSubjectMenu extends StatefulWidget {
   final void Function() onPressed;
+  final List<CategoryData> categories;
 
   const EnlightSubjectMenu({
     super.key,
     required this.onPressed,
+    required this.categories,
   });
 
   @override
@@ -85,8 +89,9 @@ class _EnlightSubjectMenuState extends State<EnlightSubjectMenu> {
               key: formKey,
               child: Column(
                 children: <Widget>[
-                  EnlightTextFormField(
+                  EnlightAutocompleteField(
                     text: "Category Name",
+                    data: widget.categories,
                     controller: categoryNameController,
                   ),
                   EnlightTextFormField(
