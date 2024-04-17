@@ -1,5 +1,5 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'package:enlight/components/enlight_dropdown_button.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:enlight/components/enlight_form_submission_button.dart';
 import 'package:enlight/components/enlight_loading_indicator.dart';
 import 'package:enlight/components/enlight_text_form_field.dart';
@@ -23,7 +23,12 @@ class _SignUpState extends State<SignUp> {
   late final TextEditingController birthdayController;
   late final TextEditingController addressController;
   var loading = false;
-  var dropdownValue = "Role";
+  final List<String> items = [
+    'Teacher',
+    'Student',
+  ];
+  String? selectedValue;
+  late String role;
 
   @override
   void initState() {
@@ -92,7 +97,6 @@ class _SignUpState extends State<SignUp> {
                                   password: true,
                                 ),
                                 EnlightTextFormField(
-                                
                                   text: "Name",
                                   controller: nameController,
                                 ),
@@ -105,18 +109,98 @@ class _SignUpState extends State<SignUp> {
                                   text: "Address",
                                   controller: addressController,
                                 ),
-                                EnlightDropdownButton(
-                                  value: dropdownValue,
-                                  text: "Role",
-                                  items: const <String>[
-                                    "Student",
-                                    "Teacher",
-                                  ],
-                                  onChanged: (value) {
-                                    setState(() {
-                                      dropdownValue = value!;
-                                    });
-                                  },
+                                Center(
+                                  child: DropdownButtonHideUnderline(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10),
+                                      child: DropdownButton2<String>(
+                                        isExpanded: true,
+                                        hint: const Row(
+                                          children: [
+                                            SizedBox(
+                                              width: 4,
+                                            ),
+                                            Expanded(
+                                              child: Text(
+                                                'Select Role',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                ),
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        items: items
+                                            .map((String item) =>
+                                                DropdownMenuItem<String>(
+                                                  value: item,
+                                                  child: Text(
+                                                    item,
+                                                    style: const TextStyle(
+                                                      color: Colors.white,
+                                                    ),
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ))
+                                            .toList(),
+                                        value: selectedValue,
+                                        onChanged: (String? value) {
+                                          setState(() {
+                                            selectedValue = value!;
+                                          });
+                                        },
+                                        buttonStyleData: ButtonStyleData(
+                                          height: 55,
+                                          width: double.infinity,
+                                          padding: const EdgeInsets.all(8),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            border: Border.all(
+                                              color: Colors.white,
+                                            ),
+                                            color: const Color.fromARGB(
+                                                255, 43, 57, 68),
+                                          ),
+                                        ),
+                                        iconStyleData: const IconStyleData(
+                                          icon: Icon(
+                                            Icons.arrow_forward_ios_outlined,
+                                          ),
+                                          iconSize: 14,
+                                          iconEnabledColor: Colors.white,
+                                          iconDisabledColor: Colors.grey,
+                                        ),
+                                        dropdownStyleData: DropdownStyleData(
+                                          maxHeight: 200,
+                                          width: 200,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(14),
+                                            color: const Color.fromARGB(
+                                                255, 43, 57, 68),
+                                          ),
+                                          offset: const Offset(150, 0),
+                                          scrollbarTheme: ScrollbarThemeData(
+                                            radius: const Radius.circular(40),
+                                            thickness: MaterialStateProperty
+                                                .all<double>(6),
+                                            thumbVisibility:
+                                                MaterialStateProperty.all<bool>(
+                                                    true),
+                                          ),
+                                        ),
+                                        menuItemStyleData:
+                                            const MenuItemStyleData(
+                                          height: 40,
+                                          padding: EdgeInsets.only(
+                                              left: 14, right: 14),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                 ),
                                 EnlightFormSubmissionButton(
                                   text: "Sign up",
@@ -141,7 +225,7 @@ class _SignUpState extends State<SignUp> {
   }
 
   void _onPressed() {
-    if (dropdownValue == "Role") {
+    if (selectedValue == "") {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: AwesomeSnackbarContent(
@@ -152,6 +236,12 @@ class _SignUpState extends State<SignUp> {
         ),
       );
       return;
+    } else {
+      if (selectedValue == "Teacher") {
+        role = "teacher";
+      } else {
+        role = "student";
+      }
     }
     setState(() {
       loading = true;
@@ -162,7 +252,7 @@ class _SignUpState extends State<SignUp> {
       name: nameController.text,
       birthday: birthdayController.text,
       address: addressController.text,
-      role: dropdownValue.toLowerCase(),
+      role: role,
     ).then((code) {
       setState(() {
         loading = false;
