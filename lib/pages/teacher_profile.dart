@@ -40,9 +40,6 @@ class _TeacherProfileState extends State<TeacherProfile> {
     return Stack(
       children: [
         Scaffold(
-          appBar: const EnlightAppBar(
-            text: "Profile",
-          ),
           endDrawer: Drawer(
             child: ListView(
               children: <Widget>[

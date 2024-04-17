@@ -35,7 +35,6 @@ class _EditAccountState extends State<EditTeacherProfile> {
     formKey = GlobalKey<FormState>();
     data = AccountOps.getTeacher();
     descriptionController = TextEditingController();
-    pictureController = TextEditingController();
   }
 
   @override
