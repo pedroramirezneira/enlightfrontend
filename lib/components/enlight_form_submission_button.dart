@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class EnlightFormSubmissionButton extends StatelessWidget {
   final String text;
   final GlobalKey<FormState> formKey;
-  final Function()? onPressed;
+  final void Function()? onPressed;
 
   const EnlightFormSubmissionButton({
     super.key,

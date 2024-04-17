@@ -38,97 +38,100 @@ class _SignInState extends State<SignIn> {
       children: [
         Scaffold(
           body: SingleChildScrollView(
-              child: SafeArea(
-                  top: true,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Align(
-                        alignment: const AlignmentDirectional(0.0, 0.0),
-                        child: Padding(
-                          padding: const EdgeInsetsDirectional.fromSTEB(
-                              0.0, 40.0, 0.0, 0.0),
-                          child: SizedBox(
-                            width: 308.0,
-                            height: 100.0,
-                            child: Align(
-                              alignment: const AlignmentDirectional(0.0, 0.0),
-                              child: Text('ENLIGHT',
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.getFont(
-                                    'Montserrat',
-                                    color: const Color.fromARGB(
-                                        255, 100, 201, 169),
-                                    fontSize: 50.0,
-                                  )),
+            child: SafeArea(
+              top: true,
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Align(
+                    alignment: const AlignmentDirectional(0.0, 0.0),
+                    child: Padding(
+                      padding: const EdgeInsetsDirectional.fromSTEB(
+                          0.0, 40.0, 0.0, 0.0),
+                      child: SizedBox(
+                        width: 308.0,
+                        height: 100.0,
+                        child: Align(
+                          alignment: const AlignmentDirectional(0.0, 0.0),
+                          child: Text(
+                            'ENLIGHT',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.getFont(
+                              'Montserrat',
+                              color: const Color.fromARGB(255, 100, 201, 169),
+                              fontSize: 50.0,
                             ),
                           ),
                         ),
                       ),
-                      Form(
-                          key: formKey,
-                          child: SizedBox(
-                              width: 350.0,
-                              height: 556.0,
-                              child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Align(
-                                      alignment: const AlignmentDirectional(
-                                          -1.0, -1.0),
-                                      child: Padding(
-                                        padding: const EdgeInsetsDirectional
-                                            .fromSTEB(10.0, 10.0, 0.0, 0.0),
-                                        child: Text(
-                                          'Welcome Back!',
-                                          style: GoogleFonts.getFont(
-                                            'Montserrat',
-                                            fontSize: 25.0,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Align(
-                                      alignment:
-                                          const AlignmentDirectional(-1.0, 0.0),
-                                      child: Padding(
-                                        padding: const EdgeInsetsDirectional
-                                            .fromSTEB(10.0, 10.0, 0.0, 0.0),
-                                        child: Text(
-                                          'Fill the information below to access your account',
-                                          style: GoogleFonts.getFont(
-                                            'Montserrat',
-                                            letterSpacing: 0.0,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    EnlightTextFormField(
-                                      text: "Email",
-                                      controller: emailController,
-                                    ),
-                                    EnlightTextFormField(
-                                      text: "Password",
-                                      controller: passwordController,
-                                      password: true,
-                                    ),
-                                    EnlightFormSubmissionButton(
-                                      text: "Sign in",
-                                      formKey: formKey,
-                                      onPressed: _onPressed,
-                                    ),
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                                builder: ((context) =>
-                                                    const PasswordRecoveryPage())));
-                                      },
-                                      child: const Text("Forgot password?"),
-                                    )
-                                  ])))
-                    ],
-                  ))),
+                    ),
+                  ),
+                  Form(
+                    key: formKey,
+                    child: SizedBox(
+                      width: 350.0,
+                      height: 556.0,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Align(
+                            alignment: const AlignmentDirectional(-1.0, -1.0),
+                            child: Padding(
+                              padding: const EdgeInsetsDirectional.fromSTEB(
+                                  10.0, 10.0, 0.0, 0.0),
+                              child: Text(
+                                'Welcome Back!',
+                                style: GoogleFonts.getFont(
+                                  'Montserrat',
+                                  fontSize: 25.0,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Align(
+                            alignment: const AlignmentDirectional(-1.0, 0.0),
+                            child: Padding(
+                              padding: const EdgeInsetsDirectional.fromSTEB(
+                                  10.0, 10.0, 0.0, 0.0),
+                              child: Text(
+                                'Fill the information below to access your account',
+                                style: GoogleFonts.getFont(
+                                  'Montserrat',
+                                  letterSpacing: 0.0,
+                                ),
+                              ),
+                            ),
+                          ),
+                          EnlightTextFormField(
+                            text: "Email",
+                            controller: emailController,
+                          ),
+                          EnlightTextFormField(
+                            text: "Password",
+                            controller: passwordController,
+                            password: true,
+                          ),
+                          EnlightFormSubmissionButton(
+                            text: "Sign in",
+                            formKey: formKey,
+                            onPressed: _onPressed,
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: ((context) =>
+                                      const PasswordRecoveryPage())));
+                            },
+                            child: const Text("Forgot password?"),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
           persistentFooterButtons: <Widget>[
             Center(
               child: TextButton(

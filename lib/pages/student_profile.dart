@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:enlight/components/enlight_app_bar.dart';
-import 'package:enlight/components/enlight_bottom_sheet.dart';
+import 'package:enlight/components/enlight_picture_menu.dart';
 import 'package:enlight/components/enlight_confirm_picture_dialog.dart';
 import 'package:enlight/components/enlight_loading_indicator.dart';
 import 'package:enlight/models/account_data.dart';
@@ -146,7 +146,7 @@ class _StudentProfileState extends State<StudentProfile> {
                   });
                 }
                 final hasImage = snapshot.data!.picture != null;
-                final decoded = base64.decode(snapshot.data!.picture!);
+                final decoded = base64.decode(snapshot.data!.picture ?? "");
                 return Scaffold(
                   body: Center(
                     child: Padding(
@@ -160,18 +160,27 @@ class _StudentProfileState extends State<StudentProfile> {
                             onTap: () {
                               showModalBottomSheet(
                                 context: context,
-                                builder: (context) => EnlightBottomSheet(
+                                builder: (context) => EnlightPictureMenu(
                                   selectFromGallery: selectFromGallery,
                                   takePhoto: takePhoto,
                                 ),
                               );
                             },
                             child: CircleAvatar(
+                              backgroundColor: Theme.of(context)
+                                  .colorScheme
+                                  .surface
+                                  .withOpacity(0.5),
                               radius: 100,
                               backgroundImage:
                                   hasImage ? MemoryImage(decoded) : null,
                               child: !hasImage
-                                  ? Text(snapshot.data!.name[0].toUpperCase())
+                                  ? Text(
+                                      snapshot.data!.name[0].toUpperCase(),
+                                      style: const TextStyle(
+                                        fontSize: 50,
+                                      ),
+                                    )
                                   : null,
                             ),
                           ),

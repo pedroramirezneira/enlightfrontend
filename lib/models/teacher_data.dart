@@ -1,31 +1,39 @@
-import 'package:enlight/models/account_data.dart';
+import 'package:enlight/models/category_data.dart';
+import 'package:enlight/models/subject_data.dart';
 
-class TeacherData extends AccountData {
-  double rating;
-  List<String> tags;
+class TeacherData {
   String description;
+  double rating;
+  List<SubjectData> subjects;
+  List<CategoryData> categories;
 
   TeacherData({
-    required this.rating,
-    required this.tags,
     required this.description,
-    required super.picture, 
-    required super.email, 
-    required super.birthday, 
-    required super.address, 
-    required super.name,
+    required this.rating,
+    required this.subjects,
+    required this.categories,
   });
 
   factory TeacherData.fromJson(Map<String, dynamic> json) {
+    List<dynamic> subjects = json["subjects"];
+    List<dynamic> categories = json["categories"];
     return TeacherData(
+      description: json["description"],
       rating: json["rating"],
-      description: json["teacher"]["description"],
-      name: json["name"],
-      address: json["address"],
-      tags: json["tags"],
-      picture: json["picture"], 
-      email: json["email"],
-      birthday: (json["birthday"] as String).split("T")[0],
+      subjects: subjects
+          .map(
+            (subject) => SubjectData.fromJson(
+              subject,
+            ),
+          )
+          .toList(),
+      categories: categories
+          .map(
+            (category) => CategoryData.fromJson(
+              category,
+            ),
+          )
+          .toList(),
     );
   }
 }
