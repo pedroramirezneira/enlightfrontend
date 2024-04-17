@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'package:enlight/components/enlight_app_bar.dart';
 import 'package:enlight/components/enlight_confirm_picture_dialog.dart';
 import 'package:enlight/components/enlight_loading_indicator.dart';
 import 'package:enlight/components/enlight_picture_menu.dart';
@@ -164,97 +163,213 @@ class _TeacherProfileState extends State<TeacherProfile> {
                 }
                 final hasImage = snapshot.data!.picture != null;
                 final decoded = base64.decode(snapshot.data!.picture ?? "");
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(100),
-                            onTap: () {
-                              showModalBottomSheet(
-                                context: context,
-                                builder: (context) => EnlightPictureMenu(
-                                  selectFromGallery: selectFromGallery,
-                                  takePhoto: takePhoto,
-                                ),
-                              );
-                            },
-                            child: CircleAvatar(
-                              radius: 50,
-                              backgroundImage:
-                                  hasImage ? MemoryImage(decoded) : null,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 0, horizontal: 34),
-                          child: Column(
+                return CustomScrollView(
+                  slivers: [
+                    const SliverAppBar(
+                      title: Text("Profile"),
+                    ),
+                    SliverList(
+                      delegate: SliverChildListDelegate(
+                        [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Text(
-                                snapshot.data!.name,
-                                style: const TextStyle(fontSize: 30),
+                              Row(
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: InkWell(
+                                      borderRadius: BorderRadius.circular(100),
+                                      onTap: () {
+                                        showModalBottomSheet(
+                                          context: context,
+                                          builder: (context) =>
+                                              EnlightPictureMenu(
+                                            selectFromGallery:
+                                                selectFromGallery,
+                                            takePhoto: takePhoto,
+                                          ),
+                                        );
+                                      },
+                                      child: CircleAvatar(
+                                        radius: 50,
+                                        backgroundImage: hasImage
+                                            ? MemoryImage(decoded)
+                                            : null,
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 0, horizontal: 26),
+                                    child: Column(
+                                      children: <Widget>[
+                                        Text(
+                                          snapshot.data!.name,
+                                          style: const TextStyle(fontSize: 30),
+                                        ),
+                                        Text(
+                                          "${snapshot.data!.teacher.rating}/10.0",
+                                          style: const TextStyle(fontSize: 18),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
-                              Text(
-                                "${snapshot.data!.teacher.rating}/10.0",
-                                style: const TextStyle(fontSize: 18),
-                              )
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 0, horizontal: 10),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      "Description:",
+                                      style: TextStyle(
+                                        decoration: TextDecoration.underline,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                    Text(
+                                      snapshot.data!.teacher.description,
+                                      style: const TextStyle(fontSize: 18),
+                                    ),
+                                    const Text(
+                                      "Tags:",
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        decoration: TextDecoration.underline,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Column(
+                                mainAxisSize: MainAxisSize.max,
+                                children: <Widget>[
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  for (var tag in snapshot.data!.teacher.subjects)
+                                    Column(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsetsDirectional
+                                              .fromSTEB(20, 0, 20, 0),
+                                          child: Container(
+                                              width: double.infinity,
+                                              decoration: BoxDecoration(
+                                                color: const Color.fromARGB(
+                                                    255, 100, 201, 169),
+                                                borderRadius:
+                                                    BorderRadius.circular(24),
+                                              ),
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.max,
+                                                children: [
+                                                  Text(
+                                                    tag.name,
+                                                    style: const TextStyle(
+                                                      fontFamily: 'Montserrat',
+                                                      fontSize: 20,
+                                                      letterSpacing: 0,
+                                                    ),
+                                                  ),
+                                                  const Padding(
+                                                    padding:
+                                                        EdgeInsetsDirectional
+                                                            .fromSTEB(
+                                                                8, 0, 0, 0),
+                                                    child: Text(
+                                                      "price: \$100",
+                                                      style: TextStyle(
+                                                        fontFamily:
+                                                            'Montserrat',
+                                                        fontSize: 16,
+                                                        letterSpacing: 0,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                   Padding(
+                                                    padding:
+                                                        const EdgeInsetsDirectional
+                                                            .fromSTEB(
+                                                                8, 0, 0, 0),
+                                                    child: Text(
+                                                      tag.description,
+                                                      style: const TextStyle(
+                                                        fontFamily:
+                                                            'Montserrat',
+                                                        fontSize: 16,
+                                                        letterSpacing: 0,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  TextButton(
+                                                    onPressed: () {
+                                                      print(
+                                                          'Button pressed ...');
+                                                    },
+                                                    style: ButtonStyle(
+                                                      backgroundColor:
+                                                          MaterialStateProperty
+                                                              .all<Color>(Colors
+                                                                  .orange),
+                                                      elevation:
+                                                          MaterialStateProperty
+                                                              .all<double>(3),
+                                                      shape: MaterialStateProperty
+                                                          .all<OutlinedBorder>(
+                                                        RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(20),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    child: const Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        Icon(
+                                                          Icons.edit_square,
+                                                          size: 15,
+                                                        ),
+                                                        SizedBox(width: 8),
+                                                        Text(
+                                                          'Edit Tag',
+                                                          style: TextStyle(
+                                                            fontFamily:
+                                                                'Plus Jakarta Sans',
+                                                            color: Colors.white,
+                                                            letterSpacing: 0,
+                                                            fontSize: 14,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  const SizedBox(
+                                                    height: 5,
+                                                  ),
+                                                ],
+                                              )),
+                                        ),
+                                        const SizedBox(
+                                          height: 20,
+                                        ),
+                                      ],
+                                    ),
+                                ],
+                              ),
+                              
                             ],
                           ),
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 0, horizontal: 10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            "Description:",
-                            style: TextStyle(
-                              decoration: TextDecoration.underline,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                            ),
-                          ),
-                          Text(
-                            snapshot.data!.teacher.description,
-                            style: const TextStyle(fontSize: 18),
-                          ),
-                          const Text(
-                            "Tags:",
-                            style: TextStyle(
-                              fontSize: 20,
-                              decoration: TextDecoration.underline,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          )
                         ],
                       ),
                     ),
-                    Wrap(
-                      children: <Widget>[
-                        for (var item in snapshot.data!.teacher.subjects)
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 10, horizontal: 10),
-                            child: Container(
-                              padding: const EdgeInsets.all(8),
-                              color: const Color.fromARGB(255, 100, 201, 169),
-                              child: Text(
-                                item.name,
-                                style: const TextStyle(
-                                  fontSize: 15,
-                                ),
-                              ),
-                            ),
-                          ),
-                      ],
-                    )
                   ],
                 );
               }
