@@ -272,24 +272,7 @@ class _TeacherProfileState extends State<TeacherProfile> {
             }),
           ),
           floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              showModalBottomSheet(
-                context: context,
-                builder: (context) => EnlightSubjectMenu(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    setState(() {
-                      loading = true;
-                    });
-                  },
-                  onResponse: () {
-                    setState(() {
-                      loading =
-                    });
-                  },
-                ),
-              );
-            },
+            onPressed: _showSubjectDialog,
             child: const Icon(
               Icons.add,
             ),
@@ -475,5 +458,44 @@ class _TeacherProfileState extends State<TeacherProfile> {
       );
     });
     return null;
+  }
+
+  void _showSubjectDialog() {
+    showModalBottomSheet<int>(
+      context: context,
+      builder: (context) => EnlightSubjectMenu(
+        onPressed: () {
+          setState(() {
+            loading = true;
+          });
+        },
+      ),
+    ).then((code) {
+      setState(() {
+        loading = false;
+      });
+      if (code == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: AwesomeSnackbarContent(
+              title: "Success",
+              message: "Subject successfully created.",
+              contentType: ContentType.success,
+            ),
+          ),
+        );
+      }
+      if (code == 500) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: AwesomeSnackbarContent(
+              title: "Error",
+              message: "Internal server error.",
+              contentType: ContentType.failure,
+            ),
+          ),
+        );
+      }
+    });
   }
 }
