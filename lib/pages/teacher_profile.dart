@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'package:enlight/components/enlight_bottom_sheet.dart';
+import 'package:enlight/components/enlight_app_bar.dart';
 import 'package:enlight/components/enlight_confirm_picture_dialog.dart';
 import 'package:enlight/components/enlight_loading_indicator.dart';
+import 'package:enlight/components/enlight_picture_menu.dart';
+import 'package:enlight/components/enlight_subject_menu.dart';
 import 'package:enlight/models/account_data.dart';
-import 'package:enlight/models/teacher_data.dart';
+import 'package:enlight/models/teacher_account_data.dart';
 import 'package:enlight/pages/edit_account.dart';
 import 'package:enlight/pages/edit_profile_teacher.dart';
 import 'package:enlight/pages/sign_in.dart';
@@ -22,7 +24,7 @@ class TeacherProfile extends StatefulWidget {
 }
 
 class _TeacherProfileState extends State<TeacherProfile> {
-  late Future<TeacherData> data;
+  late Future<TeacherAccountData> data;
   var loading = true;
   var initialLoaded = false;
   Uint8List? selectedImage;
@@ -162,256 +164,97 @@ class _TeacherProfileState extends State<TeacherProfile> {
                 }
                 final hasImage = snapshot.data!.picture != null;
                 final decoded = base64.decode(snapshot.data!.picture ?? "");
-                return CustomScrollView(
-                  slivers: [
-                    const SliverAppBar(
-                      title: Text("Profile"),
-                    ),
-                    SliverList(
-                      delegate: SliverChildListDelegate(
-                        [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(100),
+                            onTap: () {
+                              showModalBottomSheet(
+                                context: context,
+                                builder: (context) => EnlightPictureMenu(
+                                  selectFromGallery: selectFromGallery,
+                                  takePhoto: takePhoto,
+                                ),
+                              );
+                            },
+                            child: CircleAvatar(
+                              radius: 50,
+                              backgroundImage:
+                                  hasImage ? MemoryImage(decoded) : null,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 0, horizontal: 34),
+                          child: Column(
                             children: <Widget>[
-                              Row(
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: InkWell(
-                                      borderRadius: BorderRadius.circular(100),
-                                      onTap: () {
-                                        showModalBottomSheet(
-                                          context: context,
-                                          builder: (context) =>
-                                              EnlightBottomSheet(
-                                            selectFromGallery:
-                                                selectFromGallery,
-                                            takePhoto: takePhoto,
-                                          ),
-                                        );
-                                      },
-                                      child: CircleAvatar(
-                                        radius: 50,
-                                        backgroundImage: hasImage
-                                            ? MemoryImage(decoded)
-                                            : null,
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 0, horizontal: 26),
-                                    child: Column(
-                                      children: <Widget>[
-                                        Text(
-                                          snapshot.data!.name,
-                                          style: const TextStyle(fontSize: 30),
-                                        ),
-                                        Text(
-                                          "${snapshot.data!.rating}/10.0",
-                                          style: const TextStyle(fontSize: 18),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ],
+                              Text(
+                                snapshot.data!.name,
+                                style: const TextStyle(fontSize: 30),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 0, horizontal: 10),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text(
-                                      "Description:",
-                                      style: TextStyle(
-                                        decoration: TextDecoration.underline,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                    Text(
-                                      snapshot.data!.description,
-                                      style: const TextStyle(fontSize: 18),
-                                    ),
-                                    const Text(
-                                      "Tags:",
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        decoration: TextDecoration.underline,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Column(
-                                mainAxisSize: MainAxisSize.max,
-                                children: <Widget>[
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  for (var tag in snapshot.data!.tags)
-                                    Column(
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsetsDirectional
-                                              .fromSTEB(20, 0, 20, 0),
-                                          child: Container(
-                                              width: double.infinity,
-                                              decoration: BoxDecoration(
-                                                color: const Color.fromARGB(
-                                                    255, 100, 201, 169),
-                                                borderRadius:
-                                                    BorderRadius.circular(24),
-                                              ),
-                                              child: Column(
-                                                mainAxisSize: MainAxisSize.max,
-                                                children: [
-                                                  Text(
-                                                    tag,
-                                                    style: const TextStyle(
-                                                      fontFamily: 'Montserrat',
-                                                      fontSize: 20,
-                                                      letterSpacing: 0,
-                                                    ),
-                                                  ),
-                                                  const Padding(
-                                                    padding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(
-                                                                8, 0, 0, 0),
-                                                    child: Text(
-                                                      "price: \$100",
-                                                      style: TextStyle(
-                                                        fontFamily:
-                                                            'Montserrat',
-                                                        fontSize: 16,
-                                                        letterSpacing: 0,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  const Padding(
-                                                    padding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(
-                                                                8, 0, 0, 0),
-                                                    child: Text(
-                                                      "Me encanta enseñar matemáticas porque es emocionante ver cómo los estudiantes descubren la belleza y la lógica detrás de los números, desarrollando habilidades para resolver problemas y pensar de manera crítica.",
-                                                      style: TextStyle(
-                                                        fontFamily:
-                                                            'Montserrat',
-                                                        fontSize: 16,
-                                                        letterSpacing: 0,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  TextButton(
-                                                    onPressed: () {
-                                                      print(
-                                                          'Button pressed ...');
-                                                    },
-                                                    style: ButtonStyle(
-                                                      backgroundColor:
-                                                          MaterialStateProperty
-                                                              .all<Color>(Colors
-                                                                  .orange),
-                                                      elevation:
-                                                          MaterialStateProperty
-                                                              .all<double>(3),
-                                                      shape: MaterialStateProperty
-                                                          .all<OutlinedBorder>(
-                                                        RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(20),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    child: const Row(
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
-                                                      children: [
-                                                        Icon(
-                                                          Icons.edit_square,
-                                                          size: 15,
-                                                        ),
-                                                        SizedBox(width: 8),
-                                                        Text(
-                                                          'Edit Tag',
-                                                          style: TextStyle(
-                                                            fontFamily:
-                                                                'Plus Jakarta Sans',
-                                                            color: Colors.white,
-                                                            letterSpacing: 0,
-                                                            fontSize: 14,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 5,
-                                                  ),
-                                                ],
-                                              )),
-                                        ),
-                                        const SizedBox(
-                                          height: 20,
-                                        ),
-                                      ],
-                                    ),
-                                ],
-                              ),
-                              Padding(
-                                padding: const EdgeInsetsDirectional.fromSTEB(
-                                    20, 0, 20, 0),
-                                child: Container(
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                    color: const Color.fromARGB(
-                                        255, 100, 201, 169),
-                                    borderRadius: BorderRadius.circular(24),
-                                  ),
-                                  child: Center(
-                                    child: Stack(
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsetsDirectional
-                                              .fromSTEB(0, 20, 0, 20),
-                                          child: Container(
-                                            width: 48,
-                                            height: 48,
-                                            decoration: const BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color: Colors.orange,
-                                            ),
-                                            child: Center(
-                                              child: IconButton(
-                                                icon: const Icon(
-                                                  Icons.add,
-                                                  color: Colors.white,
-                                                ),
-                                                onPressed: () {
-                                                  print("si");
-                                                },
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 20,
+                              Text(
+                                "${snapshot.data!.teacher.rating}/10.0",
+                                style: const TextStyle(fontSize: 18),
                               )
                             ],
                           ),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 0, horizontal: 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Description:",
+                            style: TextStyle(
+                              decoration: TextDecoration.underline,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                            ),
+                          ),
+                          Text(
+                            snapshot.data!.teacher.description,
+                            style: const TextStyle(fontSize: 18),
+                          ),
+                          const Text(
+                            "Tags:",
+                            style: TextStyle(
+                              fontSize: 20,
+                              decoration: TextDecoration.underline,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          )
                         ],
                       ),
                     ),
+                    Wrap(
+                      children: <Widget>[
+                        for (var item in snapshot.data!.teacher.subjects)
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 10),
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              color: const Color.fromARGB(255, 100, 201, 169),
+                              child: Text(
+                                item.name,
+                                style: const TextStyle(
+                                  fontSize: 15,
+                                ),
+                              ),
+                            ),
+                          ),
+                      ],
+                    )
                   ],
                 );
               }
@@ -424,6 +267,12 @@ class _TeacherProfileState extends State<TeacherProfile> {
               }
               return const EnlightLoadingIndicator(visible: false);
             }),
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: _showSubjectDialog,
+            child: const Icon(
+              Icons.add,
+            ),
           ),
         ),
         EnlightLoadingIndicator(visible: loading),
@@ -606,5 +455,49 @@ class _TeacherProfileState extends State<TeacherProfile> {
       );
     });
     return null;
+  }
+
+  void _showSubjectDialog() {
+    data.then(
+      (value) {
+        showModalBottomSheet<int>(
+          context: context,
+          builder: (context) => EnlightSubjectMenu(
+            categories: value.teacher.categories,
+            onPressed: () {
+              setState(() {
+                loading = true;
+              });
+            },
+          ),
+        ).then((code) {
+          setState(() {
+            loading = false;
+          });
+          if (code == 200) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: AwesomeSnackbarContent(
+                  title: "Success",
+                  message: "Subject successfully created.",
+                  contentType: ContentType.success,
+                ),
+              ),
+            );
+          }
+          if (code == 500) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: AwesomeSnackbarContent(
+                  title: "Error",
+                  message: "Internal server error.",
+                  contentType: ContentType.failure,
+                ),
+              ),
+            );
+          }
+        });
+      },
+    );
   }
 }

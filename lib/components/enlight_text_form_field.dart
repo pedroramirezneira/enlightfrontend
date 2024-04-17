@@ -6,6 +6,7 @@ class EnlightTextFormField extends StatefulWidget {
   final bool email;
   final bool password;
   final bool date;
+  final bool description;
 
   const EnlightTextFormField({
     super.key,
@@ -14,6 +15,7 @@ class EnlightTextFormField extends StatefulWidget {
     this.email = false,
     this.password = false,
     this.date = false,
+    this.description = false,
   });
 
   @override
@@ -37,6 +39,7 @@ class _EnlightTextFormFieldState extends State<EnlightTextFormField> {
         controller: widget.controller,
         obscureText: obscure,
         readOnly: widget.date,
+        maxLines: widget.description == true ? null : 1,
         validator: (value) {
           if (value == null || value.isEmpty) {
             return "${widget.text} cannot be empty.";

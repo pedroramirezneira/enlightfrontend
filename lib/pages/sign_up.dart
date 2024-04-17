@@ -64,17 +64,18 @@ class _SignUpState extends State<SignUp> {
                             width: 308,
                             height: 100,
                             child: Align(
-                                alignment: const AlignmentDirectional(0, 0),
-                                child: Text(
-                                  'ENLIGHT',
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.getFont(
-                                    'Montserrat',
-                                    color: const Color.fromARGB(
-                                        255, 100, 201, 169),
-                                    fontSize: 50,
-                                  ),
-                                )),
+                              alignment: const AlignmentDirectional(0, 0),
+                              child: Text(
+                                'ENLIGHT',
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.getFont(
+                                  'Montserrat',
+                                  color:
+                                      const Color.fromARGB(255, 100, 201, 169),
+                                  fontSize: 50,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                       ),
