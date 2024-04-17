@@ -7,7 +7,7 @@ import 'package:enlight/components/enlight_loading_indicator.dart';
 import 'package:enlight/components/enlight_picture_menu.dart';
 import 'package:enlight/components/enlight_subject_menu.dart';
 import 'package:enlight/models/account_data.dart';
-import 'package:enlight/models/teacher_data.dart';
+import 'package:enlight/models/teacher_account_data.dart';
 import 'package:enlight/pages/edit_account.dart';
 import 'package:enlight/pages/edit_profile_teacher.dart';
 import 'package:enlight/pages/sign_in.dart';
@@ -24,7 +24,7 @@ class TeacherProfile extends StatefulWidget {
 }
 
 class _TeacherProfileState extends State<TeacherProfile> {
-  late Future<TeacherData> data;
+  late Future<TeacherAccountData> data;
   var loading = true;
   var initialLoaded = false;
   Uint8List? selectedImage;
@@ -202,7 +202,7 @@ class _TeacherProfileState extends State<TeacherProfile> {
                                 style: const TextStyle(fontSize: 30),
                               ),
                               Text(
-                                "${snapshot.data!.rating}/10.0",
+                                "${snapshot.data!.teacher.rating}/10.0",
                                 style: const TextStyle(fontSize: 18),
                               )
                             ],
@@ -225,7 +225,7 @@ class _TeacherProfileState extends State<TeacherProfile> {
                             ),
                           ),
                           Text(
-                            snapshot.data!.description,
+                            snapshot.data!.teacher.description,
                             style: const TextStyle(fontSize: 18),
                           ),
                           const Text(
@@ -241,7 +241,7 @@ class _TeacherProfileState extends State<TeacherProfile> {
                     ),
                     Wrap(
                       children: <Widget>[
-                        for (var item in snapshot.data!.tags)
+                        for (var item in snapshot.data!.teacher.subjects)
                           Padding(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 10, horizontal: 10),
@@ -249,7 +249,7 @@ class _TeacherProfileState extends State<TeacherProfile> {
                               padding: const EdgeInsets.all(8),
                               color: const Color.fromARGB(255, 100, 201, 169),
                               child: Text(
-                                item,
+                                item.name,
                                 style: const TextStyle(
                                   fontSize: 15,
                                 ),

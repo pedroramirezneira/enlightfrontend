@@ -3,8 +3,9 @@ import 'package:enlight/components/enlight_app_bar.dart';
 import 'package:enlight/components/enlight_form_submission_button.dart';
 import 'package:enlight/components/enlight_loading_indicator.dart';
 import 'package:enlight/components/enlight_text_form_field.dart';
-import 'package:enlight/models/teacher_data.dart';
+import 'package:enlight/models/teacher_account_data.dart';
 import 'package:enlight/util/account_ops.dart';
+import 'package:enlight/util/teacher_ops.dart';
 import 'package:flutter/material.dart';
 
 class EditTeacherProfile extends StatefulWidget {
@@ -23,7 +24,7 @@ class _EditAccountState extends State<EditTeacherProfile> {
   late final GlobalKey<FormState> formKey;
   late final TextEditingController descriptionController;
   late final TextEditingController pictureController;
-  late Future<TeacherData> data;
+  late Future<TeacherAccountData> data;
   late String encoded;
   var loading = true;
   var initialLoaded = false;
@@ -48,7 +49,7 @@ class _EditAccountState extends State<EditTeacherProfile> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 if (!initialLoaded) {
-                  descriptionController.text = snapshot.data!.description;
+                  descriptionController.text = snapshot.data!.teacher.description;
                   pictureController.text = "si";
                   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
                     setState(() {
@@ -115,7 +116,7 @@ class _EditAccountState extends State<EditTeacherProfile> {
     setState(() {
       loading = true;
     });
-    AccountOps.updateTeacherProfile(
+    TeacherOps.updateTeacher(
       description: descriptionController.text,
     ).then((code) {
       if (code == 200) {

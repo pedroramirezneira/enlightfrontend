@@ -6,11 +6,11 @@ import 'package:enlight/util/token.dart';
 import 'package:flutter/material.dart';
 
 class EnlightSubjectMenu extends StatefulWidget {
-  final void Function()? onPressed;
+  final void Function() onPressed;
 
   const EnlightSubjectMenu({
     super.key,
-    this.onPressed,
+    required this.onPressed,
   });
 
   @override
@@ -51,7 +51,7 @@ class _EnlightSubjectMenuState extends State<EnlightSubjectMenu> {
   }
 
   void _submit() {
-    widget.onPressed != null ? widget.onPressed!() : null;
+    widget.onPressed();
     TeacherOps.createSubject(
       categoryName: categoryNameController.text,
       name: nameController.text,
