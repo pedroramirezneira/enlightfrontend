@@ -73,9 +73,7 @@ class _EditAccountState extends State<EditTeacherProfile> {
                             EnlightFormSubmissionButton(
                               text: "Add tags",
                               formKey: formKey,
-                              onPressed: () {
-                                print("hola");
-                              },
+                              onPressed: () {},
                             ),
                             EnlightFormSubmissionButton(
                               text: "Save",

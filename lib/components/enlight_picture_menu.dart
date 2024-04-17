@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class EnlightBottomSheet extends StatelessWidget {
+class EnlightPictureMenu extends StatelessWidget {
   final void Function()? selectFromGallery;
   final void Function()? takePhoto;
 
-  const EnlightBottomSheet({
+  const EnlightPictureMenu({
     super.key,
     this.selectFromGallery,
     this.takePhoto,
@@ -13,7 +13,7 @@ class EnlightBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 85,
+      height: 75,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
@@ -23,7 +23,7 @@ class EnlightBottomSheet extends StatelessWidget {
                 onPressed: selectFromGallery,
                 icon: const Icon(
                   Icons.photo,
-                  size: 40,
+                  size: 30,
                 ),
               ),
               const Text("Select photo"),
@@ -35,7 +35,7 @@ class EnlightBottomSheet extends StatelessWidget {
                 onPressed: takePhoto,
                 icon: const Icon(
                   Icons.photo_camera,
-                  size: 40,
+                  size: 30,
                 ),
               ),
               const Text("Take photo"),

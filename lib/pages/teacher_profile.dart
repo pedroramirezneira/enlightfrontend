@@ -2,9 +2,10 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:enlight/components/enlight_app_bar.dart';
-import 'package:enlight/components/enlight_bottom_sheet.dart';
 import 'package:enlight/components/enlight_confirm_picture_dialog.dart';
 import 'package:enlight/components/enlight_loading_indicator.dart';
+import 'package:enlight/components/enlight_picture_menu.dart';
+import 'package:enlight/components/enlight_subject_menu.dart';
 import 'package:enlight/models/account_data.dart';
 import 'package:enlight/models/teacher_data.dart';
 import 'package:enlight/pages/edit_account.dart';
@@ -178,7 +179,7 @@ class _TeacherProfileState extends State<TeacherProfile> {
                             onTap: () {
                               showModalBottomSheet(
                                 context: context,
-                                builder: (context) => EnlightBottomSheet(
+                                builder: (context) => EnlightPictureMenu(
                                   selectFromGallery: selectFromGallery,
                                   takePhoto: takePhoto,
                                 ),
@@ -269,6 +270,29 @@ class _TeacherProfileState extends State<TeacherProfile> {
               }
               return const EnlightLoadingIndicator(visible: false);
             }),
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                builder: (context) => EnlightSubjectMenu(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    setState(() {
+                      loading = true;
+                    });
+                  },
+                  onResponse: () {
+                    setState(() {
+                      loading =
+                    });
+                  },
+                ),
+              );
+            },
+            child: const Icon(
+              Icons.add,
+            ),
           ),
         ),
         EnlightLoadingIndicator(visible: loading),

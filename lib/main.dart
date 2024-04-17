@@ -47,13 +47,14 @@ class MyApp extends StatelessWidget {
       title: 'Enlight',
       theme: ThemeData(
         appBarTheme: AppBarTheme(
-            backgroundColor: const Color.fromARGB(255, 43, 57, 68),
-            centerTitle: true,
-            titleTextStyle: GoogleFonts.getFont(
-              "Montserrat",
-              color: Colors.white,
-              fontSize: 22,
-            )),
+          backgroundColor: const Color.fromARGB(255, 43, 57, 68),
+          centerTitle: true,
+          titleTextStyle: GoogleFonts.getFont(
+            "Montserrat",
+            color: Colors.white,
+            fontSize: 22,
+          ),
+        ),
         fontFamily: GoogleFonts.montserrat().fontFamily,
         colorScheme: ColorScheme(
           brightness: Brightness.dark,
