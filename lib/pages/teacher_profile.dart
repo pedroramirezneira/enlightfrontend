@@ -64,11 +64,7 @@ class _TeacherProfileState extends State<TeacherProfile> {
                         ..push(MaterialPageRoute(
                           builder: (context) => EditAccount(
                             data: value as AccountData,
-                            onUpdate: () {
-                              setState(() {
-                                data;
-                              });
-                            },
+                            onUpdate: () => setState(() => data),
                           ),
                         ));
                     });
@@ -82,11 +78,7 @@ class _TeacherProfileState extends State<TeacherProfile> {
                       ..pop()
                       ..push(MaterialPageRoute(
                         builder: (context) => EditTeacherProfile(
-                          onUpdate: () {
-                            setState(() {
-                              data = TeacherOps.getTeacher();
-                            });
-                          },
+                          onUpdate: () => setState(() => data),
                         ),
                       ));
                   },

@@ -80,6 +80,7 @@ class _EditAccountState extends State<EditAccount> {
                             birthday: birthdayController.text,
                             address: addressController.text,
                             widget: widget,
+                            onResponse: () => setState(() => loading = false),
                           );
                         },
                       ),

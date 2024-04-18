@@ -65,11 +65,7 @@ class _StudentProfileState extends State<StudentProfile> {
                         ..push(MaterialPageRoute(
                           builder: (context) => EditAccount(
                             data: data,
-                            onUpdate: () {
-                              setState(() {
-                                data;
-                              });
-                            },
+                            onUpdate: () => setState(() => data),
                           ),
                         ));
                     });
