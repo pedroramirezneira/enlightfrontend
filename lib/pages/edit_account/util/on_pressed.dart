@@ -10,12 +10,14 @@ void onPressed({
   required String birthday,
   required String address,
   required EditAccount widget,
+  required void Function() onResponse,
 }) {
   AccountOps.updateAccount(
     name: name,
     birthday: birthday,
     address: address,
   ).then((code) {
+    onResponse();
     if (code == 200) {
       widget.data.name = name;
       widget.data.birthday = birthday;
@@ -40,6 +42,7 @@ void onPressed({
           birthday: birthday,
           address: address,
           widget: widget,
+          onResponse: onResponse
         ),
       );
     }
