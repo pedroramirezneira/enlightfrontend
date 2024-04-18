@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class EnlightTextFormField extends StatefulWidget {
+class EnlightTextField extends StatefulWidget {
   final String text;
   final TextEditingController controller;
   final bool email;
@@ -8,7 +8,7 @@ class EnlightTextFormField extends StatefulWidget {
   final bool date;
   final bool description;
 
-  const EnlightTextFormField({
+  const EnlightTextField({
     super.key,
     required this.text,
     required this.controller,
@@ -19,10 +19,10 @@ class EnlightTextFormField extends StatefulWidget {
   });
 
   @override
-  State<EnlightTextFormField> createState() => _EnlightTextFormFieldState();
+  State<EnlightTextField> createState() => _EnlightTextFieldState();
 }
 
-class _EnlightTextFormFieldState extends State<EnlightTextFormField> {
+class _EnlightTextFieldState extends State<EnlightTextField> {
   late bool obscure;
 
   @override

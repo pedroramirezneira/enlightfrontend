@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'package:enlight/components/enlight_form_submission_button.dart';
-import 'package:enlight/components/enlight_loading_indicator.dart';
-import 'package:enlight/components/enlight_text_form_field.dart';
+import 'package:enlight/components/form_submission_button.dart';
+import 'package:enlight/components/loading_indicator.dart';
+import 'package:enlight/components/enlight_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
@@ -40,7 +40,7 @@ class _PasswordRecoveryPageState extends State<PasswordRecoveryPage> {
             formKey: formKey,
           ),
         ),
-        EnlightLoadingIndicator(visible: loading)
+        LoadingIndicator(visible: loading)
       ],
     );
   }
@@ -146,12 +146,12 @@ class _PasswordRecoveryFormState extends State<PasswordRecoveryForm> {
                     'Enter the email linked to your accont.',
                     style: TextStyle(fontSize: 16),
                   ),
-                  EnlightTextFormField(
+                  EnlightTextField(
                     text: "Email",
                     controller: widget.emailController,
                     email: true,
                   ),
-                  EnlightFormSubmissionButton(
+                  FormSubmissionButton(
                     text: "Send recovery email",
                     onPressed: widget.onPressed,
                     formKey: widget.formKey,

@@ -11,7 +11,6 @@ import 'package:enlight/pages/edit_account.dart';
 import 'package:enlight/pages/edit_profile_teacher.dart';
 import 'package:enlight/pages/sign_in.dart';
 import 'package:enlight/util/account_ops.dart';
-import 'package:enlight/util/teacher_ops.dart';
 import 'package:enlight/util/token.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -32,7 +31,7 @@ class _TeacherProfileState extends State<TeacherProfile> {
   @override
   void initState() {
     super.initState();
-    data = TeacherOps.getTeacher();
+    data = AccountOps.getTeacher();
   }
 
   @override
@@ -84,7 +83,7 @@ class _TeacherProfileState extends State<TeacherProfile> {
                         builder: (context) => EditTeacherProfile(
                           onUpdate: () {
                             setState(() {
-                              data = TeacherOps.getTeacher();
+                              data = AccountOps.getTeacher();
                             });
                           },
                         ),
@@ -251,10 +250,9 @@ class _TeacherProfileState extends State<TeacherProfile> {
                                 mainAxisSize: MainAxisSize.max,
                                 children: <Widget>[
                                   const SizedBox(
-                                    height: 20,
+                                    height: 10,
                                   ),
-                                  for (var tag
-                                      in snapshot.data!.teacher.subjects)
+                                  for (var tag in snapshot.data!.teacher.subjects)
                                     Column(
                                       children: [
                                         Padding(
@@ -294,11 +292,11 @@ class _TeacherProfileState extends State<TeacherProfile> {
                                                       ),
                                                     ),
                                                   ),
-                                                  Padding(
+                                                   Padding(
                                                     padding:
                                                         const EdgeInsetsDirectional
                                                             .fromSTEB(
-                                                            8, 0, 0, 0),
+                                                                8, 0, 0, 0),
                                                     child: Text(
                                                       tag.description,
                                                       style: const TextStyle(
@@ -307,6 +305,50 @@ class _TeacherProfileState extends State<TeacherProfile> {
                                                         fontSize: 16,
                                                         letterSpacing: 0,
                                                       ),
+                                                    ),
+                                                  ),
+                                                  TextButton(
+                                                    onPressed: () {
+                                                      print(
+                                                          'Button pressed ...');
+                                                    },
+                                                    style: ButtonStyle(
+                                                      backgroundColor:
+                                                          MaterialStateProperty
+                                                              .all<Color>(Colors
+                                                                  .orange),
+                                                      elevation:
+                                                          MaterialStateProperty
+                                                              .all<double>(3),
+                                                      shape: MaterialStateProperty
+                                                          .all<OutlinedBorder>(
+                                                        RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(20),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    child: const Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        Icon(
+                                                          Icons.edit_square,
+                                                          size: 15,
+                                                        ),
+                                                        SizedBox(width: 8),
+                                                        Text(
+                                                          'Edit Tag',
+                                                          style: TextStyle(
+                                                            fontFamily:
+                                                                'Plus Jakarta Sans',
+                                                            color: Colors.white,
+                                                            letterSpacing: 0,
+                                                            fontSize: 14,
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
                                                   ),
                                                   const SizedBox(
@@ -322,6 +364,7 @@ class _TeacherProfileState extends State<TeacherProfile> {
                                     ),
                                 ],
                               ),
+                              
                             ],
                           ),
                         ],

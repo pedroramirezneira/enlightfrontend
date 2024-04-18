@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class EnlightLoadingIndicator extends StatelessWidget {
+class LoadingIndicator extends StatelessWidget {
   final bool visible;
 
-  const EnlightLoadingIndicator({
+  const LoadingIndicator({
     super.key,
     required this.visible,
   });

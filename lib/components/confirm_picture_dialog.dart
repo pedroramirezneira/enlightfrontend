@@ -1,12 +1,12 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 
-class EnlightConfirmPictureDialog extends StatelessWidget {
+class ConfirmPictureDialog extends StatelessWidget {
   final Uint8List bytes;
   final void Function()? onConfirm;
   final void Function()? onCancel;
 
-  const EnlightConfirmPictureDialog({
+  const ConfirmPictureDialog({
     super.key,
     required this.bytes,
     this.onConfirm,

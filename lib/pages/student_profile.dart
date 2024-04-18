@@ -1,13 +1,12 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'package:enlight/components/enlight_app_bar.dart';
-import 'package:enlight/components/enlight_picture_menu.dart';
-import 'package:enlight/components/enlight_confirm_picture_dialog.dart';
-import 'package:enlight/components/enlight_loading_indicator.dart';
+import 'package:enlight/components/picture_menu.dart';
+import 'package:enlight/components/confirm_picture_dialog.dart';
+import 'package:enlight/components/loading_indicator.dart';
 import 'package:enlight/models/account_data.dart';
-import 'package:enlight/pages/edit_account.dart';
-import 'package:enlight/pages/sign_in.dart';
+import 'package:enlight/pages/edit_account/edit_account.dart';
+import 'package:enlight/pages/sign_in/sign_in.dart';
 import 'package:enlight/util/account_ops.dart';
 import 'package:enlight/util/token.dart';
 import 'package:flutter/material.dart';
@@ -37,8 +36,10 @@ class _StudentProfileState extends State<StudentProfile> {
     return Stack(
       children: [
         Scaffold(
-          appBar: const EnlightAppBar(
-            text: "Profile",
+          appBar: AppBar(
+            title: const Text(
+              "Profile",
+            ),
           ),
           endDrawer: Drawer(
             child: ListView(
@@ -160,7 +161,7 @@ class _StudentProfileState extends State<StudentProfile> {
                             onTap: () {
                               showModalBottomSheet(
                                 context: context,
-                                builder: (context) => EnlightPictureMenu(
+                                builder: (context) => PictureMenu(
                                   selectFromGallery: selectFromGallery,
                                   takePhoto: takePhoto,
                                 ),
@@ -204,11 +205,11 @@ class _StudentProfileState extends State<StudentProfile> {
                   });
                 });
               }
-              return const EnlightLoadingIndicator(visible: false);
+              return const LoadingIndicator(visible: false);
             },
           ),
         ),
-        EnlightLoadingIndicator(visible: loading),
+        LoadingIndicator(visible: loading),
       ],
     );
   }
@@ -300,7 +301,7 @@ class _StudentProfileState extends State<StudentProfile> {
         showAdaptiveDialog(
           barrierDismissible: false,
           context: context,
-          builder: (context) => EnlightConfirmPictureDialog(
+          builder: (context) => ConfirmPictureDialog(
             bytes: selectedImage!,
             onConfirm: updatePicture,
             onCancel: () {
@@ -330,7 +331,7 @@ class _StudentProfileState extends State<StudentProfile> {
         showAdaptiveDialog(
           barrierDismissible: false,
           context: context,
-          builder: (context) => EnlightConfirmPictureDialog(
+          builder: (context) => ConfirmPictureDialog(
             bytes: selectedImage!,
             onConfirm: updatePicture,
             onCancel: () {

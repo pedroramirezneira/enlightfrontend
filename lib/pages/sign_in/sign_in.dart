@@ -3,7 +3,7 @@ import 'package:enlight/components/enlight_form_submission_button.dart';
 import 'package:enlight/components/enlight_loading_indicator.dart';
 import 'package:enlight/components/enlight_text_form_field.dart';
 import 'package:enlight/pages/student_profile.dart';
-import 'package:enlight/pages/teacher_profile/teacher_profile_page.dart';
+import 'package:enlight/pages/teacher_profile.dart';
 import 'package:enlight/pages/recover_password.dart';
 import 'package:enlight/pages/sign_up.dart';
 import 'package:enlight/util/account_ops.dart';
