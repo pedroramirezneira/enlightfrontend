@@ -23,7 +23,7 @@ class AutocompleteField extends StatelessWidget {
           return const Iterable<String>.empty();
         }
         return data.map((category) => category.name).where((name) {
-          return name.contains(textEditingValue.text.toLowerCase());
+          return name.toLowerCase().contains(textEditingValue.text.toLowerCase());
         });
       },
       fieldViewBuilder:
