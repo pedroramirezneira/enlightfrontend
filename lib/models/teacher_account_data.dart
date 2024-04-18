@@ -9,6 +9,7 @@ class TeacherAccountData extends AccountData {
     required super.name,
     required super.birthday,
     required super.address,
+    required super.picture,
     required this.teacher,
   });
 
@@ -18,6 +19,7 @@ class TeacherAccountData extends AccountData {
       name: json["name"],
       birthday: (json["birthday"] as String).split("T")[0],
       address: json["address"],
+      picture: json["picture"],
       teacher: TeacherData.fromJson(
         json["teacher"],
       ),

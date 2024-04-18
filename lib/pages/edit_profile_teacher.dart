@@ -21,7 +21,6 @@ class EditTeacherProfile extends StatefulWidget {
 class _EditAccountState extends State<EditTeacherProfile> {
   late final GlobalKey<FormState> formKey;
   late final TextEditingController descriptionController;
-  late final TextEditingController pictureController;
   late Future<TeacherAccountData> data;
   late String encoded;
   var loading = true;
@@ -52,7 +51,6 @@ class _EditAccountState extends State<EditTeacherProfile> {
                 if (!initialLoaded) {
                   descriptionController.text =
                       snapshot.data!.teacher.description;
-                  pictureController.text = "si";
                   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
                     setState(() {
                       loading = false;
@@ -72,11 +70,6 @@ class _EditAccountState extends State<EditTeacherProfile> {
                             EnlightTextField(
                               text: "Description",
                               controller: descriptionController,
-                            ),
-                            FormSubmissionButton(
-                              text: "Add tags",
-                              formKey: formKey,
-                              onPressed: () {},
                             ),
                             FormSubmissionButton(
                               text: "Save",

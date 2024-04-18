@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'package:enlight/components/confirm_picture_dialog.dart';
 import 'package:enlight/components/loading_indicator.dart';
 import 'package:enlight/components/picture_menu.dart';
 import 'package:enlight/components/subject_menu.dart';
@@ -10,11 +9,11 @@ import 'package:enlight/models/teacher_account_data.dart';
 import 'package:enlight/pages/edit_account/edit_account.dart';
 import 'package:enlight/pages/edit_profile_teacher.dart';
 import 'package:enlight/pages/sign_in/sign_in.dart';
+import 'package:enlight/pages/teacher_profile/util/select_image.dart';
+import 'package:enlight/pages/teacher_profile/util/tags_container.dart';
 import 'package:enlight/util/account_ops.dart';
 import 'package:enlight/util/teacher_ops.dart';
-import 'package:enlight/util/token.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 
 class TeacherProfile extends StatefulWidget {
   const TeacherProfile({super.key});
@@ -27,7 +26,6 @@ class _TeacherProfileState extends State<TeacherProfile> {
   late Future<TeacherAccountData> data;
   var loading = true;
   var initialLoaded = false;
-  Uint8List? selectedImage;
 
   @override
   void initState() {
@@ -185,9 +183,16 @@ class _TeacherProfileState extends State<TeacherProfile> {
                                         showModalBottomSheet(
                                           context: context,
                                           builder: (context) => PictureMenu(
-                                            selectFromGallery:
-                                                selectFromGallery,
-                                            takePhoto: takePhoto,
+                                            selectFromGallery: () =>
+                                                selectFromGallery(
+                                                    context: context,
+                                                    setLoading: setLoading,
+                                                    refreshPicture:
+                                                        refreshPicture),
+                                            takePhoto: () => takePhoto(
+                                                context: context,
+                                                setLoading: setLoading,
+                                                refreshPicture: refreshPicture),
                                           ),
                                         );
                                       },
@@ -256,64 +261,9 @@ class _TeacherProfileState extends State<TeacherProfile> {
                                       in snapshot.data!.teacher.subjects)
                                     Column(
                                       children: [
-                                        Padding(
-                                          padding: const EdgeInsetsDirectional
-                                              .fromSTEB(20, 0, 20, 0),
-                                          child: Container(
-                                              width: double.infinity,
-                                              decoration: BoxDecoration(
-                                                color: const Color.fromARGB(
-                                                    255, 100, 201, 169),
-                                                borderRadius:
-                                                    BorderRadius.circular(24),
-                                              ),
-                                              child: Column(
-                                                mainAxisSize: MainAxisSize.max,
-                                                children: [
-                                                  Text(
-                                                    tag.name,
-                                                    style: const TextStyle(
-                                                      fontFamily: 'Montserrat',
-                                                      fontSize: 20,
-                                                      letterSpacing: 0,
-                                                    ),
-                                                  ),
-                                                  const Padding(
-                                                    padding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(
-                                                                8, 0, 0, 0),
-                                                    child: Text(
-                                                      "price: \$100",
-                                                      style: TextStyle(
-                                                        fontFamily:
-                                                            'Montserrat',
-                                                        fontSize: 16,
-                                                        letterSpacing: 0,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsetsDirectional
-                                                            .fromSTEB(
-                                                            8, 0, 0, 0),
-                                                    child: Text(
-                                                      tag.description,
-                                                      style: const TextStyle(
-                                                        fontFamily:
-                                                            'Montserrat',
-                                                        fontSize: 16,
-                                                        letterSpacing: 0,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 5,
-                                                  ),
-                                                ],
-                                              )),
-                                        ),
+                                        TagContainer(
+                                            name: tag.name,
+                                            description: tag.description),
                                         const SizedBox(
                                           height: 20,
                                         ),
@@ -349,66 +299,6 @@ class _TeacherProfileState extends State<TeacherProfile> {
         LoadingIndicator(visible: loading),
       ],
     );
-  }
-
-  void selectFromGallery() {
-    final picker = ImagePicker();
-    picker.pickImage(source: ImageSource.gallery).then((image) {
-      if (image == null) {
-        Navigator.of(context).pop();
-        return;
-      }
-      image.readAsBytes().then((bytes) {
-        setState(() {
-          selectedImage = bytes;
-        });
-        Navigator.of(context).pop();
-        showAdaptiveDialog(
-          barrierDismissible: false,
-          context: context,
-          builder: (context) => ConfirmPictureDialog(
-            bytes: selectedImage!,
-            onConfirm: updatePicture,
-            onCancel: () {
-              Navigator.of(context).pop();
-              setState(() {
-                selectedImage = null;
-              });
-            },
-          ),
-        );
-      });
-    });
-  }
-
-  void takePhoto() {
-    final picker = ImagePicker();
-    picker.pickImage(source: ImageSource.camera).then((image) {
-      if (image == null) {
-        Navigator.of(context).pop();
-        return;
-      }
-      image.readAsBytes().then((bytes) {
-        setState(() {
-          selectedImage = bytes;
-        });
-        Navigator.of(context).pop();
-        showAdaptiveDialog(
-          barrierDismissible: false,
-          context: context,
-          builder: (context) => ConfirmPictureDialog(
-            bytes: selectedImage!,
-            onConfirm: updatePicture,
-            onCancel: () {
-              Navigator.of(context).pop();
-              setState(() {
-                selectedImage = null;
-              });
-            },
-          ),
-        );
-      });
-    });
   }
 
   void Function()? _logout() {
@@ -447,49 +337,18 @@ class _TeacherProfileState extends State<TeacherProfile> {
     return null;
   }
 
-  void updatePicture() {
-    Navigator.of(context).pop();
+  void setLoading(bool value) {
     setState(() {
-      loading = true;
+      loading = value;
     });
-    AccountOps.insertPicture(picture: base64.encode(selectedImage!))
-        .then((code) {
-      if (code == 200) {
-        setState(() {
-          loading = false;
-          data.then((value) {
-            value.picture = base64.encode(selectedImage!);
-            selectedImage = null;
-          });
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: AwesomeSnackbarContent(
-              title: "Success",
-              message: "Successful update.",
-              contentType: ContentType.success,
-            ),
-          ),
-        );
-      }
-      if (code == 400) {
-        Token.refreshAccessToken().then((_) => updatePicture());
-      }
-      if (code == 500) {
-        setState(() {
-          loading = false;
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: AwesomeSnackbarContent(
-              title: "Error",
-              message: "Internal server error.",
-              contentType: ContentType.failure,
-            ),
-          ),
-        );
-      }
-    });
+  }
+
+  void refreshPicture({
+    required Uint8List? selectedImage,
+  }) {
+    data.then(
+      (value) => value.picture = base64.encode(selectedImage!),
+    );
   }
 
   void Function()? _deleteAccount() {
