@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:enlight/models/account_data.dart';
-import 'package:enlight/models/teacher_account_data.dart';
 import 'package:enlight/util/io.dart';
 import 'package:enlight/util/token.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -179,25 +178,5 @@ class AccountOps {
       ),
     );
     return response.statusCode;
-  }
-
-  static Future<TeacherAccountData> getTeacher() async {
-    final token = await Token.getAccessToken();
-    final response = await http.get(
-      Uri.https(
-        dotenv.env["SERVER"]!,
-        "/account",
-        {
-          "include_picture": "true",
-        },
-      ),
-      headers: {"Authorization": "Bearer $token"},
-    );
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      data["teacher"]["rating"] = 10.0;
-      return TeacherAccountData.fromJson(data);
-    }
-    throw response.statusCode;
   }
 }

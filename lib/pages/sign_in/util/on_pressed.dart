@@ -1,6 +1,6 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:enlight/pages/student_profile.dart';
-import 'package:enlight/pages/teacher_profile.dart';
+import 'package:enlight/pages/teacher_profile/teacher_profile.dart';
 import 'package:enlight/util/account_ops.dart';
 import 'package:enlight/util/io.dart';
 import 'package:flutter/material.dart';

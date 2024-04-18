@@ -1,9 +1,13 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:enlight/components/enlight_text_field.dart';
 import 'package:enlight/components/form_submission_button.dart';
 import 'package:enlight/components/loading_indicator.dart';
-import 'package:enlight/components/enlight_text_field.dart';
-import 'package:enlight/pages/sign_in/util/on_pressed.dart';
+import 'package:enlight/pages/student_profile.dart';
+import 'package:enlight/pages/teacher_profile/teacher_profile.dart';
 import 'package:enlight/pages/recover_password.dart';
 import 'package:enlight/pages/sign_up/sign_up.dart';
+import 'package:enlight/util/account_ops.dart';
+import 'package:enlight/util/io.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -110,16 +114,7 @@ class _SignInState extends State<SignIn> {
                           FormSubmissionButton(
                             text: "Sign in",
                             formKey: formKey,
-                            onPressed: () {
-                              setState(() {
-                                loading = true;
-                              });
-                              onPressed(
-                                context: context,
-                                email: emailController.text,
-                                password: passwordController.text,
-                              );
-                            },
+                            onPressed: _onPressed,
                           ),
                           TextButton(
                             onPressed: () {
@@ -151,6 +146,76 @@ class _SignInState extends State<SignIn> {
         ),
         LoadingIndicator(visible: loading),
       ],
+    );
+  }
+
+  void _onPressed() {
+    setState(() {
+      loading = true;
+    });
+    AccountOps.login(
+      email: emailController.text,
+      password: passwordController.text,
+    ).then(
+      (code) {
+        setState(() {
+          loading = false;
+        });
+        if (code == 200) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: AwesomeSnackbarContent(
+                title: "Success",
+                message: "You have successfully logged in.",
+                contentType: ContentType.success,
+              ),
+            ),
+          );
+          IO.getRole().then((value) {
+            if (value == "student") {
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => const StudentProfile()),
+                (route) => false,
+              );
+            }
+            if (value == "teacher") {
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => const TeacherProfile()),
+                (route) => false,
+              );
+            }
+          });
+        }
+        if (code == 401) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: AwesomeSnackbarContent(
+                title: "Warning",
+                message: "Incorrect password. Please try again.",
+                contentType: ContentType.warning,
+              ),
+            ),
+          );
+        }
+        if (code == 404) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: AwesomeSnackbarContent(
+                title: "Warning",
+                message: "This email is not registered. Please try again.",
+                contentType: ContentType.warning,
+              ),
+            ),
+          );
+        }
+        if (code == 500) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Internal server error. Please try again."),
+            ),
+          );
+        }
+      },
     );
   }
 }
