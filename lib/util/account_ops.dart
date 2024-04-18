@@ -195,7 +195,7 @@ class AccountOps {
     );
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-      data["teacher"]["rating"] = 10;
+      data["teacher"]["rating"] = 10.0;
       return TeacherAccountData.fromJson(data);
     }
     throw response.statusCode;

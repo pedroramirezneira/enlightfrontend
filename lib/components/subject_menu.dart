@@ -45,6 +45,8 @@ class _SubjectMenuState extends State<SubjectMenu> {
               loaded = true;
             });
             showModalBottomSheet<bool>(
+              isScrollControlled: true,
+              useSafeArea: true,
               context: context,
               builder: (context) => buildForm(context),
             ).then((pressed) =>
@@ -74,44 +76,45 @@ class _SubjectMenuState extends State<SubjectMenu> {
   }
 
   Widget buildForm(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(15),
-        child: Column(
-          children: [
-            const Text(
-              "Create subject",
-              style: TextStyle(
-                fontSize: 20,
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          "Create subject",
+        ),
+      ),
+      body: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(15),
+          child: Column(
+            children: [
+              Form(
+                key: formKey,
+                child: Column(
+                  children: <Widget>[
+                    AutocompleteField(
+                      text: "Category Name",
+                      data: widget.categories,
+                      controller: categoryNameController,
+                    ),
+                    EnlightTextField(
+                      text: "Name",
+                      controller: nameController,
+                    ),
+                    EnlightTextField(
+                      text: "Description",
+                      controller: descriptionController,
+                      description: true,
+                    ),
+                    FormSubmissionButton(
+                      text: "Create",
+                      formKey: formKey,
+                      onPressed: () => Navigator.of(context).pop(true),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            Form(
-              key: formKey,
-              child: Column(
-                children: <Widget>[
-                  AutocompleteField(
-                    text: "Category Name",
-                    data: widget.categories,
-                    controller: categoryNameController,
-                  ),
-                  EnlightTextField(
-                    text: "Name",
-                    controller: nameController,
-                  ),
-                  EnlightTextField(
-                    text: "Description",
-                    controller: descriptionController,
-                    description: true,
-                  ),
-                  FormSubmissionButton(
-                    text: "Create",
-                    formKey: formKey,
-                    onPressed: () => Navigator.of(context).pop(true),
-                  ),
-                ],
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
