@@ -7,6 +7,7 @@ class EnlightTextField extends StatefulWidget {
   final bool password;
   final bool date;
   final bool description;
+  final bool number;
   final FocusNode? focusNode;
   final void Function()? onFieldSubmitted;
 
@@ -18,6 +19,7 @@ class EnlightTextField extends StatefulWidget {
     this.password = false,
     this.date = false,
     this.description = false,
+    this.number = false,
     this.focusNode,
     this.onFieldSubmitted,
   });
@@ -54,6 +56,11 @@ class _EnlightTextFieldState extends State<EnlightTextField> {
             }
             if (!widget.controller.text.split("@")[1].contains(".")) {
               return "Invalid email.";
+            }
+          }
+          if (widget.number) {
+            if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
+              return "Invalid number.";
             }
           }
           if (!widget.date) {

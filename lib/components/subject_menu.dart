@@ -26,6 +26,7 @@ class _SubjectMenuState extends State<SubjectMenu> {
   late final TextEditingController categoryNameController;
   late final TextEditingController nameController;
   late final TextEditingController descriptionController;
+  late final TextEditingController priceController;
   var loaded = false;
 
   @override
@@ -35,6 +36,7 @@ class _SubjectMenuState extends State<SubjectMenu> {
     categoryNameController = TextEditingController();
     nameController = TextEditingController();
     descriptionController = TextEditingController();
+    priceController = TextEditingController();
   }
 
   @override
@@ -59,6 +61,7 @@ class _SubjectMenuState extends State<SubjectMenu> {
   void _submit() {
     widget.onPressed();
     TeacherOps.createSubject(
+      price: int.tryParse(priceController.text) ?? 0,
       categoryName: categoryNameController.text,
       name: nameController.text,
       description: descriptionController.text,
@@ -99,6 +102,11 @@ class _SubjectMenuState extends State<SubjectMenu> {
                     EnlightTextField(
                       text: "Name",
                       controller: nameController,
+                    ),
+                    EnlightTextField(
+                      text: "Price",
+                      controller: priceController,
+                      number: true,
                     ),
                     EnlightTextField(
                       text: "Description",

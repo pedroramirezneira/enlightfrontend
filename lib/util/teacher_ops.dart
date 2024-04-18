@@ -28,6 +28,7 @@ class TeacherOps {
   static Future<int> createSubject({
     required String categoryName,
     required String name,
+    required int price,
     required String description,
   }) async {
     final token = await Token.getAccessToken();
@@ -43,6 +44,7 @@ class TeacherOps {
       body: json.encode({
         "category_name": categoryName,
         "name": name,
+        "price": price,
         "description": description,
       }),
     );

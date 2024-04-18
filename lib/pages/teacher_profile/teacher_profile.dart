@@ -263,7 +263,8 @@ class _TeacherProfileState extends State<TeacherProfile> {
                                       children: [
                                         TagContainer(
                                             name: tag.name,
-                                            description: tag.description),
+                                            description: tag.description,
+                                            price: tag.price),
                                         const SizedBox(
                                           height: 20,
                                         ),

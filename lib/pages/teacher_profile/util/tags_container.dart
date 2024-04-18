@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 class TagContainer extends StatefulWidget {
   final String name;
   final String description;
+  final int price;
 
   const TagContainer({
     super.key,
     required this.name,
+    required this.price,
     required this.description,
   });
 
@@ -36,11 +38,11 @@ class _TagContainer extends State<TagContainer> {
                   letterSpacing: 0,
                 ),
               ),
-              const Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(8, 0, 0, 0),
+              Padding(
+                padding: const EdgeInsetsDirectional.fromSTEB(8, 0, 0, 0),
                 child: Text(
-                  "price: \$100",
-                  style: TextStyle(
+                  "price: \$${widget.price}",
+                  style: const TextStyle(
                     fontFamily: 'Montserrat',
                     fontSize: 16,
                     letterSpacing: 0,
