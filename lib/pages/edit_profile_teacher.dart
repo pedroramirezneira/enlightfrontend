@@ -4,7 +4,6 @@ import 'package:enlight/components/enlight_form_submission_button.dart';
 import 'package:enlight/components/enlight_loading_indicator.dart';
 import 'package:enlight/components/enlight_text_form_field.dart';
 import 'package:enlight/models/teacher_account_data.dart';
-import 'package:enlight/util/account_ops.dart';
 import 'package:enlight/util/teacher_ops.dart';
 import 'package:flutter/material.dart';
 
@@ -33,7 +32,7 @@ class _EditAccountState extends State<EditTeacherProfile> {
   void initState() {
     super.initState();
     formKey = GlobalKey<FormState>();
-    data = AccountOps.getTeacher();
+    data = TeacherOps.getTeacher();
     descriptionController = TextEditingController();
   }
 
