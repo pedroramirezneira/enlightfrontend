@@ -1,15 +1,15 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'package:enlight/components/enlight_confirm_picture_dialog.dart';
-import 'package:enlight/components/enlight_loading_indicator.dart';
-import 'package:enlight/components/enlight_picture_menu.dart';
-import 'package:enlight/components/enlight_subject_menu.dart';
+import 'package:enlight/components/confirm_picture_dialog.dart';
+import 'package:enlight/components/loading_indicator.dart';
+import 'package:enlight/components/picture_menu.dart';
+import 'package:enlight/components/subject_menu.dart';
 import 'package:enlight/models/account_data.dart';
 import 'package:enlight/models/teacher_account_data.dart';
-import 'package:enlight/pages/edit_account.dart';
+import 'package:enlight/pages/edit_account/edit_account.dart';
 import 'package:enlight/pages/edit_profile_teacher.dart';
-import 'package:enlight/pages/sign_in.dart';
+import 'package:enlight/pages/sign_in/sign_in.dart';
 import 'package:enlight/util/account_ops.dart';
 import 'package:enlight/util/token.dart';
 import 'package:flutter/material.dart';
@@ -183,8 +183,7 @@ class _TeacherProfileState extends State<TeacherProfile> {
                                       onTap: () {
                                         showModalBottomSheet(
                                           context: context,
-                                          builder: (context) =>
-                                              EnlightPictureMenu(
+                                          builder: (context) => PictureMenu(
                                             selectFromGallery:
                                                 selectFromGallery,
                                             takePhoto: takePhoto,
@@ -252,7 +251,8 @@ class _TeacherProfileState extends State<TeacherProfile> {
                                   const SizedBox(
                                     height: 10,
                                   ),
-                                  for (var tag in snapshot.data!.teacher.subjects)
+                                  for (var tag
+                                      in snapshot.data!.teacher.subjects)
                                     Column(
                                       children: [
                                         Padding(
@@ -292,11 +292,11 @@ class _TeacherProfileState extends State<TeacherProfile> {
                                                       ),
                                                     ),
                                                   ),
-                                                   Padding(
+                                                  Padding(
                                                     padding:
                                                         const EdgeInsetsDirectional
                                                             .fromSTEB(
-                                                                8, 0, 0, 0),
+                                                            8, 0, 0, 0),
                                                     child: Text(
                                                       tag.description,
                                                       style: const TextStyle(
@@ -308,10 +308,7 @@ class _TeacherProfileState extends State<TeacherProfile> {
                                                     ),
                                                   ),
                                                   TextButton(
-                                                    onPressed: () {
-                                                      print(
-                                                          'Button pressed ...');
-                                                    },
+                                                    onPressed: () {},
                                                     style: ButtonStyle(
                                                       backgroundColor:
                                                           MaterialStateProperty
@@ -364,7 +361,6 @@ class _TeacherProfileState extends State<TeacherProfile> {
                                     ),
                                 ],
                               ),
-                              
                             ],
                           ),
                         ],
@@ -380,7 +376,7 @@ class _TeacherProfileState extends State<TeacherProfile> {
                   });
                 });
               }
-              return const EnlightLoadingIndicator(visible: false);
+              return const LoadingIndicator(visible: false);
             }),
           ),
           floatingActionButton: FloatingActionButton(
@@ -390,7 +386,7 @@ class _TeacherProfileState extends State<TeacherProfile> {
             ),
           ),
         ),
-        EnlightLoadingIndicator(visible: loading),
+        LoadingIndicator(visible: loading),
       ],
     );
   }
@@ -410,7 +406,7 @@ class _TeacherProfileState extends State<TeacherProfile> {
         showAdaptiveDialog(
           barrierDismissible: false,
           context: context,
-          builder: (context) => EnlightConfirmPictureDialog(
+          builder: (context) => ConfirmPictureDialog(
             bytes: selectedImage!,
             onConfirm: updatePicture,
             onCancel: () {
@@ -440,7 +436,7 @@ class _TeacherProfileState extends State<TeacherProfile> {
         showAdaptiveDialog(
           barrierDismissible: false,
           context: context,
-          builder: (context) => EnlightConfirmPictureDialog(
+          builder: (context) => ConfirmPictureDialog(
             bytes: selectedImage!,
             onConfirm: updatePicture,
             onCancel: () {
@@ -577,7 +573,7 @@ class _TeacherProfileState extends State<TeacherProfile> {
       (value) {
         showModalBottomSheet<int>(
           context: context,
-          builder: (context) => EnlightSubjectMenu(
+          builder: (context) => SubjectMenu(
             categories: value.teacher.categories,
             onPressed: () {
               setState(() {

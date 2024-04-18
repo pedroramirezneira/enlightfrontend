@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class EnlightPictureMenu extends StatelessWidget {
+class PictureMenu extends StatelessWidget {
   final void Function()? selectFromGallery;
   final void Function()? takePhoto;
 
-  const EnlightPictureMenu({
+  const PictureMenu({
     super.key,
     this.selectFromGallery,
     this.takePhoto,

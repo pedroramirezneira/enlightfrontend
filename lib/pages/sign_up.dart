@@ -1,9 +1,9 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:enlight/components/enlight_form_submission_button.dart';
-import 'package:enlight/components/enlight_loading_indicator.dart';
-import 'package:enlight/components/enlight_text_form_field.dart';
-import 'package:enlight/pages/sign_in.dart';
+import 'package:enlight/components/form_submission_button.dart';
+import 'package:enlight/components/loading_indicator.dart';
+import 'package:enlight/components/enlight_text_field.dart';
+import 'package:enlight/pages/sign_in/sign_in.dart';
 import 'package:enlight/util/account_ops.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -87,26 +87,26 @@ class _SignUpState extends State<SignUp> {
                             width: 500,
                             child: Column(
                               children: <Widget>[
-                                EnlightTextFormField(
+                                EnlightTextField(
                                   text: "Email",
                                   controller: emailController,
                                   email: true,
                                 ),
-                                EnlightTextFormField(
+                                EnlightTextField(
                                   text: "Password",
                                   controller: passwordController,
                                   password: true,
                                 ),
-                                EnlightTextFormField(
+                                EnlightTextField(
                                   text: "Name",
                                   controller: nameController,
                                 ),
-                                EnlightTextFormField(
+                                EnlightTextField(
                                   text: "Birthday",
                                   controller: birthdayController,
                                   date: true,
                                 ),
-                                EnlightTextFormField(
+                                EnlightTextField(
                                   text: "Address",
                                   controller: addressController,
                                 ),
@@ -203,7 +203,7 @@ class _SignUpState extends State<SignUp> {
                                     ),
                                   ),
                                 ),
-                                EnlightFormSubmissionButton(
+                                FormSubmissionButton(
                                   text: "Sign up",
                                   formKey: formKey,
                                   onPressed: _onPressed,
@@ -220,7 +220,7 @@ class _SignUpState extends State<SignUp> {
             ),
           ],
         )),
-        EnlightLoadingIndicator(visible: loading),
+        LoadingIndicator(visible: loading),
       ],
     );
   }

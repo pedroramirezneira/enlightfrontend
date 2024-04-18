@@ -1,27 +1,27 @@
-import 'package:enlight/components/enlight_autocomplete_field.dart';
-import 'package:enlight/components/enlight_form_submission_button.dart';
-import 'package:enlight/components/enlight_loading_indicator.dart';
-import 'package:enlight/components/enlight_text_form_field.dart';
+import 'package:enlight/components/autocomplete_field.dart';
+import 'package:enlight/components/form_submission_button.dart';
+import 'package:enlight/components/loading_indicator.dart';
+import 'package:enlight/components/enlight_text_field.dart';
 import 'package:enlight/models/category_data.dart';
 import 'package:enlight/util/teacher_ops.dart';
 import 'package:enlight/util/token.dart';
 import 'package:flutter/material.dart';
 
-class EnlightSubjectMenu extends StatefulWidget {
+class SubjectMenu extends StatefulWidget {
   final void Function() onPressed;
   final List<CategoryData> categories;
 
-  const EnlightSubjectMenu({
+  const SubjectMenu({
     super.key,
     required this.onPressed,
     required this.categories,
   });
 
   @override
-  State<EnlightSubjectMenu> createState() => _EnlightSubjectMenuState();
+  State<SubjectMenu> createState() => _SubjectMenuState();
 }
 
-class _EnlightSubjectMenuState extends State<EnlightSubjectMenu> {
+class _SubjectMenuState extends State<SubjectMenu> {
   late final GlobalKey<FormState> formKey;
   late final TextEditingController categoryNameController;
   late final TextEditingController nameController;
@@ -51,7 +51,7 @@ class _EnlightSubjectMenuState extends State<EnlightSubjectMenu> {
                 pressed == true ? _submit() : Navigator.of(context).pop(null));
           })
         : null;
-    return const EnlightLoadingIndicator(visible: false);
+    return const LoadingIndicator(visible: false);
   }
 
   void _submit() {
@@ -89,21 +89,21 @@ class _EnlightSubjectMenuState extends State<EnlightSubjectMenu> {
               key: formKey,
               child: Column(
                 children: <Widget>[
-                  EnlightAutocompleteField(
+                  AutocompleteField(
                     text: "Category Name",
                     data: widget.categories,
                     controller: categoryNameController,
                   ),
-                  EnlightTextFormField(
+                  EnlightTextField(
                     text: "Name",
                     controller: nameController,
                   ),
-                  EnlightTextFormField(
+                  EnlightTextField(
                     text: "Description",
                     controller: descriptionController,
                     description: true,
                   ),
-                  EnlightFormSubmissionButton(
+                  FormSubmissionButton(
                     text: "Create",
                     formKey: formKey,
                     onPressed: () => Navigator.of(context).pop(true),

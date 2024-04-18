@@ -1,4 +1,4 @@
-import 'package:enlight/pages/sign_in.dart';
+import 'package:enlight/pages/sign_in/sign_in.dart';
 import 'package:enlight/pages/student_profile.dart';
 import 'package:enlight/pages/teacher_profile.dart';
 import 'package:enlight/util/io.dart';

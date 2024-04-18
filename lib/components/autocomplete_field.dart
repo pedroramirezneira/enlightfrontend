@@ -1,12 +1,12 @@
 import 'package:enlight/models/category_data.dart';
 import 'package:flutter/material.dart';
 
-class EnlightAutocompleteField extends StatelessWidget {
+class AutocompleteField extends StatelessWidget {
   final String text;
   final List<CategoryData> data;
   final TextEditingController controller;
 
-  const EnlightAutocompleteField({
+  const AutocompleteField({
     super.key,
     required this.text,
     required this.data,
