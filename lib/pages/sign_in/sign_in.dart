@@ -3,7 +3,7 @@ import 'package:enlight/components/loading_indicator.dart';
 import 'package:enlight/components/enlight_text_field.dart';
 import 'package:enlight/pages/sign_in/util/on_pressed.dart';
 import 'package:enlight/pages/recover_password.dart';
-import 'package:enlight/pages/sign_up.dart';
+import 'package:enlight/pages/sign_up/sign_up.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 

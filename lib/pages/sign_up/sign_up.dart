@@ -1,10 +1,8 @@
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:enlight/components/form_submission_button.dart';
 import 'package:enlight/components/loading_indicator.dart';
 import 'package:enlight/components/enlight_text_field.dart';
-import 'package:enlight/pages/sign_in/sign_in.dart';
-import 'package:enlight/util/account_ops.dart';
+import 'package:enlight/pages/sign_up/util/on_pressed.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -28,7 +26,6 @@ class _SignUpState extends State<SignUp> {
     'Student',
   ];
   String? selectedValue;
-  late String role;
 
   @override
   void initState() {
@@ -206,7 +203,25 @@ class _SignUpState extends State<SignUp> {
                                 FormSubmissionButton(
                                   text: "Sign up",
                                   formKey: formKey,
-                                  onPressed: _onPressed,
+                                  onPressed: () {
+                                    setState(() {
+                                      loading = true;
+                                    });
+                                    onPressed(
+                                      context: context,
+                                      email: emailController.text,
+                                      password: passwordController.text,
+                                      name: nameController.text,
+                                      birthday: birthdayController.text,
+                                      address: addressController.text,
+                                      selectedValue: selectedValue,
+                                      onResponse: () {
+                                        setState(() {
+                                          loading = false;
+                                        });
+                                      },
+                                    );
+                                  },
                                 ),
                               ],
                             ),
@@ -223,78 +238,5 @@ class _SignUpState extends State<SignUp> {
         LoadingIndicator(visible: loading),
       ],
     );
-  }
-
-  void _onPressed() {
-    if (selectedValue == "") {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: AwesomeSnackbarContent(
-            title: "Watch out",
-            message: "Role cannot be empty.",
-            contentType: ContentType.help,
-          ),
-        ),
-      );
-      return;
-    } else {
-      if (selectedValue == "Teacher") {
-        role = "teacher";
-      } else {
-        role = "student";
-      }
-    }
-    setState(() {
-      loading = true;
-    });
-    AccountOps.signUp(
-      email: emailController.text,
-      password: passwordController.text,
-      name: nameController.text,
-      birthday: birthdayController.text,
-      address: addressController.text,
-      role: role,
-    ).then((code) {
-      setState(() {
-        loading = false;
-      });
-      if (code == 200) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: AwesomeSnackbarContent(
-              title: "Success",
-              message: "Your account has been successfully created.",
-              contentType: ContentType.success,
-            ),
-          ),
-        );
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => const SignIn()),
-          (route) => false,
-        );
-      }
-      if (code == 409) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: AwesomeSnackbarContent(
-              title: "Warning",
-              message: "This email is already in use.",
-              contentType: ContentType.warning,
-            ),
-          ),
-        );
-      }
-      if (code == 500) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: AwesomeSnackbarContent(
-              title: "Error",
-              message: "Internal server error. Please try again.",
-              contentType: ContentType.failure,
-            ),
-          ),
-        );
-      }
-    });
   }
 }
