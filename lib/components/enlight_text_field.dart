@@ -7,6 +7,8 @@ class EnlightTextField extends StatefulWidget {
   final bool password;
   final bool date;
   final bool description;
+  final FocusNode? focusNode;
+  final void Function()? onFieldSubmitted;
 
   const EnlightTextField({
     super.key,
@@ -16,6 +18,8 @@ class EnlightTextField extends StatefulWidget {
     this.password = false,
     this.date = false,
     this.description = false,
+    this.focusNode,
+    this.onFieldSubmitted,
   });
 
   @override
@@ -100,6 +104,12 @@ class _EnlightTextFieldState extends State<EnlightTextField> {
                     : null;
               }
             : null,
+        focusNode: widget.focusNode,
+        onFieldSubmitted: (value) {
+          if (widget.onFieldSubmitted != null) {
+            widget.onFieldSubmitted!();
+          }
+        },
       ),
     );
   }
