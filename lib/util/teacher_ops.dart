@@ -28,8 +28,8 @@ class TeacherOps {
   static Future<int> createSubject({
     required String categoryName,
     required String name,
-    required int price,
     required String description,
+    required int price,
   }) async {
     final token = await Token.getAccessToken();
     final response = await http.post(

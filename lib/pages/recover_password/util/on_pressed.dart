@@ -9,7 +9,6 @@ void onPressed({
 }) {
   AccountOps.requestPasswordReset(email: email).then(
     (code) {
-      onResponse();
       if (code == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -44,6 +43,7 @@ void onPressed({
           ),
         );
       }
+      onResponse();
     },
   );
 }

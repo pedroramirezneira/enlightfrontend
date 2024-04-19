@@ -17,7 +17,6 @@ void onPressed({
     birthday: birthday,
     address: address,
   ).then((code) {
-    onResponse();
     if (code == 200) {
       widget.data.name = name;
       widget.data.birthday = birthday;
@@ -37,13 +36,12 @@ void onPressed({
     if (code == 401) {
       Token.refreshAccessToken().then(
         (_) => onPressed(
-          context: context,
-          name: name,
-          birthday: birthday,
-          address: address,
-          widget: widget,
-          onResponse: onResponse
-        ),
+            context: context,
+            name: name,
+            birthday: birthday,
+            address: address,
+            widget: widget,
+            onResponse: onResponse),
       );
     }
     if (code == 500) {
@@ -57,5 +55,6 @@ void onPressed({
         ),
       );
     }
+    onResponse();
   });
 }

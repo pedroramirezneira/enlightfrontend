@@ -14,7 +14,6 @@ void onPressed({
   required void Function() onResponse,
 }) {
   if (selectedValue == null) {
-    onResponse();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: AwesomeSnackbarContent(
@@ -24,6 +23,7 @@ void onPressed({
         ),
       ),
     );
+    onResponse();
     return;
   }
   AccountOps.signUp(
@@ -34,7 +34,6 @@ void onPressed({
     address: address,
     role: selectedValue.toLowerCase(),
   ).then((code) {
-    onResponse();
     if (code == 200) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -72,5 +71,6 @@ void onPressed({
         ),
       );
     }
+    onResponse();
   });
 }

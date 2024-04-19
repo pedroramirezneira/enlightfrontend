@@ -8,10 +8,9 @@ import 'package:enlight/models/account_data.dart';
 import 'package:enlight/models/teacher_account_data.dart';
 import 'package:enlight/pages/edit_account/edit_account.dart';
 import 'package:enlight/pages/edit_profile_teacher.dart';
-import 'package:enlight/pages/sign_in/sign_in.dart';
 import 'package:enlight/pages/teacher_profile/util/select_image.dart';
 import 'package:enlight/pages/teacher_profile/util/tags_container.dart';
-import 'package:enlight/util/account_ops.dart';
+import 'package:enlight/util/messenger.dart';
 import 'package:enlight/util/teacher_ops.dart';
 import 'package:flutter/material.dart';
 
@@ -93,27 +92,10 @@ class _TeacherProfileState extends State<TeacherProfile> {
                   title: const Text("Logout"),
                   leading: const Icon(Icons.logout),
                   onTap: () {
-                    showAdaptiveDialog(
+                    Messenger.showLogoutDialog(
                       context: context,
-                      builder: (context) {
-                        return AlertDialog.adaptive(
-                          title: const Text("Logout"),
-                          content:
-                              const Text("Are you sure you want to logout?"),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text("Cancel"),
-                            ),
-                            TextButton(
-                              onPressed: _logout,
-                              child: const Text("OK"),
-                            ),
-                          ],
-                        );
-                      },
+                      onAccept: () => setState(() => loading = true),
+                      onResponse: () => setState(() => loading = false),
                     );
                   },
                 ),
@@ -121,27 +103,10 @@ class _TeacherProfileState extends State<TeacherProfile> {
                   title: const Text("Delete account"),
                   leading: const Icon(Icons.delete_rounded),
                   onTap: () {
-                    showAdaptiveDialog(
+                    Messenger.showDeleteAccountDialog(
                       context: context,
-                      builder: (context) {
-                        return AlertDialog.adaptive(
-                          title: const Text("Delete Account"),
-                          content: const Text(
-                              "Are you sure you want to delete the account?"),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text("Cancel"),
-                            ),
-                            TextButton(
-                              onPressed: _deleteAccount,
-                              child: const Text("OK"),
-                            ),
-                          ],
-                        );
-                      },
+                      onAccept: () => setState(() => loading = true),
+                      onResponse: () => setState(() => loading = false),
                     );
                   },
                 ),
@@ -302,42 +267,6 @@ class _TeacherProfileState extends State<TeacherProfile> {
     );
   }
 
-  void Function()? _logout() {
-    Navigator.of(context)
-      ..pop()
-      ..pop();
-    setState(() {
-      loading = true;
-    });
-    AccountOps.logout().then((success) {
-      setState(() {
-        loading = false;
-      });
-      if (success) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: AwesomeSnackbarContent(
-              title: "Success",
-              message: "You have successfully logged out.",
-              contentType: ContentType.success,
-            ),
-          ),
-        );
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => const SignIn()),
-          (route) => false,
-        );
-        return;
-      }
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Internal server error. Please try again."),
-        ),
-      );
-    });
-    return null;
-  }
-
   void setLoading(bool value) {
     setState(() {
       loading = value;
@@ -350,42 +279,6 @@ class _TeacherProfileState extends State<TeacherProfile> {
     data.then(
       (value) => value.picture = base64.encode(selectedImage!),
     );
-  }
-
-  void Function()? _deleteAccount() {
-    Navigator.of(context)
-      ..pop()
-      ..pop();
-    setState(() {
-      loading = true;
-    });
-    AccountOps.delete().then((success) {
-      setState(() {
-        loading = false;
-      });
-      if (success) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: AwesomeSnackbarContent(
-              title: "Success",
-              message: "You have successfully deleted your account.",
-              contentType: ContentType.success,
-            ),
-          ),
-        );
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => const SignIn()),
-          (route) => false,
-        );
-        return;
-      }
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Internal server error. Please try again."),
-        ),
-      );
-    });
-    return null;
   }
 
   void _showSubjectDialog() {

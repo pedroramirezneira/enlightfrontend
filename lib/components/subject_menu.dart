@@ -1,6 +1,5 @@
 import 'package:enlight/components/autocomplete_field.dart';
 import 'package:enlight/components/form_submission_button.dart';
-import 'package:enlight/components/loading_indicator.dart';
 import 'package:enlight/components/enlight_text_field.dart';
 import 'package:enlight/models/category_data.dart';
 import 'package:enlight/util/teacher_ops.dart';
@@ -50,21 +49,24 @@ class _SubjectMenuState extends State<SubjectMenu> {
               isScrollControlled: true,
               useSafeArea: true,
               context: context,
-              builder: (context) => buildForm(context),
+              builder: (context) => _buildForm(context),
             ).then((pressed) =>
                 pressed == true ? _submit() : Navigator.of(context).pop(null));
           })
         : null;
-    return const LoadingIndicator(visible: false);
+    return const Visibility(
+      visible: false,
+      child: Placeholder(),
+    );
   }
 
   void _submit() {
     widget.onPressed();
     TeacherOps.createSubject(
-      price: int.tryParse(priceController.text) ?? 0,
       categoryName: categoryNameController.text,
       name: nameController.text,
       description: descriptionController.text,
+      price: int.tryParse(priceController.text) ?? 0,
     ).then((code) {
       if (code == 200) {
         Navigator.of(context).pop(200);
@@ -78,7 +80,7 @@ class _SubjectMenuState extends State<SubjectMenu> {
     });
   }
 
-  Widget buildForm(BuildContext context) {
+  Widget _buildForm(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text(

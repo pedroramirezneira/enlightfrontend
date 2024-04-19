@@ -6,8 +6,8 @@ import 'package:enlight/components/confirm_picture_dialog.dart';
 import 'package:enlight/components/loading_indicator.dart';
 import 'package:enlight/models/account_data.dart';
 import 'package:enlight/pages/edit_account/edit_account.dart';
-import 'package:enlight/pages/sign_in/sign_in.dart';
 import 'package:enlight/util/account_ops.dart';
+import 'package:enlight/util/messenger.dart';
 import 'package:enlight/util/token.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -59,43 +59,30 @@ class _StudentProfileState extends State<StudentProfile> {
                   title: const Text("Edit account"),
                   leading: const Icon(Icons.edit_rounded),
                   onTap: () {
-                    data.then((data) {
-                      Navigator.of(context)
-                        ..pop()
-                        ..push(MaterialPageRoute(
-                          builder: (context) => EditAccount(
-                            data: data,
-                            onUpdate: () => setState(() => data),
-                          ),
-                        ));
-                    });
+                    data.then(
+                      (data) {
+                        Navigator.of(context)
+                          ..pop()
+                          ..push(
+                            MaterialPageRoute(
+                              builder: (context) => EditAccount(
+                                data: data,
+                                onUpdate: () => setState(() => data),
+                              ),
+                            ),
+                          );
+                      },
+                    );
                   },
                 ),
                 ListTile(
                   title: const Text("Logout"),
                   leading: const Icon(Icons.logout),
                   onTap: () {
-                    showAdaptiveDialog(
+                    Messenger.showLogoutDialog(
                       context: context,
-                      builder: (context) {
-                        return AlertDialog.adaptive(
-                          title: const Text("Logout"),
-                          content:
-                              const Text("Are you sure you want to logout?"),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text("Cancel"),
-                            ),
-                            TextButton(
-                              onPressed: _logout,
-                              child: const Text("OK"),
-                            ),
-                          ],
-                        );
-                      },
+                      onAccept: () => setState(() => loading = true),
+                      onResponse: () => setState(() => loading = false),
                     );
                   },
                 ),
@@ -103,27 +90,10 @@ class _StudentProfileState extends State<StudentProfile> {
                   title: const Text("Delete account"),
                   leading: const Icon(Icons.delete_rounded),
                   onTap: () {
-                    showAdaptiveDialog(
+                    Messenger.showDeleteAccountDialog(
                       context: context,
-                      builder: (context) {
-                        return AlertDialog.adaptive(
-                          title: const Text("Delete Account"),
-                          content: const Text(
-                              "Are you sure you want to delete the account?"),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text("Cancel"),
-                            ),
-                            TextButton(
-                              onPressed: _deleteAccount,
-                              child: const Text("OK"),
-                            ),
-                          ],
-                        );
-                      },
+                      onAccept: () => setState(() => loading = true),
+                      onResponse: () => setState(() => loading = false),
                     );
                   },
                 ),
@@ -210,78 +180,6 @@ class _StudentProfileState extends State<StudentProfile> {
     );
   }
 
-  void Function()? _logout() {
-    Navigator.of(context)
-      ..pop()
-      ..pop();
-    setState(() {
-      loading = true;
-    });
-    AccountOps.logout().then((success) {
-      setState(() {
-        loading = false;
-      });
-      if (success) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: AwesomeSnackbarContent(
-              title: "Success",
-              message: "You have successfully logged out.",
-              contentType: ContentType.success,
-            ),
-          ),
-        );
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => const SignIn()),
-          (route) => false,
-        );
-        return;
-      }
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Internal server error. Please try again."),
-        ),
-      );
-    });
-    return null;
-  }
-
-  void Function()? _deleteAccount() {
-    Navigator.of(context)
-      ..pop()
-      ..pop();
-    setState(() {
-      loading = true;
-    });
-    AccountOps.delete().then((success) {
-      setState(() {
-        loading = false;
-      });
-      if (success) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: AwesomeSnackbarContent(
-              title: "Success",
-              message: "You have successfully deleted your account.",
-              contentType: ContentType.success,
-            ),
-          ),
-        );
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => const SignIn()),
-          (route) => false,
-        );
-        return;
-      }
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Internal server error. Please try again."),
-        ),
-      );
-    });
-    return null;
-  }
-
   void selectFromGallery() {
     final picker = ImagePicker();
     picker.pickImage(source: ImageSource.gallery).then((image) {
@@ -302,9 +200,7 @@ class _StudentProfileState extends State<StudentProfile> {
             onConfirm: updatePicture,
             onCancel: () {
               Navigator.of(context).pop();
-              setState(() {
-                selectedImage = null;
-              });
+              setState(() => selectedImage = null);
             },
           ),
         );
@@ -347,43 +243,44 @@ class _StudentProfileState extends State<StudentProfile> {
     setState(() {
       loading = true;
     });
-    AccountOps.insertPicture(picture: base64.encode(selectedImage!))
-        .then((code) {
-      if (code == 200) {
-        setState(() {
-          loading = false;
-          data.then((value) {
-            value.picture = base64.encode(selectedImage!);
-            selectedImage = null;
+    AccountOps.insertPicture(picture: base64.encode(selectedImage!)).then(
+      (code) {
+        if (code == 200) {
+          setState(() {
+            loading = false;
+            data.then((value) {
+              value.picture = base64.encode(selectedImage!);
+              selectedImage = null;
+            });
           });
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: AwesomeSnackbarContent(
-              title: "Success",
-              message: "Successful update.",
-              contentType: ContentType.success,
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: AwesomeSnackbarContent(
+                title: "Success",
+                message: "Successful update.",
+                contentType: ContentType.success,
+              ),
             ),
-          ),
-        );
-      }
-      if (code == 400) {
-        Token.refreshAccessToken().then((_) => updatePicture());
-      }
-      if (code == 500) {
-        setState(() {
-          loading = false;
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: AwesomeSnackbarContent(
-              title: "Error",
-              message: "Internal server error.",
-              contentType: ContentType.failure,
+          );
+        }
+        if (code == 400) {
+          Token.refreshAccessToken().then((_) => updatePicture());
+        }
+        if (code == 500) {
+          setState(() {
+            loading = false;
+          });
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: AwesomeSnackbarContent(
+                title: "Error",
+                message: "Internal server error.",
+                contentType: ContentType.failure,
+              ),
             ),
-          ),
-        );
-      }
-    });
+          );
+        }
+      },
+    );
   }
 }
