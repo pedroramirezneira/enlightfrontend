@@ -71,9 +71,7 @@ class _EditAccountState extends State<EditAccount> {
                         text: "Save",
                         formKey: formKey,
                         onPressed: () {
-                          setState(() {
-                            loading = true;
-                          });
+                          setState(() => loading = true);
                           onPressed(
                             context: context,
                             name: nameController.text,

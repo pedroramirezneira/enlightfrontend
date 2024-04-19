@@ -179,4 +179,22 @@ class AccountOps {
     );
     return response.statusCode;
   }
+
+  static Future<int> requestPasswordReset({required String email}) async {
+    final response = await http.post(
+      Uri.https(
+        dotenv.env["SERVER"]!,
+        "/password-reset/request",
+      ),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: json.encode(
+        {
+          "email": email,
+        },
+      ),
+    );
+    return response.statusCode;
+  }
 }

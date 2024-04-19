@@ -43,198 +43,195 @@ class _SignUpState extends State<SignUp> {
     return Stack(
       children: <Widget>[
         Scaffold(
-            body: CustomScrollView(
-          slivers: [
-            const SliverAppBar(),
-            SliverList(
-              delegate: SliverChildListDelegate(
-                [
-                  Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: <Widget>[
-                      Align(
-                        alignment: const AlignmentDirectional(0, 0),
-                        child: Padding(
-                          padding:
-                              const EdgeInsetsDirectional.fromSTEB(0, 5, 0, 0),
-                          child: SizedBox(
-                            width: 308,
-                            height: 100,
-                            child: Align(
-                              alignment: const AlignmentDirectional(0, 0),
-                              child: Text(
-                                'ENLIGHT',
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.getFont(
-                                  'Montserrat',
-                                  color:
-                                      const Color.fromARGB(255, 100, 201, 169),
-                                  fontSize: 50,
+          body: CustomScrollView(
+            slivers: [
+              const SliverAppBar(),
+              SliverList(
+                delegate: SliverChildListDelegate(
+                  [
+                    Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: <Widget>[
+                        Align(
+                          alignment: const AlignmentDirectional(0, 0),
+                          child: Padding(
+                            padding: const EdgeInsetsDirectional.fromSTEB(
+                                0, 5, 0, 0),
+                            child: SizedBox(
+                              width: 308,
+                              height: 100,
+                              child: Align(
+                                alignment: const AlignmentDirectional(0, 0),
+                                child: Text(
+                                  'ENLIGHT',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.getFont(
+                                    'Montserrat',
+                                    color: const Color.fromARGB(
+                                        255, 100, 201, 169),
+                                    fontSize: 50,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(15.0),
-                        child: Form(
-                          key: formKey,
-                          child: SizedBox(
-                            width: 500,
-                            child: Column(
-                              children: <Widget>[
-                                EnlightTextField(
-                                  text: "Email",
-                                  controller: emailController,
-                                  email: true,
-                                ),
-                                EnlightTextField(
-                                  text: "Password",
-                                  controller: passwordController,
-                                  password: true,
-                                ),
-                                EnlightTextField(
-                                  text: "Name",
-                                  controller: nameController,
-                                ),
-                                EnlightTextField(
-                                  text: "Birthday",
-                                  controller: birthdayController,
-                                  date: true,
-                                ),
-                                EnlightTextField(
-                                  text: "Address",
-                                  controller: addressController,
-                                ),
-                                Center(
-                                  child: DropdownButtonHideUnderline(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(10),
-                                      child: DropdownButton2<String>(
-                                        isExpanded: true,
-                                        hint: const Row(
-                                          children: [
-                                            SizedBox(
-                                              width: 4,
-                                            ),
-                                            Expanded(
-                                              child: Text(
-                                                'Select Role',
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                ),
-                                                overflow: TextOverflow.ellipsis,
+                        Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Form(
+                            key: formKey,
+                            child: SizedBox(
+                              width: 500,
+                              child: Column(
+                                children: <Widget>[
+                                  EnlightTextField(
+                                    text: "Email",
+                                    controller: emailController,
+                                    email: true,
+                                  ),
+                                  EnlightTextField(
+                                    text: "Password",
+                                    controller: passwordController,
+                                    password: true,
+                                  ),
+                                  EnlightTextField(
+                                    text: "Name",
+                                    controller: nameController,
+                                  ),
+                                  EnlightTextField(
+                                    text: "Birthday",
+                                    controller: birthdayController,
+                                    date: true,
+                                  ),
+                                  EnlightTextField(
+                                    text: "Address",
+                                    controller: addressController,
+                                  ),
+                                  Center(
+                                    child: DropdownButtonHideUnderline(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10),
+                                        child: DropdownButton2<String>(
+                                          isExpanded: true,
+                                          hint: const Row(
+                                            children: [
+                                              SizedBox(
+                                                width: 4,
                                               ),
-                                            ),
-                                          ],
-                                        ),
-                                        items: items
-                                            .map((String item) =>
-                                                DropdownMenuItem<String>(
-                                                  value: item,
-                                                  child: Text(
-                                                    item,
-                                                    style: const TextStyle(
-                                                      color: Colors.white,
-                                                    ),
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
+                                              Expanded(
+                                                child: Text(
+                                                  'Select Role',
+                                                  style: TextStyle(
+                                                    color: Colors.white,
                                                   ),
-                                                ))
-                                            .toList(),
-                                        value: selectedValue,
-                                        onChanged: (String? value) {
-                                          setState(() {
-                                            selectedValue = value!;
-                                          });
-                                        },
-                                        buttonStyleData: ButtonStyleData(
-                                          height: 55,
-                                          width: double.infinity,
-                                          padding: const EdgeInsets.all(8),
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            border: Border.all(
-                                              color: Colors.white,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          items: items
+                                              .map((String item) =>
+                                                  DropdownMenuItem<String>(
+                                                    value: item,
+                                                    child: Text(
+                                                      item,
+                                                      style: const TextStyle(
+                                                        color: Colors.white,
+                                                      ),
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ))
+                                              .toList(),
+                                          value: selectedValue,
+                                          onChanged: (String? value) {
+                                            setState(() {
+                                              selectedValue = value!;
+                                            });
+                                          },
+                                          buttonStyleData: ButtonStyleData(
+                                            height: 55,
+                                            width: double.infinity,
+                                            padding: const EdgeInsets.all(8),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              border: Border.all(
+                                                color: Colors.white,
+                                              ),
+                                              color: const Color.fromARGB(
+                                                  255, 43, 57, 68),
                                             ),
-                                            color: const Color.fromARGB(
-                                                255, 43, 57, 68),
                                           ),
-                                        ),
-                                        iconStyleData: const IconStyleData(
-                                          icon: Icon(
-                                            Icons.arrow_forward_ios_outlined,
+                                          iconStyleData: const IconStyleData(
+                                            icon: Icon(
+                                              Icons.arrow_forward_ios_outlined,
+                                            ),
+                                            iconSize: 14,
+                                            iconEnabledColor: Colors.white,
+                                            iconDisabledColor: Colors.grey,
                                           ),
-                                          iconSize: 14,
-                                          iconEnabledColor: Colors.white,
-                                          iconDisabledColor: Colors.grey,
-                                        ),
-                                        dropdownStyleData: DropdownStyleData(
-                                          maxHeight: 200,
-                                          width: 200,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(14),
-                                            color: const Color.fromARGB(
-                                                255, 43, 57, 68),
+                                          dropdownStyleData: DropdownStyleData(
+                                            maxHeight: 200,
+                                            width: 200,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(14),
+                                              color: const Color.fromARGB(
+                                                  255, 43, 57, 68),
+                                            ),
+                                            offset: const Offset(150, 0),
+                                            scrollbarTheme: ScrollbarThemeData(
+                                              radius: const Radius.circular(40),
+                                              thickness: MaterialStateProperty
+                                                  .all<double>(6),
+                                              thumbVisibility:
+                                                  MaterialStateProperty.all<
+                                                      bool>(true),
+                                            ),
                                           ),
-                                          offset: const Offset(150, 0),
-                                          scrollbarTheme: ScrollbarThemeData(
-                                            radius: const Radius.circular(40),
-                                            thickness: MaterialStateProperty
-                                                .all<double>(6),
-                                            thumbVisibility:
-                                                MaterialStateProperty.all<bool>(
-                                                    true),
+                                          menuItemStyleData:
+                                              const MenuItemStyleData(
+                                            height: 40,
+                                            padding: EdgeInsets.only(
+                                                left: 14, right: 14),
                                           ),
-                                        ),
-                                        menuItemStyleData:
-                                            const MenuItemStyleData(
-                                          height: 40,
-                                          padding: EdgeInsets.only(
-                                              left: 14, right: 14),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                FormSubmissionButton(
-                                  text: "Sign up",
-                                  formKey: formKey,
-                                  onPressed: () {
-                                    setState(() {
-                                      loading = true;
-                                    });
-                                    onPressed(
-                                      context: context,
-                                      email: emailController.text,
-                                      password: passwordController.text,
-                                      name: nameController.text,
-                                      birthday: birthdayController.text,
-                                      address: addressController.text,
-                                      selectedValue: selectedValue,
-                                      onResponse: () {
-                                        setState(() {
-                                          loading = false;
-                                        });
-                                      },
-                                    );
-                                  },
-                                ),
-                              ],
+                                  FormSubmissionButton(
+                                    text: "Sign up",
+                                    formKey: formKey,
+                                    onPressed: () {
+                                      setState(() => loading = true);
+                                      onPressed(
+                                        context: context,
+                                        email: emailController.text,
+                                        password: passwordController.text,
+                                        name: nameController.text,
+                                        birthday: birthdayController.text,
+                                        address: addressController.text,
+                                        selectedValue: selectedValue,
+                                        onResponse: () =>
+                                            setState(() => loading = false),
+                                      );
+                                    },
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
-        )),
+            ],
+          ),
+        ),
         LoadingIndicator(visible: loading),
       ],
     );
