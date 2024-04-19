@@ -264,7 +264,11 @@ class _TeacherProfileState extends State<TeacherProfile> {
                                         TagContainer(
                                             name: tag.name,
                                             description: tag.description,
-                                            price: tag.price),
+                                            price: tag.price,
+                                            deleteSubject:() {
+                                              _deleteSubject(subjectID: tag.id);
+                                            }
+                                            ),
                                         const SizedBox(
                                           height: 20,
                                         ),
@@ -376,6 +380,37 @@ class _TeacherProfileState extends State<TeacherProfile> {
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => const SignIn()),
           (route) => false,
+        );
+        return;
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Internal server error. Please try again."),
+        ),
+      );
+    });
+    return null;
+  }
+
+  void Function()? _deleteSubject({
+    required int subjectID,
+  }) {
+    setState(() {
+      loading = true;
+    });
+    TeacherOps.deleteSubject(subjectID: subjectID).then((success) {
+      setState(() {
+        loading = false;
+      });
+      if (success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: AwesomeSnackbarContent(
+              title: "Success",
+              message: "You have successfully deleted the subject.",
+              contentType: ContentType.success,
+            ),
+          ),
         );
         return;
       }

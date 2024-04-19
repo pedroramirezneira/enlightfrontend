@@ -134,7 +134,7 @@ class _SubjectMenuState extends State<SubjectMenu> {
                         fontWeight: FontWeight.w500,
                         days: _days,
                         border: false,
-                        width: 345,
+                        //width: 345,
                         daysFillColor: const Color.fromARGB(255, 100, 201, 169),
                         boxDecoration: BoxDecoration(
                           border: Border.all(color: Colors.white),
