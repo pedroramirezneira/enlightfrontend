@@ -4,12 +4,14 @@ class TagContainer extends StatefulWidget {
   final String name;
   final String description;
   final int price;
+  final VoidCallback deleteSubject;
 
   const TagContainer({
     super.key,
     required this.name,
     required this.price,
     required this.description,
+    required this.deleteSubject,
   });
 
   @override
@@ -60,6 +62,22 @@ class _TagContainer extends State<TagContainer> {
                   ),
                 ),
               ),
+              Padding(
+                padding: const EdgeInsetsDirectional.fromSTEB(8, 0, 0, 0),
+                child: TextButton(
+                  onPressed: () {
+                    widget.deleteSubject();
+                  },
+                  style: TextButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    padding: const EdgeInsets.all(12),
+                  ),
+                  child: const Icon(
+                    Icons.delete,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
               const SizedBox(
                 height: 5,
               ),
@@ -67,4 +85,6 @@ class _TagContainer extends State<TagContainer> {
           )),
     );
   }
+
+  
 }

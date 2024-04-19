@@ -30,6 +30,7 @@ class TeacherOps {
     required String name,
     required String description,
     required int price,
+    required List<String> days,
   }) async {
     final token = await Token.getAccessToken();
     final response = await http.post(
@@ -43,12 +44,33 @@ class TeacherOps {
       },
       body: json.encode({
         "category_name": categoryName,
+        "days": days,
         "name": name,
         "price": price,
         "description": description,
       }),
     );
     return response.statusCode;
+  }
+
+  static Future<bool> deleteSubject({
+    required int subjectID,
+  }) async {
+    final token = await Token.getAccessToken();
+    final response = await http.delete(
+      Uri.https(
+        dotenv.env["SERVER"]!,
+        "/subject",
+      ),
+      headers: {
+        "Authorization": "Bearer $token",
+        "Content-Type": "application/json",
+      },
+      body: json.encode({
+        "subject_id": subjectID,
+      }),
+    );
+    return response.statusCode == 200;
   }
 
   static Future<TeacherAccountData> getTeacher() async {

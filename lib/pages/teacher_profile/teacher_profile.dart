@@ -221,9 +221,11 @@ class _TeacherProfileState extends State<TeacherProfile> {
                                     Column(
                                       children: [
                                         TagContainer(
-                                            name: tag.name,
-                                            description: tag.description,
-                                            price: tag.price),
+                                          name: tag.name,
+                                          description: tag.description,
+                                          price: tag.price,
+                                          deleteSubject: () {},
+                                        ),
                                         const SizedBox(
                                           height: 20,
                                         ),

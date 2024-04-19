@@ -44,6 +44,7 @@ dependencies:
   image_picker: ^1.0.8
   google_fonts: ^6.2.1
   dropdown_button2: ^2.3.9
+  day_picker: ^2.2.0
 
 dev_dependencies:
   flutter_test:
