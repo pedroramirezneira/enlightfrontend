@@ -2,6 +2,7 @@ import 'package:enlight/components/autocomplete_field.dart';
 import 'package:enlight/components/form_submission_button.dart';
 import 'package:enlight/components/enlight_text_field.dart';
 import 'package:enlight/models/category_data.dart';
+import 'package:enlight/models/subject_data.dart';
 import 'package:enlight/util/teacher_ops.dart';
 import 'package:enlight/util/token.dart';
 import 'package:flutter/material.dart';
@@ -9,11 +10,13 @@ import 'package:flutter/material.dart';
 class SubjectMenu extends StatefulWidget {
   final void Function() onPressed;
   final List<CategoryData> categories;
+  final List<SubjectData> subjects;
 
   const SubjectMenu({
     super.key,
     required this.onPressed,
     required this.categories,
+    required this.subjects,
   });
 
   @override
@@ -69,6 +72,16 @@ class _SubjectMenuState extends State<SubjectMenu> {
       price: int.tryParse(priceController.text) ?? 0,
     ).then((code) {
       if (code == 200) {
+        widget.subjects.add(
+          SubjectData(
+            id: 0,
+            name: nameController.text,
+            description: descriptionController.text,
+            categoryId: 0,
+            categoryName: categoryNameController.text,
+            price: int.tryParse(priceController.text) ?? 0,
+          ),
+        );
         Navigator.of(context).pop(200);
       } else if (code == 401) {
         Token.refreshAccessToken().then((_) => _submit());

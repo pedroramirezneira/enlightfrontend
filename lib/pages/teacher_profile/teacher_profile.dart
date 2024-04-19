@@ -1,11 +1,10 @@
 import 'dart:convert';
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:enlight/components/loading_indicator.dart';
-import 'package:enlight/components/subject_menu.dart';
 import 'package:enlight/models/account_data.dart';
 import 'package:enlight/models/teacher_account_data.dart';
 import 'package:enlight/pages/edit_account/edit_account.dart';
 import 'package:enlight/pages/edit_teacher_profile/edit_teacher_profile.dart';
+import 'package:enlight/pages/teacher_profile/util/show_subject_dialog.dart';
 import 'package:enlight/pages/teacher_profile/util/tags_container.dart';
 import 'package:enlight/util/messenger.dart';
 import 'package:enlight/util/teacher_ops.dart';
@@ -251,7 +250,21 @@ class _TeacherProfileState extends State<TeacherProfile> {
             }),
           ),
           floatingActionButton: FloatingActionButton(
-            onPressed: _showSubjectDialog,
+            onPressed: () {
+              data.then((data) {
+                showSubjectDialog(
+                  context: context,
+                  data: data.teacher,
+                  onSubmit: () => setState(() => loading = true),
+                  onResponse: () {
+                    setState(() {
+                      loading = false;
+                      data.teacher.subjects;
+                    });
+                  },
+                );
+              });
+            },
             child: const Icon(
               Icons.add,
             ),
@@ -259,50 +272,6 @@ class _TeacherProfileState extends State<TeacherProfile> {
         ),
         LoadingIndicator(visible: loading),
       ],
-    );
-  }
-
-  void _showSubjectDialog() {
-    data.then(
-      (value) {
-        showModalBottomSheet<int>(
-          context: context,
-          builder: (context) => SubjectMenu(
-            categories: value.teacher.categories,
-            onPressed: () {
-              setState(() {
-                loading = true;
-              });
-            },
-          ),
-        ).then((code) {
-          setState(() {
-            loading = false;
-          });
-          if (code == 200) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: AwesomeSnackbarContent(
-                  title: "Success",
-                  message: "Subject successfully created.",
-                  contentType: ContentType.success,
-                ),
-              ),
-            );
-          }
-          if (code == 500) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: AwesomeSnackbarContent(
-                  title: "Error",
-                  message: "Internal server error.",
-                  contentType: ContentType.failure,
-                ),
-              ),
-            );
-          }
-        });
-      },
     );
   }
 }
