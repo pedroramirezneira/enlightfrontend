@@ -30,6 +30,7 @@ class TeacherOps {
     required String name,
     required int price,
     required String description,
+    required List<String> days,
   }) async {
     final token = await Token.getAccessToken();
     final response = await http.post(
@@ -43,6 +44,7 @@ class TeacherOps {
       },
       body: json.encode({
         "category_name": categoryName,
+        "days": days,
         "name": name,
         "price": price,
         "description": description,

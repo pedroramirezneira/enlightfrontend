@@ -6,6 +6,7 @@ import 'package:enlight/models/category_data.dart';
 import 'package:enlight/util/teacher_ops.dart';
 import 'package:enlight/util/token.dart';
 import 'package:flutter/material.dart';
+import 'package:day_picker/day_picker.dart';
 
 class SubjectMenu extends StatefulWidget {
   final void Function() onPressed;
@@ -27,6 +28,8 @@ class _SubjectMenuState extends State<SubjectMenu> {
   late final TextEditingController nameController;
   late final TextEditingController descriptionController;
   late final TextEditingController priceController;
+  late final List<DayInWeek> _days;
+  late List<String> _selectedDays;
   var loaded = false;
 
   @override
@@ -37,6 +40,16 @@ class _SubjectMenuState extends State<SubjectMenu> {
     nameController = TextEditingController();
     descriptionController = TextEditingController();
     priceController = TextEditingController();
+    _selectedDays = [];
+    _days = [
+      DayInWeek("Mon", dayKey: "Monday"),
+      DayInWeek("Tue", dayKey: "Tuesday"),
+      DayInWeek("Wed", dayKey: "Wednesday"),
+      DayInWeek("Thu", dayKey: "Thursday"),
+      DayInWeek("Fri", dayKey: "Friday"),
+      DayInWeek("Sat", dayKey: "Saturday"),
+      DayInWeek("Sun", dayKey: "Sunday"),
+    ];
   }
 
   @override
@@ -62,6 +75,7 @@ class _SubjectMenuState extends State<SubjectMenu> {
     widget.onPressed();
     TeacherOps.createSubject(
       price: int.tryParse(priceController.text) ?? 0,
+      days: _selectedDays,
       categoryName: categoryNameController.text,
       name: nameController.text,
       description: descriptionController.text,
@@ -112,6 +126,32 @@ class _SubjectMenuState extends State<SubjectMenu> {
                       text: "Description",
                       controller: descriptionController,
                       description: true,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: SelectWeekDays(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w500,
+                        days: _days,
+                        border: false,
+                        width: 345,
+                        daysFillColor: const Color.fromARGB(255, 100, 201, 169),
+                        boxDecoration: BoxDecoration(
+                          border: Border.all(color: Colors.white),
+                          borderRadius: BorderRadius.circular(10.0),
+                          gradient: const LinearGradient(
+                            begin: Alignment.topLeft,
+                            colors: [
+                              Color.fromARGB(255, 43, 57, 68),
+                              Color.fromARGB(255, 43, 57, 68)
+                            ],
+                            tileMode: TileMode.repeated,
+                          ),
+                        ),
+                        onSelect: (values) {
+                          _selectedDays = values;
+                        },
+                      ),
                     ),
                     FormSubmissionButton(
                       text: "Create",

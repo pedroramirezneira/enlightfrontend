@@ -113,6 +113,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.8"
+  day_picker:
+    dependency: "direct main"
+    description:
+      name: day_picker
+      sha256: a0f73716d688b3643769db39e7626cae54026bec24c33a8ebf5a6f8c618a05f2
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.0"
   dropdown_button2:
     dependency: "direct main"
     description:
