@@ -1,14 +1,11 @@
 import 'dart:convert';
-import 'dart:typed_data';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:enlight/components/loading_indicator.dart';
-import 'package:enlight/components/picture_menu.dart';
 import 'package:enlight/components/subject_menu.dart';
 import 'package:enlight/models/account_data.dart';
 import 'package:enlight/models/teacher_account_data.dart';
 import 'package:enlight/pages/edit_account/edit_account.dart';
-import 'package:enlight/pages/edit_profile_teacher.dart';
-import 'package:enlight/pages/teacher_profile/util/select_image.dart';
+import 'package:enlight/pages/edit_teacher_profile/edit_teacher_profile.dart';
 import 'package:enlight/pages/teacher_profile/util/tags_container.dart';
 import 'package:enlight/util/messenger.dart';
 import 'package:enlight/util/teacher_ops.dart';
@@ -55,19 +52,17 @@ class _TeacherProfileState extends State<TeacherProfile> {
                   title: const Text("Edit account"),
                   leading: const Icon(Icons.edit_rounded),
                   onTap: () {
-                    data.then((value) {
+                    data.then((data) {
                       Navigator.of(context)
                         ..pop()
-                        ..push(MaterialPageRoute(
-                          builder: (context) => EditAccount(
-                            data: value as AccountData,
-                            onUpdate: () {
-                              setState(() {
-                                data;
-                              });
-                            },
+                        ..push(
+                          MaterialPageRoute(
+                            builder: (context) => EditAccount(
+                              data: data as AccountData,
+                              onUpdate: () => setState(() => data),
+                            ),
                           ),
-                        ));
+                        );
                     });
                   },
                 ),
@@ -75,17 +70,18 @@ class _TeacherProfileState extends State<TeacherProfile> {
                   title: const Text("Edit profile"),
                   leading: const Icon(Icons.edit_rounded),
                   onTap: () {
-                    Navigator.of(context)
-                      ..pop()
-                      ..push(MaterialPageRoute(
-                        builder: (context) => EditTeacherProfile(
-                          onUpdate: () {
-                            setState(() {
-                              data = TeacherOps.getTeacher();
-                            });
-                          },
-                        ),
-                      ));
+                    data.then((data) {
+                      Navigator.of(context)
+                        ..pop()
+                        ..push(
+                          MaterialPageRoute(
+                            builder: (context) => EditTeacherProfile(
+                              data: data.teacher,
+                              onUpdate: () => setState(() => data),
+                            ),
+                          ),
+                        );
+                    });
                   },
                 ),
                 ListTile(
@@ -145,21 +141,20 @@ class _TeacherProfileState extends State<TeacherProfile> {
                                     child: InkWell(
                                       borderRadius: BorderRadius.circular(100),
                                       onTap: () {
-                                        showModalBottomSheet(
-                                          context: context,
-                                          builder: (context) => PictureMenu(
-                                            selectFromGallery: () =>
-                                                selectFromGallery(
-                                                    context: context,
-                                                    setLoading: setLoading,
-                                                    refreshPicture:
-                                                        refreshPicture),
-                                            takePhoto: () => takePhoto(
-                                                context: context,
-                                                setLoading: setLoading,
-                                                refreshPicture: refreshPicture),
-                                          ),
-                                        );
+                                        data.then((data) {
+                                          Messenger.showPictureMenu(
+                                            context: context,
+                                            data: data,
+                                            onSubmit: () =>
+                                                setState(() => loading = true),
+                                            onResponse: () {
+                                              setState(() {
+                                                loading = false;
+                                                data.picture;
+                                              });
+                                            },
+                                          );
+                                        });
                                       },
                                       child: CircleAvatar(
                                         radius: 50,
@@ -264,20 +259,6 @@ class _TeacherProfileState extends State<TeacherProfile> {
         ),
         LoadingIndicator(visible: loading),
       ],
-    );
-  }
-
-  void setLoading(bool value) {
-    setState(() {
-      loading = value;
-    });
-  }
-
-  void refreshPicture({
-    required Uint8List? selectedImage,
-  }) {
-    data.then(
-      (value) => value.picture = base64.encode(selectedImage!),
     );
   }
 

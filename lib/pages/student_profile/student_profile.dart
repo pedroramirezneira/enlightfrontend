@@ -1,16 +1,11 @@
 import 'dart:convert';
 import 'dart:typed_data';
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'package:enlight/components/picture_menu.dart';
-import 'package:enlight/components/confirm_picture_dialog.dart';
 import 'package:enlight/components/loading_indicator.dart';
 import 'package:enlight/models/account_data.dart';
 import 'package:enlight/pages/edit_account/edit_account.dart';
 import 'package:enlight/util/account_ops.dart';
 import 'package:enlight/util/messenger.dart';
-import 'package:enlight/util/token.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 
 class StudentProfile extends StatefulWidget {
   const StudentProfile({super.key});
@@ -59,20 +54,18 @@ class _StudentProfileState extends State<StudentProfile> {
                   title: const Text("Edit account"),
                   leading: const Icon(Icons.edit_rounded),
                   onTap: () {
-                    data.then(
-                      (data) {
-                        Navigator.of(context)
-                          ..pop()
-                          ..push(
-                            MaterialPageRoute(
-                              builder: (context) => EditAccount(
-                                data: data,
-                                onUpdate: () => setState(() => data),
-                              ),
+                    data.then((data) {
+                      Navigator.of(context)
+                        ..pop()
+                        ..push(
+                          MaterialPageRoute(
+                            builder: (context) => EditAccount(
+                              data: data,
+                              onUpdate: () => setState(() => data),
                             ),
-                          );
-                      },
-                    );
+                          ),
+                        );
+                    });
                   },
                 ),
                 ListTile(
@@ -125,13 +118,20 @@ class _StudentProfileState extends State<StudentProfile> {
                           InkWell(
                             borderRadius: BorderRadius.circular(100),
                             onTap: () {
-                              showModalBottomSheet(
-                                context: context,
-                                builder: (context) => PictureMenu(
-                                  selectFromGallery: selectFromGallery,
-                                  takePhoto: takePhoto,
-                                ),
-                              );
+                              data.then((data) {
+                                Messenger.showPictureMenu(
+                                  context: context,
+                                  data: data,
+                                  onSubmit: () =>
+                                      setState(() => loading = true),
+                                  onResponse: () {
+                                    setState(() {
+                                      loading = false;
+                                      data.picture;
+                                    });
+                                  },
+                                );
+                              });
                             },
                             child: CircleAvatar(
                               backgroundColor: Theme.of(context)
@@ -177,110 +177,6 @@ class _StudentProfileState extends State<StudentProfile> {
         ),
         LoadingIndicator(visible: loading),
       ],
-    );
-  }
-
-  void selectFromGallery() {
-    final picker = ImagePicker();
-    picker.pickImage(source: ImageSource.gallery).then((image) {
-      if (image == null) {
-        Navigator.of(context).pop();
-        return;
-      }
-      image.readAsBytes().then((bytes) {
-        setState(() {
-          selectedImage = bytes;
-        });
-        Navigator.of(context).pop();
-        showAdaptiveDialog(
-          barrierDismissible: false,
-          context: context,
-          builder: (context) => ConfirmPictureDialog(
-            bytes: selectedImage!,
-            onConfirm: updatePicture,
-            onCancel: () {
-              Navigator.of(context).pop();
-              setState(() => selectedImage = null);
-            },
-          ),
-        );
-      });
-    });
-  }
-
-  void takePhoto() {
-    final picker = ImagePicker();
-    picker.pickImage(source: ImageSource.camera).then((image) {
-      if (image == null) {
-        Navigator.of(context).pop();
-        return;
-      }
-      image.readAsBytes().then((bytes) {
-        setState(() {
-          selectedImage = bytes;
-        });
-        Navigator.of(context).pop();
-        showAdaptiveDialog(
-          barrierDismissible: false,
-          context: context,
-          builder: (context) => ConfirmPictureDialog(
-            bytes: selectedImage!,
-            onConfirm: updatePicture,
-            onCancel: () {
-              Navigator.of(context).pop();
-              setState(() {
-                selectedImage = null;
-              });
-            },
-          ),
-        );
-      });
-    });
-  }
-
-  void updatePicture() {
-    Navigator.of(context).pop();
-    setState(() {
-      loading = true;
-    });
-    AccountOps.insertPicture(picture: base64.encode(selectedImage!)).then(
-      (code) {
-        if (code == 200) {
-          setState(() {
-            loading = false;
-            data.then((value) {
-              value.picture = base64.encode(selectedImage!);
-              selectedImage = null;
-            });
-          });
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: AwesomeSnackbarContent(
-                title: "Success",
-                message: "Successful update.",
-                contentType: ContentType.success,
-              ),
-            ),
-          );
-        }
-        if (code == 400) {
-          Token.refreshAccessToken().then((_) => updatePicture());
-        }
-        if (code == 500) {
-          setState(() {
-            loading = false;
-          });
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: AwesomeSnackbarContent(
-                title: "Error",
-                message: "Internal server error.",
-                contentType: ContentType.failure,
-              ),
-            ),
-          );
-        }
-      },
     );
   }
 }

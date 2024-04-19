@@ -1,14 +1,7 @@
 import 'package:flutter/material.dart';
 
 class PictureMenu extends StatelessWidget {
-  final void Function()? selectFromGallery;
-  final void Function()? takePhoto;
-
-  const PictureMenu({
-    super.key,
-    this.selectFromGallery,
-    this.takePhoto,
-  });
+  const PictureMenu({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +13,7 @@ class PictureMenu extends StatelessWidget {
           Column(
             children: [
               IconButton(
-                onPressed: selectFromGallery,
+                onPressed: () => Navigator.of(context).pop("select"),
                 icon: const Icon(
                   Icons.photo,
                   size: 30,
@@ -32,7 +25,7 @@ class PictureMenu extends StatelessWidget {
           Column(
             children: [
               IconButton(
-                onPressed: takePhoto,
+                onPressed: () => Navigator.of(context).pop("take"),
                 icon: const Icon(
                   Icons.photo_camera,
                   size: 30,
