@@ -149,7 +149,6 @@ class _SubjectMenuState extends State<SubjectMenu> {
                         fontWeight: FontWeight.w500,
                         days: _days,
                         border: false,
-                        //width: 345,
                         daysFillColor: const Color.fromARGB(255, 100, 201, 169),
                         boxDecoration: BoxDecoration(
                           border: Border.all(color: Colors.white),
@@ -169,10 +168,20 @@ class _SubjectMenuState extends State<SubjectMenu> {
                       ),
                     ),
                     FormSubmissionButton(
-                      text: "Create",
-                      formKey: formKey,
-                      onPressed: () => Navigator.of(context).pop(true),
-                    ),
+                        text: "Create",
+                        formKey: formKey,
+                        onPressed: () {
+                          if (_selectedDays.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content:
+                                    Text("Please select at least one day."),
+                              ),
+                            );
+                            return;
+                          }
+                          Navigator.of(context).pop(true);
+                        }),
                   ],
                 ),
               ),

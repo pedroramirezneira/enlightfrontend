@@ -54,7 +54,7 @@ class TeacherOps {
   }
 
   static Future<bool> deleteSubject({
-    required int subjectID,
+    required int subjectId,
   }) async {
     final token = await Token.getAccessToken();
     final response = await http.delete(
@@ -67,7 +67,7 @@ class TeacherOps {
         "Content-Type": "application/json",
       },
       body: json.encode({
-        "subject_id": subjectID,
+        "subject_id": subjectId,
       }),
     );
     return response.statusCode == 200;

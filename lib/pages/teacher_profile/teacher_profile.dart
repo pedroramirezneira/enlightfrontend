@@ -224,7 +224,22 @@ class _TeacherProfileState extends State<TeacherProfile> {
                                           name: tag.name,
                                           description: tag.description,
                                           price: tag.price,
-                                          deleteSubject: () {},
+                                          deleteSubject: () {
+                                            data.then((data) {
+                                              Messenger.showDeleteSubjectDialog(
+                                                context: context,
+                                                data: data.teacher,
+                                                subjectId: tag.id,
+                                                onAccept: () => setState(
+                                                    () => loading = true),
+                                                onResponse: () {
+                                                  setState(() {
+                                                    loading = false;
+                                                  });
+                                                },
+                                              );
+                                            });
+                                          },
                                         ),
                                         const SizedBox(
                                           height: 20,
