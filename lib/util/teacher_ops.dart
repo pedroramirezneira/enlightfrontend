@@ -25,7 +25,7 @@ class TeacherOps {
     return response.statusCode;
   }
 
-  static Future<int> createSubject({
+  static Future<http.Response> createSubject({
     required String categoryName,
     required String name,
     required String description,
@@ -50,7 +50,7 @@ class TeacherOps {
         "description": description,
       }),
     );
-    return response.statusCode;
+    return response;
   }
 
   static Future<bool> deleteSubject({

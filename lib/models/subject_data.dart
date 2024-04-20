@@ -2,7 +2,6 @@ class SubjectData {
   int id;
   String name;
   String description;
-  int categoryId;
   int price;
   String categoryName;
 
@@ -10,7 +9,6 @@ class SubjectData {
     required this.id,
     required this.name,
     required this.description,
-    required this.categoryId,
     required this.categoryName,
     required this.price,
   });
@@ -21,7 +19,6 @@ class SubjectData {
       name: json["name"],
       price: json["price"],
       description: json["description"],
-      categoryId: json["category_id"],
       categoryName: json["category_name"],
     );
   }

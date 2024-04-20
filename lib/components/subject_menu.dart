@@ -84,22 +84,21 @@ class _SubjectMenuState extends State<SubjectMenu> {
       name: nameController.text,
       description: descriptionController.text,
       price: int.tryParse(priceController.text) ?? 0,
-    ).then((code) {
-      if (code == 200) {
+    ).then((response) {
+      if (response.statusCode == 200) {
         widget.subjects.add(
           SubjectData(
-            id: 0,
+            id: int.parse(response.body),
             name: nameController.text,
             description: descriptionController.text,
-            categoryId: 0,
             categoryName: categoryNameController.text,
             price: int.tryParse(priceController.text) ?? 0,
           ),
         );
         Navigator.of(context).pop(200);
-      } else if (code == 401) {
+      } else if (response.statusCode == 401) {
         Token.refreshAccessToken().then((_) => _submit());
-      } else if (code == 500) {
+      } else if (response.statusCode == 500) {
         Navigator.of(context).pop(500);
       } else {
         Navigator.of(context).pop(null);
@@ -168,20 +167,20 @@ class _SubjectMenuState extends State<SubjectMenu> {
                       ),
                     ),
                     FormSubmissionButton(
-                        text: "Create",
-                        formKey: formKey,
-                        onPressed: () {
-                          if (_selectedDays.isEmpty) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content:
-                                    Text("Please select at least one day."),
-                              ),
-                            );
-                            return;
-                          }
-                          Navigator.of(context).pop(true);
-                        }),
+                      text: "Create",
+                      formKey: formKey,
+                      onPressed: () {
+                        if (_selectedDays.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Please select at least one day."),
+                            ),
+                          );
+                          return;
+                        }
+                        Navigator.of(context).pop(true);
+                      },
+                    ),
                   ],
                 ),
               ),
