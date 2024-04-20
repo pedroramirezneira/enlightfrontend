@@ -269,13 +269,11 @@ class _TeacherProfileState extends State<TeacherProfile> {
           floatingActionButton: FloatingActionButton(
             onPressed: () {
               data.then((data) {
-                showSubjectDialog(
+                showSubjectMenu(
                   context: context,
                   data: data.teacher,
-                  onSubmit: () => setState(() => loading = true),
                   onResponse: () {
                     setState(() {
-                      loading = false;
                       data.teacher.subjects;
                     });
                   },

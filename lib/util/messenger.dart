@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:typed_data';
-
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:enlight/components/confirm_picture_dialog.dart';
 import 'package:enlight/components/picture_menu.dart';
@@ -40,7 +39,7 @@ class Messenger {
       },
     ).then(
       (value) {
-        if (value == false) {
+        if (value != true) {
           return;
         }
         onAccept();
@@ -99,7 +98,7 @@ class Messenger {
       },
     ).then(
       (value) {
-        if (value == false) {
+        if (value != true) {
           return;
         }
         onAccept();
@@ -160,7 +159,7 @@ class Messenger {
       },
     ).then(
       (value) {
-        if (value == false) {
+        if (value != true) {
           return;
         }
         onAccept();
@@ -207,13 +206,17 @@ class Messenger {
       }
       Uint8List? selected;
       if (value == "select") {
-        selected = await _selectFromGallery(context: context);
+        selected = await _loadImage(
+          context: context,
+          source: ImageSource.gallery,
+        );
       }
-      if (!context.mounted) {
-        return;
-      }
+      if (!context.mounted) return;
       if (value == "take") {
-        selected = await _takePhoto(context: context);
+        selected = await _loadImage(
+          context: context,
+          source: ImageSource.camera,
+        );
       }
       if (selected == null || !context.mounted) {
         return;
@@ -236,26 +239,12 @@ class Messenger {
     });
   }
 
-  static Future<Uint8List?> _selectFromGallery({
+  static Future<Uint8List?> _loadImage({
     required BuildContext context,
+    required ImageSource source,
   }) async {
     final picker = ImagePicker();
     final image = await picker.pickImage(source: ImageSource.gallery);
-    if (image == null) {
-      return null;
-    }
-    final bytes = await image.readAsBytes();
-    if (!context.mounted) {
-      return null;
-    }
-    return bytes;
-  }
-
-  static Future<Uint8List?> _takePhoto({
-    required BuildContext context,
-  }) async {
-    final picker = ImagePicker();
-    final image = await picker.pickImage(source: ImageSource.camera);
     if (image == null) {
       return null;
     }
@@ -287,7 +276,7 @@ class Messenger {
             ),
           );
         }
-        if (code == 400) {
+        if (code == 401) {
           Token.refreshAccessToken().then(
             (_) => _updatePicture(
               context: context,
