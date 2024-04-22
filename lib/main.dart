@@ -94,8 +94,18 @@ class MyApp extends StatelessWidget {
         datePickerTheme: const DatePickerThemeData(
           backgroundColor: Color.fromARGB(255, 43, 57, 68),
         ),
+        timePickerTheme: const TimePickerThemeData(
+          backgroundColor: Color.fromARGB(255, 43, 57, 68),
+          hourMinuteColor: Colors.grey,
+          dialBackgroundColor: Colors.grey,
+          dialHandColor: Color.fromARGB(255, 100, 201, 169),
+        ),
         bottomSheetTheme: const BottomSheetThemeData(
           backgroundColor: Color.fromARGB(255, 43, 57, 68),
+        ),
+        floatingActionButtonTheme: const FloatingActionButtonThemeData(
+          backgroundColor: Color.fromARGB(255, 100, 201, 169),
+          shape: CircleBorder(),
         ),
       ),
       home: home,

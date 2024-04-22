@@ -272,11 +272,7 @@ class _TeacherProfileState extends State<TeacherProfile> {
                 showSubjectMenu(
                   context: context,
                   data: data.teacher,
-                  onResponse: () {
-                    setState(() {
-                      data.teacher.subjects;
-                    });
-                  },
+                  onResponse: () => setState(() => data.teacher.subjects),
                 );
               });
             },

@@ -10,11 +10,14 @@ class DayData {
   });
 
   factory DayData.fromJson(Map<String, dynamic> json) {
-    List<dynamic> timeslots = json["timeslots"];
+    List<dynamic>? timeslots = json["timeslots"];
     return DayData(
       name: json["name"],
-      timeslots:
-          timeslots.map((timeslot) => TimeslotData.fromJson(timeslot)).toList(),
+      timeslots: timeslots != null
+          ? timeslots
+              .map((timeslot) => TimeslotData.fromJson(timeslot))
+              .toList()
+          : [],
     );
   }
 

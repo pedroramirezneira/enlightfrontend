@@ -124,7 +124,8 @@ class _EnlightTextFieldState extends State<EnlightTextField> {
               return;
             }
             if (timeOfDay != null) {
-              widget.controller.text = "${timeOfDay.hour}:${timeOfDay.minute}";
+              widget.controller.text =
+                  "${timeOfDay.hour < 10 ? "0${timeOfDay.hour.toString()}" : timeOfDay.hour}:${timeOfDay.minute < 10 ? "0${timeOfDay.minute.toString()}" : timeOfDay.minute}";
             }
           }
         },

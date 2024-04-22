@@ -25,6 +25,7 @@ class TimeslotMenu extends StatefulWidget {
 
 class _TimeslotMenuState extends State<TimeslotMenu> {
   late final GlobalKey<FormState> formKey;
+  late final GlobalKey<ScaffoldMessengerState> messengerKey;
   late List<String> selectedDays;
   late final TextEditingController startTimeController;
   late final TextEditingController endTimeController;
@@ -33,6 +34,7 @@ class _TimeslotMenuState extends State<TimeslotMenu> {
   void initState() {
     super.initState();
     formKey = GlobalKey<FormState>();
+    messengerKey = GlobalKey<ScaffoldMessengerState>();
     selectedDays = [];
     startTimeController = TextEditingController();
     endTimeController = TextEditingController();
@@ -40,83 +42,88 @@ class _TimeslotMenuState extends State<TimeslotMenu> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "Add timeslot",
+    return ScaffoldMessenger(
+      key: messengerKey,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            "Add timeslot",
+          ),
         ),
-      ),
-      body: SingleChildScrollView(
-        child: Form(
-          key: formKey,
-          child: Column(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: SelectWeekDays(
-                  padding: 8,
-                  fontSize: 10,
-                  fontWeight: FontWeight.w500,
-                  days: widget.days,
-                  border: false,
-                  daysFillColor: const Color.fromARGB(255, 100, 201, 169),
-                  boxDecoration: BoxDecoration(
-                    border: Border.all(color: Colors.white),
-                    borderRadius: BorderRadius.circular(10.0),
-                    gradient: const LinearGradient(
-                      begin: Alignment.topLeft,
-                      colors: [
-                        Color.fromARGB(255, 43, 57, 68),
-                        Color.fromARGB(255, 43, 57, 68)
-                      ],
-                      tileMode: TileMode.repeated,
-                    ),
-                  ),
-                  onSelect: (values) {
-                    setState(() {
-                      selectedDays = values;
-                    });
-                  },
-                ),
-              ),
-              EnlightTextField(
-                text: "Start Time",
-                controller: startTimeController,
-                time: true,
-              ),
-              EnlightTextField(
-                text: "End Time",
-                controller: endTimeController,
-                time: true,
-              ),
-              FormSubmissionButton(
-                text: "Add",
-                formKey: formKey,
-                onPressed: () {
-                  if (selectedDays.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: AwesomeSnackbarContent(
-                          title: "Watch out",
-                          message: "Please select at least one day.",
-                          contentType: ContentType.help,
+        body: Center(
+          child: SingleChildScrollView(
+            child: Form(
+              key: formKey,
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: SelectWeekDays(
+                      padding: 8,
+                      fontSize: 10,
+                      fontWeight: FontWeight.w500,
+                      days: widget.days,
+                      border: false,
+                      daysFillColor: const Color.fromARGB(255, 100, 201, 169),
+                      boxDecoration: BoxDecoration(
+                        border: Border.all(color: Colors.white),
+                        borderRadius: BorderRadius.circular(10.0),
+                        gradient: const LinearGradient(
+                          begin: Alignment.topLeft,
+                          colors: [
+                            Color.fromARGB(255, 43, 57, 68),
+                            Color.fromARGB(255, 43, 57, 68)
+                          ],
+                          tileMode: TileMode.repeated,
                         ),
                       ),
-                    );
-                    return;
-                  }
-                  Navigator.of(context).pop(
-                    TimeslotMenuData(
-                      days: selectedDays,
-                      timeslot: TimeslotData(
-                        startTime: startTimeController.text,
-                        endTime: endTimeController.text,
-                      ),
+                      onSelect: (values) {
+                        setState(() {
+                          selectedDays = values;
+                        });
+                      },
                     ),
-                  );
-                },
+                  ),
+                  EnlightTextField(
+                    text: "Start Time",
+                    controller: startTimeController,
+                    time: true,
+                  ),
+                  EnlightTextField(
+                    text: "End Time",
+                    controller: endTimeController,
+                    time: true,
+                  ),
+                  FormSubmissionButton(
+                    text: "Add",
+                    formKey: formKey,
+                    onPressed: () {
+                      if (selectedDays.isEmpty) {
+                        messengerKey.currentState!.showSnackBar(
+                          SnackBar(
+                            content: AwesomeSnackbarContent(
+                              title: "Watch out",
+                              message: "Please select at least one day.",
+                              contentType: ContentType.help,
+                            ),
+                          ),
+                        );
+                        return;
+                      }
+                      Navigator.of(context).pop(
+                        TimeslotMenuData(
+                          days: selectedDays,
+                          timeslot: TimeslotData(
+                            startTime: startTimeController.text,
+                            endTime: endTimeController.text,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),

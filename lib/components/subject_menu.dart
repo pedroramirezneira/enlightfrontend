@@ -3,6 +3,7 @@ import 'package:enlight/components/autocomplete_field.dart';
 import 'package:enlight/components/form_submission_button.dart';
 import 'package:enlight/components/enlight_text_field.dart';
 import 'package:enlight/components/loading_indicator.dart';
+import 'package:enlight/components/timeslot.dart';
 import 'package:enlight/components/timeslot_menu.dart';
 import 'package:enlight/models/category_data.dart';
 import 'package:enlight/models/day_data.dart';
@@ -93,19 +94,40 @@ class _SubjectMenuState extends State<SubjectMenu> {
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: Wrap(
-                              spacing: 18,
-                              alignment: WrapAlignment.spaceBetween,
+                            child: Column(
                               children: [
                                 for (final day in days)
-                                  Column(
-                                    children: <Widget>[
-                                      Text(day.name),
-                                      for (final timeslot in day.timeslots)
-                                        Text(
-                                          "${timeslot.startTime} - ${timeslot.endTime}",
+                                  SizedBox(
+                                    width: double.maxFinite,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(10),
+                                          child: Text(day.name),
                                         ),
-                                    ],
+                                        Wrap(
+                                          children: <Widget>[
+                                            for (final timeslot
+                                                in day.timeslots)
+                                              Timeslot(
+                                                text:
+                                                    "${timeslot.startTime} - ${timeslot.endTime}",
+                                                onPressed: () {
+                                                  setState(() {
+                                                    day.timeslots
+                                                        .remove(timeslot);
+                                                    if (day.timeslots.isEmpty) {
+                                                      days.remove(day);
+                                                    }
+                                                  });
+                                                },
+                                              ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
                               ],
                             ),
@@ -116,6 +138,8 @@ class _SubjectMenuState extends State<SubjectMenu> {
                               onPressed: () async {
                                 final data = await showModalBottomSheet<
                                     TimeslotMenuData>(
+                                  useSafeArea: true,
+                                  isScrollControlled: true,
                                   context: context,
                                   builder: (context) => TimeslotMenu(),
                                 );
@@ -151,13 +175,13 @@ class _SubjectMenuState extends State<SubjectMenu> {
                             formKey: formKey,
                             onPressed: () {
                               if (days.isEmpty) {
-                                ScaffoldMessenger.of(context).showSnackBar(
+                                messengerKey.currentState!.showSnackBar(
                                   SnackBar(
                                     content: AwesomeSnackbarContent(
                                       title: "Watch out",
                                       message:
                                           "Please add at least one timeslot",
-                                      contentType: ContentType.warning,
+                                      contentType: ContentType.help,
                                     ),
                                   ),
                                 );

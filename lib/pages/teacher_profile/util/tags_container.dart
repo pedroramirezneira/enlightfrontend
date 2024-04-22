@@ -26,7 +26,7 @@ class _TagContainer extends State<TagContainer> {
       child: Container(
           width: double.infinity,
           decoration: BoxDecoration(
-            color: const Color.fromARGB(30, 57, 210, 192),
+            color: const Color.fromARGB(255, 71, 129, 118),
             borderRadius: BorderRadius.circular(24),
           ),
           child: Column(
@@ -85,6 +85,4 @@ class _TagContainer extends State<TagContainer> {
           )),
     );
   }
-
-  
 }
