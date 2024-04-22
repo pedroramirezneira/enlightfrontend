@@ -21,20 +21,10 @@ class TeacherData {
       description: json["description"],
       rating: json["rating"],
       subjects: subjects != null
-          ? subjects
-              .map(
-                (subject) => SubjectData.fromJson(
-                  subject,
-                ),
-              )
-              .toList()
+          ? subjects.map((subject) => SubjectData.fromJson(subject)).toList()
           : [],
       categories: categories
-          .map(
-            (category) => CategoryData.fromJson(
-              category,
-            ),
-          )
+          .map((category) => CategoryData.fromJson(category))
           .toList(),
     );
   }

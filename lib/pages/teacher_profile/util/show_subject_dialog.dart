@@ -1,5 +1,6 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:enlight/components/subject_menu.dart';
+import 'package:enlight/models/day_data.dart';
 import 'package:enlight/models/subject_data.dart';
 import 'package:enlight/models/teacher_data.dart';
 import 'package:enlight/util/teacher_ops.dart';
@@ -34,7 +35,7 @@ void _submit({
   required String name,
   required String description,
   required int price,
-  required List<String> days,
+  required List<DayData> days,
 }) {
   TeacherOps.createSubject(
     categoryName: categoryName,
@@ -60,6 +61,7 @@ void _submit({
           description: description,
           categoryName: categoryName,
           price: price,
+          days: days,
         ),
       );
     }

@@ -8,6 +8,7 @@ class EnlightTextField extends StatefulWidget {
   final bool date;
   final bool description;
   final bool number;
+  final bool time;
   final FocusNode? focusNode;
   final void Function()? onFieldSubmitted;
 
@@ -20,6 +21,7 @@ class EnlightTextField extends StatefulWidget {
     this.date = false,
     this.description = false,
     this.number = false,
+    this.time = false,
     this.focusNode,
     this.onFieldSubmitted,
   });
@@ -44,7 +46,7 @@ class _EnlightTextFieldState extends State<EnlightTextField> {
       child: TextFormField(
         controller: widget.controller,
         obscureText: obscure,
-        readOnly: widget.date,
+        readOnly: widget.date || widget.time,
         maxLines: widget.description == true ? null : 1,
         validator: (value) {
           if (value == null || value.isEmpty) {
@@ -63,18 +65,17 @@ class _EnlightTextFieldState extends State<EnlightTextField> {
               return "Invalid number.";
             }
           }
-          if (!widget.date) {
-            return null;
-          }
-          if (!RegExp(r'^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[01])$')
-              .hasMatch(value)) {
-            return "Invalid date.";
-          }
-          DateTime now = DateTime.now();
-          DateTime sixteenYearsAgo =
-              DateTime(now.year - 16, now.month, now.day);
-          if (DateTime.parse(value).isAfter(sixteenYearsAgo)) {
-            return "You must be at least 16 years old to use Enlight.";
+          if (widget.date) {
+            if (!RegExp(r'^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[01])$')
+                .hasMatch(value)) {
+              return "Invalid date.";
+            }
+            DateTime now = DateTime.now();
+            DateTime sixteenYearsAgo =
+                DateTime(now.year - 16, now.month, now.day);
+            if (DateTime.parse(value).isAfter(sixteenYearsAgo)) {
+              return "You must be at least 16 years old to use Enlight.";
+            }
           }
           return null;
         },
@@ -98,19 +99,35 @@ class _EnlightTextFieldState extends State<EnlightTextField> {
                 )
               : null,
         ),
-        onTap: widget.date
-            ? () async {
-                FocusScope.of(context).requestFocus(FocusNode());
-                DateTime? dateTime = await showDatePicker(
-                  context: context,
-                  firstDate: DateTime(1900),
-                  lastDate: DateTime.now(),
-                );
-                dateTime != null
-                    ? widget.controller.text = dateTime.toString().split(" ")[0]
-                    : null;
-              }
-            : null,
+        onTap: () async {
+          if (widget.date) {
+            FocusScope.of(context).requestFocus(FocusNode());
+            final dateTime = await showDatePicker(
+              context: context,
+              firstDate: DateTime(1900),
+              lastDate: DateTime.now(),
+            );
+            if (dateTime != null) {
+              widget.controller.text = dateTime.toString().split(" ")[0];
+            }
+          }
+          if (!context.mounted) {
+            return;
+          }
+          if (widget.time) {
+            FocusScope.of(context).requestFocus(FocusNode());
+            final timeOfDay = await showTimePicker(
+              context: context,
+              initialTime: TimeOfDay.now(),
+            );
+            if (!context.mounted) {
+              return;
+            }
+            if (timeOfDay != null) {
+              widget.controller.text = "${timeOfDay.hour}:${timeOfDay.minute}";
+            }
+          }
+        },
         focusNode: widget.focusNode,
         onFieldSubmitted: (value) {
           if (widget.onFieldSubmitted != null) {

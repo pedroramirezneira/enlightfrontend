@@ -163,7 +163,7 @@ class Messenger {
           return;
         }
         onAccept();
-        TeacherOps.deleteSubject(subjectId: subjectId).then(
+        TeacherOps.deleteSubject(id: subjectId).then(
           (success) {
             if (success) {
               ScaffoldMessenger.of(context).showSnackBar(

@@ -20,9 +20,7 @@ class TeacherAccountData extends AccountData {
       birthday: (json["birthday"] as String).split("T")[0],
       address: json["address"],
       picture: json["picture"],
-      teacher: TeacherData.fromJson(
-        json["teacher"],
-      ),
+      teacher: TeacherData.fromJson(json["teacher"]),
     );
   }
 }

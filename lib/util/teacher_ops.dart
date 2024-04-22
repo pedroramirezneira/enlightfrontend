@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:enlight/models/day_data.dart';
 import 'package:enlight/models/teacher_account_data.dart';
 import 'package:enlight/util/token.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -30,7 +31,7 @@ class TeacherOps {
     required String name,
     required String description,
     required int price,
-    required List<String> days,
+    required List<DayData> days,
   }) async {
     final token = await Token.getAccessToken();
     final response = await http.post(
@@ -44,17 +45,17 @@ class TeacherOps {
       },
       body: json.encode({
         "category_name": categoryName,
-        "days": days,
         "name": name,
         "price": price,
         "description": description,
+        "days": days.map((day) => day.toJson()).toList(),
       }),
     );
     return response;
   }
 
   static Future<bool> deleteSubject({
-    required int subjectId,
+    required int id,
   }) async {
     final token = await Token.getAccessToken();
     final response = await http.delete(
@@ -66,9 +67,11 @@ class TeacherOps {
         "Authorization": "Bearer $token",
         "Content-Type": "application/json",
       },
-      body: json.encode({
-        "subject_id": subjectId,
-      }),
+      body: json.encode(
+        {
+          "id": id,
+        },
+      ),
     );
     return response.statusCode == 200;
   }
