@@ -53,6 +53,7 @@ class _EditAccountState extends State<EditTeacherProfile> {
                     children: <Widget>[
                       EnlightTextField(
                         text: "Description",
+                        description: true,
                         controller: descriptionController,
                       ),
                       FormSubmissionButton(

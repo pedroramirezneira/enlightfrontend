@@ -156,9 +156,22 @@ class _TeacherProfileState extends State<TeacherProfile> {
                                         });
                                       },
                                       child: CircleAvatar(
+                                        backgroundColor: Theme.of(context)
+                                            .colorScheme
+                                            .surface
+                                            .withOpacity(0.5),
                                         radius: 50,
                                         backgroundImage: hasImage
                                             ? MemoryImage(decoded)
+                                            : null,
+                                        child: !hasImage
+                                            ? Text(
+                                                snapshot.data!.name[0]
+                                                    .toUpperCase(),
+                                                style: const TextStyle(
+                                                  fontSize: 50,
+                                                ),
+                                              )
                                             : null,
                                       ),
                                     ),
