@@ -244,7 +244,7 @@ class Messenger {
     required ImageSource source,
   }) async {
     final picker = ImagePicker();
-    final image = await picker.pickImage(source: ImageSource.gallery);
+    final image = await picker.pickImage(source: source);
     if (image == null) {
       return null;
     }
