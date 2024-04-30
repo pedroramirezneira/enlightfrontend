@@ -5,6 +5,7 @@ import 'package:enlight/models/account_data.dart';
 import 'package:enlight/pages/edit_account/edit_account.dart';
 import 'package:enlight/util/account_ops.dart';
 import 'package:enlight/util/messenger.dart';
+import 'package:enlight/util/student_navigation_bar.dart';
 import 'package:flutter/material.dart';
 
 class StudentProfile extends StatefulWidget {
@@ -162,6 +163,7 @@ class _StudentProfileState extends State<StudentProfile> {
                       ),
                     ),
                   ),
+                  bottomNavigationBar: const StudentNavigationBar(index: 1,)
                 );
               }
               if (snapshot.hasError) {
