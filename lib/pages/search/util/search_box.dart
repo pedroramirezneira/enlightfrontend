@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 class SearchBox extends StatefulWidget {
   final String hintText;
+  final Function(String) onSubmitted;
 
-  const SearchBox({super.key, required this.hintText});
+  const SearchBox({super.key, required this.hintText, required this.onSubmitted});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -27,7 +28,7 @@ class _SearchBoxState extends State<SearchBox> {
           ),
         ),
         onSubmitted: (value) {
-          print(value);
+          widget.onSubmitted(value);
         },
       ),
     );
