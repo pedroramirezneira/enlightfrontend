@@ -1,8 +1,7 @@
 import 'dart:convert';
 import 'package:enlight/components/loading_indicator.dart';
-import 'package:enlight/models/teacher_account_data.dart';
+import 'package:enlight/models/searched_teacher_data.dart';
 import 'package:enlight/pages/teacher_profile/util/tags_container_from_search.dart';
-import 'package:enlight/util/messenger.dart';
 import 'package:enlight/util/teacher_ops.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +16,7 @@ class TeacherProfileFromSearch extends StatefulWidget {
 }
 
 class _TeacherProfileFromSearchState extends State<TeacherProfileFromSearch> {
-  late Future<TeacherAccountData> data;
+  late Future<SearchTeacherData> data;
   var loading = true;
   var initialLoaded = false;
 
@@ -61,43 +60,24 @@ class _TeacherProfileFromSearchState extends State<TeacherProfileFromSearch> {
                                 children: <Widget>[
                                   Padding(
                                     padding: const EdgeInsets.all(10.0),
-                                    child: InkWell(
-                                      borderRadius: BorderRadius.circular(100),
-                                      onTap: () {
-                                        data.then((data) {
-                                          Messenger.showPictureMenu(
-                                            context: context,
-                                            data: data,
-                                            onSubmit: () =>
-                                                setState(() => loading = true),
-                                            onResponse: () {
-                                              setState(() {
-                                                loading = false;
-                                                data.picture;
-                                              });
-                                            },
-                                          );
-                                        });
-                                      },
-                                      child: CircleAvatar(
-                                        backgroundColor: Theme.of(context)
-                                            .colorScheme
-                                            .surface
-                                            .withOpacity(0.5),
-                                        radius: 50,
-                                        backgroundImage: hasImage
-                                            ? MemoryImage(decoded)
-                                            : null,
-                                        child: !hasImage
-                                            ? Text(
-                                                snapshot.data!.name[0]
-                                                    .toUpperCase(),
-                                                style: const TextStyle(
-                                                  fontSize: 50,
-                                                ),
-                                              )
-                                            : null,
-                                      ),
+                                    child: CircleAvatar(
+                                      backgroundColor: Theme.of(context)
+                                          .colorScheme
+                                          .surface
+                                          .withOpacity(0.5),
+                                      radius: 50,
+                                      backgroundImage: hasImage
+                                          ? MemoryImage(decoded)
+                                          : null,
+                                      child: !hasImage
+                                          ? Text(
+                                              snapshot.data!.name[0]
+                                                  .toUpperCase(),
+                                              style: const TextStyle(
+                                                fontSize: 50,
+                                              ),
+                                            )
+                                          : null,
                                     ),
                                   ),
                                   Padding(
@@ -110,7 +90,7 @@ class _TeacherProfileFromSearchState extends State<TeacherProfileFromSearch> {
                                           style: const TextStyle(fontSize: 30),
                                         ),
                                         Text(
-                                          "${snapshot.data!.teacher.rating}/10.0",
+                                          "${snapshot.data!.rating}/10",
                                           style: const TextStyle(fontSize: 18),
                                         )
                                       ],
@@ -133,7 +113,7 @@ class _TeacherProfileFromSearchState extends State<TeacherProfileFromSearch> {
                                       ),
                                     ),
                                     Text(
-                                      snapshot.data!.teacher.description,
+                                      snapshot.data!.description,
                                       style: const TextStyle(fontSize: 18),
                                     ),
                                     const Text(
@@ -154,7 +134,7 @@ class _TeacherProfileFromSearchState extends State<TeacherProfileFromSearch> {
                                     height: 10,
                                   ),
                                   for (var tag
-                                      in snapshot.data!.teacher.subjects)
+                                      in snapshot.data!.subjects)
                                     Column(
                                       children: [
                                         TagContainerFromSearch(
@@ -183,7 +163,7 @@ class _TeacherProfileFromSearchState extends State<TeacherProfileFromSearch> {
                   });
                 });
               }
-              return const LoadingIndicator(visible: true);
+              return const LoadingIndicator(visible: false);
             }),
           ),
         ),

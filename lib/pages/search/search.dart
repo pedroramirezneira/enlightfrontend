@@ -110,6 +110,7 @@ class _SearchTeachersState extends State<SearchTeachers> {
                                 description: teacher.description,
                                 picture: teacher.picture,
                                 id: teacher.id,
+                                rating: teacher.rating,
                               )
                           else if (selectedValue == "Tags")
                             for (var subject in snapshot.data!.subject!)

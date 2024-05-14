@@ -5,6 +5,7 @@ class TeacherResultContainer extends StatelessWidget {
   final String name;
   final String description;
   final String? picture;
+  final double rating;
   final int id;
 
   const TeacherResultContainer({
@@ -12,7 +13,8 @@ class TeacherResultContainer extends StatelessWidget {
     required this.name,
     required this.description,
     required this.picture,
-    required this.id,
+    required this.rating,
+    required this.id
   });
 
   @override
@@ -21,9 +23,8 @@ class TeacherResultContainer extends StatelessWidget {
       padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 20),
       child: GestureDetector(
         onTap: () {
-          Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => TeacherProfileFromSearch(id: id)),
-              (route) => false,
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => TeacherProfileFromSearch(id: id))
             );
         },
         child: Container(
@@ -45,15 +46,20 @@ class TeacherResultContainer extends StatelessWidget {
                       letterSpacing: 0,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(8, 0, 0, 0),
-                    child: Text(
-                      description,
-                      style: const TextStyle(
-                        fontFamily: 'Montserrat',
-                        fontSize: 16,
-                        letterSpacing: 0,
-                      ),
+                  Text(
+                    "$rating/10.0",
+                    style: const TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontSize: 15,
+                      letterSpacing: 0,
+                    ),
+                  ),
+                  Text(
+                    description,
+                    style: const TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontSize: 16,
+                      letterSpacing: 0,
                     ),
                   ),
                 ],

@@ -1,25 +1,27 @@
-class SearchTeacherData {
+
+
+class ConatinerSearchTeacherData {
   final int id;
-  int accountId;
+  double rating;
   String name;
   String description;
   String? picture;
 
-  SearchTeacherData({
+  ConatinerSearchTeacherData({
+    required this.rating,
     required this.id,
-    required this.accountId,
     required this.name,
     required this.description,
     this.picture,
   });
 
-  factory SearchTeacherData.fromJson(Map<String, dynamic> json) {
+  factory ConatinerSearchTeacherData.fromJson(Map<String, dynamic> json) {
     String? picture = json["picture"];
-    return SearchTeacherData(
-      accountId: json["account_id"],
+    return ConatinerSearchTeacherData(
       id: json["id"],
       name: json["name"],
       description: json["description"],
+      rating : 10.0,
       picture: picture ?? "",
     );
   }

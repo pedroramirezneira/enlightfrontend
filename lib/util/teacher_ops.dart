@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:enlight/models/day_data.dart';
+import 'package:enlight/models/searched_teacher_data.dart';
 import 'package:enlight/models/teacher_account_data.dart';
 import 'package:enlight/util/token.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -90,28 +91,26 @@ class TeacherOps {
     );
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-      data["teacher"]["rating"] = 10.0;
       return TeacherAccountData.fromJson(data);
     }
     throw response.statusCode;
   }
 
-  static Future<TeacherAccountData> getTeacherFromSearch(int id) async {
+  static Future<SearchTeacherData> getTeacherFromSearch(int id) async {
     final token = await Token.getAccessToken();
-    print("DNWOIDNOIADNOA");
     final response = await http.get(
       Uri.https(
         dotenv.env["SERVER"]!,
         "/teacher",
         {
-          "id": id,
+          "id": "$id",
         },
       ),  
       headers: {"Authorization": "Bearer $token"},
     );
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-      return TeacherAccountData.fromJson(data);
+      return SearchTeacherData.fromJson(data);
     }
     throw response.statusCode;
   }
