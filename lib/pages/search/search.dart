@@ -19,7 +19,7 @@ class _SearchTeachersState extends State<SearchTeachers> {
     'Teacher',
     'Tags',
   ];
-  String? selectedValue;
+  String? selectedValue = 'Teacher';
 
   void _performSearch(String query) {
     setState(() {
@@ -85,7 +85,6 @@ class _SearchTeachersState extends State<SearchTeachers> {
                                   width: 200,
                                   child: DropdownButton<String>(
                                     borderRadius: BorderRadius.circular(10),
-                                    hint: const Text("Select a category"),
                                     items: items.map((String value) {
                                       return DropdownMenuItem<String>(
                                         value: value,
@@ -107,11 +106,11 @@ class _SearchTeachersState extends State<SearchTeachers> {
                           if (selectedValue == "Teacher")
                             for (var teacher in snapshot.data!.teacher!)
                               TeacherResultContainer(
-                                  name: teacher.name,
-                                  description: teacher.description,
-                                  picture: teacher.picture,
-                                  id: teacher.accountId,
-                                  )
+                                name: teacher.name,
+                                description: teacher.description,
+                                picture: teacher.picture,
+                                id: teacher.id,
+                              )
                           else if (selectedValue == "Tags")
                             for (var subject in snapshot.data!.subject!)
                               ResultContainer(

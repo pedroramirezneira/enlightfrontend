@@ -98,19 +98,19 @@ class TeacherOps {
 
   static Future<TeacherAccountData> getTeacherFromSearch(int id) async {
     final token = await Token.getAccessToken();
+    print("DNWOIDNOIADNOA");
     final response = await http.get(
       Uri.https(
         dotenv.env["SERVER"]!,
         "/teacher",
         {
-          "teacher_id": id,
+          "id": id,
         },
-      ),
+      ),  
       headers: {"Authorization": "Bearer $token"},
     );
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-      data["teacher"]["rating"] = 10.0;
       return TeacherAccountData.fromJson(data);
     }
     throw response.statusCode;

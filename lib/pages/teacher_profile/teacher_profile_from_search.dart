@@ -183,7 +183,7 @@ class _TeacherProfileFromSearchState extends State<TeacherProfileFromSearch> {
                   });
                 });
               }
-              return const LoadingIndicator(visible: false);
+              return const LoadingIndicator(visible: true);
             }),
           ),
         ),
