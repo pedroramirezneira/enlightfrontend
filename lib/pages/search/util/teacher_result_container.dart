@@ -47,7 +47,7 @@ class TeacherResultContainer extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    "$rating/10.0",
+                    "${rating.toStringAsFixed(1)}/10.0",
                     style: const TextStyle(
                       fontFamily: 'Montserrat',
                       fontSize: 15,
