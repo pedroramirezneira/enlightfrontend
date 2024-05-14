@@ -1,11 +1,11 @@
 import 'package:enlight/pages/sign_in/sign_in.dart';
 import 'package:enlight/pages/student_profile/student_profile.dart';
 import 'package:enlight/pages/teacher_profile/teacher_profile.dart';
+import 'package:enlight/theme.dart';
 import 'package:enlight/util/io.dart';
 import 'package:enlight/util/token.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 Future<void> main() async {
   await dotenv.load();
@@ -45,69 +45,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Enlight',
-      theme: ThemeData(
-        appBarTheme: AppBarTheme(
-          backgroundColor: const Color.fromARGB(255, 43, 57, 68),
-          centerTitle: true,
-          titleTextStyle: GoogleFonts.getFont(
-            "Montserrat",
-            color: Colors.white,
-            fontSize: 22,
-          ),
-        ),
-        fontFamily: GoogleFonts.montserrat().fontFamily,
-        colorScheme: ColorScheme(
-          brightness: Brightness.dark,
-          primary: Colors.purple.shade100,
-          onPrimary: Colors.white,
-          secondary: Colors.blueAccent.shade100,
-          onSecondary: Colors.white,
-          error: Colors.red,
-          onError: Colors.white,
-          background: const Color.fromARGB(255, 43, 57, 68),
-          onBackground: Colors.white,
-          surface: const Color.fromARGB(255, 100, 201, 169),
-          onSurface: Colors.white,
-        ),
-        elevatedButtonTheme: const ElevatedButtonThemeData(
-          style: ButtonStyle(
-            fixedSize: MaterialStatePropertyAll(
-              Size(double.maxFinite, 50),
-            ),
-            shape: MaterialStatePropertyAll(
-              RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10))),
-            ),
-            backgroundColor:
-                MaterialStatePropertyAll(Color.fromARGB(255, 100, 201, 169)),
-            foregroundColor: MaterialStatePropertyAll(Colors.white),
-          ),
-        ),
-        snackBarTheme: const SnackBarThemeData(
-          elevation: 0,
-          behavior: SnackBarBehavior.floating,
-          backgroundColor: Colors.transparent,
-        ),
-        drawerTheme: const DrawerThemeData(
-          backgroundColor: Color.fromARGB(255, 43, 57, 68),
-        ),
-        datePickerTheme: const DatePickerThemeData(
-          backgroundColor: Color.fromARGB(255, 43, 57, 68),
-        ),
-        timePickerTheme: const TimePickerThemeData(
-          backgroundColor: Color.fromARGB(255, 43, 57, 68),
-          hourMinuteColor: Colors.grey,
-          dialBackgroundColor: Colors.grey,
-          dialHandColor: Color.fromARGB(255, 100, 201, 169),
-        ),
-        bottomSheetTheme: const BottomSheetThemeData(
-          backgroundColor: Color.fromARGB(255, 43, 57, 68),
-        ),
-        floatingActionButtonTheme: const FloatingActionButtonThemeData(
-          backgroundColor: Color.fromARGB(255, 100, 201, 169),
-          shape: CircleBorder(),
-        ),
-      ),
+      theme: theme,
       home: home,
     );
   }
