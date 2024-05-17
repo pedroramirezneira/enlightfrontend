@@ -1,4 +1,4 @@
-class DayIndex {
+class Weekday {
   static String getDay(int index) {
     final Map<int, String> map = {
       1: "Monday",

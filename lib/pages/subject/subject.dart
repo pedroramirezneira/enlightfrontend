@@ -2,8 +2,10 @@ import 'package:enlight/components/loading_indicator.dart';
 import 'package:enlight/components/selectable_timeslot.dart';
 import 'package:enlight/models/day_data.dart';
 import 'package:enlight/models/subject_data.dart';
-import 'package:enlight/pages/subject/day_index.dart';
+import 'package:enlight/pages/subject/util/reserve_timeslots.dart';
+import 'package:enlight/pages/subject/util/weekday.dart';
 import 'package:enlight/util/subject_ops.dart';
+import 'package:enlight/util/token.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -24,6 +26,7 @@ class _SubjectState extends State<Subject> {
   late DateTime selectedDay;
   late DateTime focusedDay;
   late CalendarFormat calendarFormat;
+  var loading = false;
 
   @override
   void initState() {
@@ -38,65 +41,103 @@ class _SubjectState extends State<Subject> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: FutureBuilder(
-        future: data,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return Column(
-              children: <Widget>[
-                TableCalendar(
-                  firstDay: DateTime(1900),
-                  lastDay: DateTime.now().add(const Duration(days: 30)),
-                  focusedDay: focusedDay,
-                  selectedDayPredicate: (day) => day != selectedDay,
-                  onDaySelected: (selectedDay, focusedDay) => setState(() {
-                    this.selectedDay = selectedDay;
-                    this.focusedDay = focusedDay;
-                  }),
-                  calendarFormat: calendarFormat,
-                  onFormatChanged: (format) =>
-                      setState(() => calendarFormat = format),
-                ),
-                () {
-                  final DayData day = snapshot.data!.days.firstWhere(
-                    (day) => day.name == DayIndex.getDay(selectedDay.weekday),
-                    orElse: () => DayData(
-                      name: "Invalid",
-                      timeslots: [],
-                    ),
-                  );
-                  if (day.name == "Invalid") {
-                    return const Visibility(
-                      visible: false,
-                      child: Placeholder(),
-                    );
-                  }
-                  return Wrap(
-                    children: snapshot.data!.days
-                        .firstWhere(
+      body: Stack(
+        children: <Widget>[
+          FutureBuilder(
+            future: data,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return SingleChildScrollView(
+                  child: Column(
+                    children: <Widget>[
+                      TableCalendar(
+                        firstDay: DateTime(1900),
+                        lastDay: DateTime.now().add(const Duration(days: 30)),
+                        focusedDay: focusedDay,
+                        selectedDayPredicate: (day) => day == selectedDay,
+                        onDaySelected: (selectedDay, focusedDay) =>
+                            setState(() {
+                          this.selectedDay = selectedDay;
+                          this.focusedDay = focusedDay;
+                        }),
+                        calendarFormat: calendarFormat,
+                        onFormatChanged: (format) =>
+                            setState(() => calendarFormat = format),
+                      ),
+                      () {
+                        final DayData day = snapshot.data!.days.firstWhere(
                           (day) =>
-                              day.name == DayIndex.getDay(selectedDay.weekday),
-                        )
-                        .timeslots
-                        .map(
-                          (timeslot) => SelectableTimeslot(
-                            text: "${timeslot.startTime}-${timeslot.endTime}",
-                            onPressed: () {},
+                              day.name == Weekday.getDay(selectedDay.weekday),
+                          orElse: () => DayData(
+                            name: "Invalid",
+                            timeslots: [],
                           ),
-                        )
-                        .toList(),
+                        );
+                        if (day.name == "Invalid") {
+                          return const Visibility(
+                            visible: false,
+                            child: Placeholder(),
+                          );
+                        }
+                        return Column(
+                          children: [
+                            Wrap(
+                              children: snapshot.data!.days
+                                  .firstWhere(
+                                    (day) =>
+                                        day.name ==
+                                        Weekday.getDay(selectedDay.weekday),
+                                  )
+                                  .timeslots
+                                  .map(
+                                    (timeslot) => SelectableTimeslot(
+                                      text:
+                                          "${timeslot.startTime.substring(0, 5)} - ${timeslot.endTime.substring(0, 5)}",
+                                      onPressed: () {},
+                                    ),
+                                  )
+                                  .toList(),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(15),
+                              child: SizedBox(
+                                width: 500,
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    setState(() => loading = true);
+                                    reserveTimeslots(
+                                      context: context,
+                                      date: selectedDay.toIso8601String().split("T")[0],
+                                      timeslotId: widget.id,
+                                    );
+                                  },
+                                  child: const Text("Reserve timeslots"),
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      }(),
+                    ],
+                  ),
+                );
+              }
+              if (snapshot.hasError) {
+                if (snapshot.error == 401) {
+                  Token.refreshAccessToken().then(
+                    (_) => data = SubjectOps.getSubject(widget.id),
                   );
-                }(),
-              ],
-            );
-          }
-          if (snapshot.hasError) {
-            return Center(
-              child: Text(snapshot.error.toString()),
-            );
-          }
-          return const LoadingIndicator(visible: true);
-        },
+                  return const LoadingIndicator(visible: true);
+                }
+                return Center(
+                  child: Text(snapshot.error.toString()),
+                );
+              }
+              return const LoadingIndicator(visible: true);
+            },
+          ),
+          LoadingIndicator(visible: loading)
+        ],
       ),
     );
   }
