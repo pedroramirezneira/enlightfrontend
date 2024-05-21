@@ -163,7 +163,7 @@ class _StudentProfileState extends State<StudentProfile> {
                       ),
                     ),
                   ),
-                  bottomNavigationBar: const StudentNavigationBar(index: 1,)
+                  bottomNavigationBar: const StudentNavigationBar(index: 2,)
                 );
               }
               if (snapshot.hasError) {

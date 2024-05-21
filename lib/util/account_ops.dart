@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:enlight/models/account_data.dart';
+import 'package:enlight/models/student_reservation_data.dart';
 import 'package:enlight/util/io.dart';
 import 'package:enlight/util/token.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -196,5 +197,24 @@ class AccountOps {
       ),
     );
     return response.statusCode;
+  }
+
+  static Future<List<StudentReservationData>> getReservation() async {
+    final token = await Token.getAccessToken();
+    final response = await http.get(
+      Uri.https(
+        dotenv.env["SERVER"]!,
+        "/reservation",
+      ),
+      headers: {
+        "Authorization": "Bearer $token",
+      },
+    );
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body);
+      return data.map((json) => StudentReservationData.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load reservations');
+    }
   }
 }

@@ -1,5 +1,6 @@
 import 'package:enlight/pages/search/search.dart';
 import 'package:enlight/pages/student_profile/student_profile.dart';
+import 'package:enlight/pages/student_profile/student_reservation.dart';
 import 'package:flutter/material.dart';
 
 class StudentNavigationBar extends StatelessWidget {
@@ -18,6 +19,10 @@ class StudentNavigationBar extends StatelessWidget {
         label: '',
       ),
       const BottomNavigationBarItem(
+        icon: Icon(Icons.bookmark),
+        label: '',
+      ),
+      const BottomNavigationBarItem(
         icon: Icon(Icons.account_circle),
         label: '',
       ),
@@ -32,6 +37,12 @@ class StudentNavigationBar extends StatelessWidget {
         }
         switch (newIndex) {
           case 1:
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => const StudentReservations()),
+              (route) => false,
+            );
+            break;
+          case 2:
             Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(builder: (context) => const StudentProfile()),
               (route) => false,
