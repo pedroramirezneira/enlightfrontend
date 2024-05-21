@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:enlight/components/loading_indicator.dart';
 import 'package:enlight/models/account_data.dart';
+import 'package:enlight/pages/chat/chat.dart';
 import 'package:enlight/pages/edit_account/edit_account.dart';
-import 'package:enlight/pages/subject/subject.dart';
 import 'package:enlight/util/account_ops.dart';
 import 'package:enlight/util/messenger.dart';
 import 'package:enlight/util/student_navigation_bar.dart';
@@ -180,7 +180,7 @@ class _StudentProfileState extends State<StudentProfile> {
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => const Subject(id: 99),
+              builder: (context) => const Chat(),
             )),
             child: const Icon(Icons.healing),
           ),

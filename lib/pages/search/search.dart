@@ -62,66 +62,70 @@ class _SearchTeachersState extends State<SearchTeachers> {
             return CustomScrollView(
               slivers: [
                 SliverList(
-                  delegate: SliverChildListDelegate([
-                    Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Row(
-                            children: <Widget>[
-                              SearchBox(
-                                hintText: "Search...",
-                                onSubmitted: _performSearch,
-                              ),
-                              const SizedBox(width: 10),
-                              Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.white,
-                                  ),
-                                  borderRadius: BorderRadius.circular(10),
+                  delegate: SliverChildListDelegate(
+                    [
+                      Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Row(
+                              children: <Widget>[
+                                SearchBox(
+                                  hintText: "Search...",
+                                  onSubmitted: _performSearch,
                                 ),
-                                child: SizedBox(
-                                  width: 200,
-                                  child: DropdownButton<String>(
+                                const SizedBox(width: 10),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.white,
+                                    ),
                                     borderRadius: BorderRadius.circular(10),
-                                    items: items.map((String value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(value),
-                                      );
-                                    }).toList(),
-                                    value: selectedValue,
-                                    onChanged: (String? newValue) {
-                                      setState(() {
-                                        selectedValue = newValue;
-                                      });
-                                    },
                                   ),
-                                ),
-                              )
-                            ],
-                          ),
-                          const SizedBox(height: 20),
-                          if (selectedValue == "Teacher")
-                            for (var teacher in snapshot.data!.teacher!)
-                              TeacherResultContainer(
-                                name: teacher.name,
-                                description: teacher.description,
-                                picture: teacher.picture,
-                                id: teacher.id,
-                                rating: teacher.rating,
-                              )
-                          else if (selectedValue == "Tags")
-                            for (var subject in snapshot.data!.subject!)
-                              ResultContainer(
+                                  child: SizedBox(
+                                    width: 200,
+                                    child: DropdownButton<String>(
+                                      borderRadius: BorderRadius.circular(10),
+                                      items: items.map((String value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(value),
+                                        );
+                                      }).toList(),
+                                      value: selectedValue,
+                                      onChanged: (String? newValue) {
+                                        setState(() {
+                                          selectedValue = newValue;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                            const SizedBox(height: 20),
+                            if (selectedValue == "Teacher")
+                              for (var teacher in snapshot.data!.teacher!)
+                                TeacherResultContainer(
+                                  name: teacher.name,
+                                  description: teacher.description,
+                                  picture: teacher.picture,
+                                  id: teacher.id,
+                                  rating: teacher.rating,
+                                )
+                            else if (selectedValue == "Tags")
+                              for (var subject in snapshot.data!.subject!)
+                                ResultContainer(
+                                  subjectId: subject.id,
                                   name: subject.name,
                                   description: subject.description,
-                                  picture: "")
-                        ],
+                                  picture: "",
+                                ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ]),
+                    ],
+                  ),
                 )
               ],
             );

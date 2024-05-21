@@ -46,6 +46,7 @@ dependencies:
   dropdown_button2: ^2.3.9
   day_picker: ^2.2.0
   table_calendar: ^3.0.9
+  web_socket_channel: ^3.0.0
 
 dev_dependencies:
   flutter_test:

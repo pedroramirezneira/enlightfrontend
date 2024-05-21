@@ -138,6 +138,7 @@ class _TeacherProfileFromSearchState extends State<TeacherProfileFromSearch> {
                                     Column(
                                       children: [
                                         TagContainerFromSearch(
+                                          subjectId: tag.id,
                                             name: tag.name,
                                             price: tag.price,
                                             description: tag.description),
