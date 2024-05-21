@@ -1,15 +1,20 @@
+import 'package:enlight/firebase_options.dart';
 import 'package:enlight/pages/sign_in/sign_in.dart';
 import 'package:enlight/pages/student_profile/student_profile.dart';
 import 'package:enlight/pages/teacher_profile/teacher_profile.dart';
 import 'package:enlight/theme.dart';
 import 'package:enlight/util/io.dart';
 import 'package:enlight/util/token.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 Future<void> main() async {
   await dotenv.load();
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   final accessToken = await Token.getAccessToken();
   final refreshToken = await Token.getRefreshToken();
   final role = await IO.getRole();

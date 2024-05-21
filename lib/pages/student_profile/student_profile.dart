@@ -180,7 +180,10 @@ class _StudentProfileState extends State<StudentProfile> {
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => const Chat(),
+              builder: (context) => const Chat(
+                senderId: 10,
+                receiverId: 20,
+              ),
             )),
             child: const Icon(Icons.healing),
           ),
