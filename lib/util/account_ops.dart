@@ -11,7 +11,7 @@ class AccountOps {
     required String password,
   }) async {
     final response = await http.post(
-      Uri.https(
+      Uri.http(
         dotenv.env["SERVER"]!,
         "/login",
       ),
@@ -38,7 +38,7 @@ class AccountOps {
   static Future<bool> logout() async {
     final token = await Token.getRefreshToken();
     final response = await http.get(
-      Uri.https(
+      Uri.http(
         dotenv.env["SERVER"]!,
         "/logout",
       ),
@@ -54,7 +54,7 @@ class AccountOps {
   static Future<bool> delete() async {
     final token = await Token.getAccessToken();
     final response = await http.delete(
-      Uri.https(
+      Uri.http(
         dotenv.env["SERVER"]!,
         "/account",
       ),
@@ -76,7 +76,7 @@ class AccountOps {
     required String role,
   }) async {
     final response = await http.post(
-      Uri.https(
+      Uri.http(
         dotenv.env["SERVER"]!,
         "/account",
       ),
@@ -98,7 +98,7 @@ class AccountOps {
   static Future<AccountData> getAccount() async {
     final token = await Token.getAccessToken();
     final response = await http.get(
-      Uri.https(
+      Uri.http(
         dotenv.env["SERVER"]!,
         "/account",
       ),
@@ -116,7 +116,7 @@ class AccountOps {
   static Future<AccountData> getAccounWithPicture() async {
     final token = await Token.getAccessToken();
     final response = await http.get(
-      Uri.https(
+      Uri.http(
         dotenv.env["SERVER"]!,
         "/account",
         {
@@ -141,7 +141,7 @@ class AccountOps {
   }) async {
     final token = await Token.getAccessToken();
     final response = await http.put(
-      Uri.https(
+      Uri.http(
         dotenv.env["SERVER"]!,
         "/account",
       ),
@@ -163,7 +163,7 @@ class AccountOps {
   static Future<int> insertPicture({required String picture}) async {
     final token = await Token.getAccessToken();
     final response = await http.put(
-      Uri.https(
+      Uri.http(
         dotenv.env["SERVER"]!,
         "account/picture",
       ),
@@ -182,7 +182,7 @@ class AccountOps {
 
   static Future<int> requestPasswordReset({required String email}) async {
     final response = await http.post(
-      Uri.https(
+      Uri.http(
         dotenv.env["SERVER"]!,
         "/password-reset/request",
       ),

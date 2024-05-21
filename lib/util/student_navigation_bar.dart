@@ -44,7 +44,6 @@ class StudentNavigationBar extends StatelessWidget {
             );
             break;
           default:
-            print("Invalid navigation index: $newIndex");
         }
       },
       backgroundColor: const Color.fromARGB(255, 43, 57, 68),
