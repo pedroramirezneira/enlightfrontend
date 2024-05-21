@@ -44,7 +44,10 @@ class _SelectableTimeslotState extends State<SelectableTimeslot> {
               ),
             ),
           ),
-          onPressed: () => setState(() => selected = !selected),
+          onPressed: () {
+            setState(() => selected = !selected);
+            widget.onPressed();
+          },
           child: Text(widget.text),
         ),
       ),

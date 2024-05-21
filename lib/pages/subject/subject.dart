@@ -2,6 +2,7 @@ import 'package:enlight/components/loading_indicator.dart';
 import 'package:enlight/components/selectable_timeslot.dart';
 import 'package:enlight/models/day_data.dart';
 import 'package:enlight/models/subject_data.dart';
+import 'package:enlight/models/timeslot_data.dart';
 import 'package:enlight/pages/subject/util/reserve_timeslots.dart';
 import 'package:enlight/pages/subject/util/weekday.dart';
 import 'package:enlight/util/subject_ops.dart';
@@ -27,6 +28,7 @@ class _SubjectState extends State<Subject> {
   late DateTime focusedDay;
   late CalendarFormat calendarFormat;
   var loading = false;
+  TimeslotData? selectedTimeslot;
 
   @override
   void initState() {
@@ -93,7 +95,7 @@ class _SubjectState extends State<Subject> {
                                     (timeslot) => SelectableTimeslot(
                                       text:
                                           "${timeslot.startTime.substring(0, 5)} - ${timeslot.endTime.substring(0, 5)}",
-                                      onPressed: () {},
+                                      onPressed: () => setState(() => selectedTimeslot = timeslot),
                                     ),
                                   )
                                   .toList(),
@@ -108,7 +110,7 @@ class _SubjectState extends State<Subject> {
                                     reserveTimeslots(
                                       context: context,
                                       date: selectedDay.toIso8601String().split("T")[0],
-                                      timeslotId: widget.id,
+                                      timeslotId: selectedTimeslot!.id,
                                     );
                                   },
                                   child: const Text("Reserve timeslots"),
