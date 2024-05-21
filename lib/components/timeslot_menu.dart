@@ -114,6 +114,7 @@ class _TimeslotMenuState extends State<TimeslotMenu> {
                         TimeslotMenuData(
                           days: selectedDays,
                           timeslot: TimeslotData(
+                            id: 0,
                             startTime: startTimeController.text,
                             endTime: endTimeController.text,
                           ),
