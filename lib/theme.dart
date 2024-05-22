@@ -4,7 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 final theme = ThemeData(
   appBarTheme: AppBarTheme(
     backgroundColor: const Color.fromARGB(255, 43, 57, 68),
-    centerTitle: true,
     titleTextStyle: GoogleFonts.getFont(
       "Montserrat",
       color: Colors.white,

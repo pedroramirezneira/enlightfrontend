@@ -183,6 +183,7 @@ class _StudentProfileState extends State<StudentProfile> {
               builder: (context) => const Chat(
                 senderId: 10,
                 receiverId: 20,
+                receiverName: "Pedro",
               ),
             )),
             child: const Icon(Icons.healing),
