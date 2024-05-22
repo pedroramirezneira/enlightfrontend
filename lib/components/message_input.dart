@@ -1,5 +1,6 @@
 import 'package:enlight/models/message_data.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class MessageInput extends StatefulWidget {
   final int senderId;
@@ -37,13 +38,37 @@ class _MessageInputState extends State<MessageInput> {
         children: [
           SizedBox(
             width: constraints.maxWidth * .8,
-            child: TextField(
-              controller: controller,
-              maxLines: null,
-              decoration: InputDecoration(
-                hintText: "Message",
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
+            child: FocusableActionDetector(
+              shortcuts: {
+                LogicalKeySet(LogicalKeyboardKey.enter): const ActivateIntent()
+              },
+              actions: {
+                ActivateIntent: CallbackAction<Intent>(
+                  onInvoke: (intent) {
+                    if (controller.text.trim().isEmpty) {
+                      return null;
+                    }
+                    if (widget.onPressed != null) {
+                      final message = MessageData(
+                        senderId: widget.senderId,
+                        message: controller.text,
+                        timestamp: DateTime.timestamp(),
+                      );
+                      widget.onPressed!(message);
+                    }
+                    controller.clear();
+                    return null;
+                  },
+                ),
+              },
+              child: TextField(
+                controller: controller,
+                maxLines: null,
+                decoration: InputDecoration(
+                  hintText: "Message",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
                 ),
               ),
             ),
@@ -56,7 +81,7 @@ class _MessageInputState extends State<MessageInput> {
               color: surface,
             ),
             child: IconButton(
-              onPressed: controller.text.isEmpty
+              onPressed: controller.text.trim().isEmpty
                   ? null
                   : () {
                       if (widget.onPressed != null) {
