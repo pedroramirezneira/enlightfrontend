@@ -113,12 +113,12 @@ class AccountOps {
     throw response.statusCode;
   }
 
-  static Future<AccountData> getAccounWithPicture() async {
+  static Future<AccountData> getAccounWithPicture({int? id}) async {
     final token = await Token.getAccessToken();
     final response = await http.get(
       Uri.http(
         dotenv.env["SERVER"]!,
-        "/account",
+        id != null ? "/acount/$id" : "/account",
         {
           "include_picture": "true",
         },

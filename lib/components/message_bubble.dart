@@ -3,13 +3,11 @@ import 'package:flutter/material.dart';
 
 class MessageBubble extends StatelessWidget {
   final MessageData data;
-  final AlignmentGeometry alignment;
   final bool isSender;
 
   const MessageBubble({
     super.key,
     required this.data,
-    required this.alignment,
     required this.isSender,
   });
 

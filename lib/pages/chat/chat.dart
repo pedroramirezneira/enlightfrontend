@@ -1,22 +1,19 @@
 import 'package:enlight/components/loading_indicator.dart';
 import 'package:enlight/components/message_bubble.dart';
 import 'package:enlight/components/message_input.dart';
+import 'package:enlight/models/account_data.dart';
 import 'package:enlight/models/message_data.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class Chat extends StatefulWidget {
   final int senderId;
-  final int receiverId;
-  final String receiverName;
+  final AccountData receiver;
 
   const Chat({
     super.key,
     required this.senderId,
-    required this.receiverId,
-    required this.receiverName,
+    required this.receiver,
   });
 
   @override
@@ -31,7 +28,7 @@ class _ChatState extends State<Chat> {
   void initState() {
     super.initState();
     chat = FirebaseDatabase.instance.ref("chat");
-    final list = [widget.senderId, widget.receiverId];
+    final list = [widget.senderId, widget.receiver.id];
     list.sort();
     chatKey = list.join("-");
   }
@@ -39,7 +36,7 @@ class _ChatState extends State<Chat> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.receiverName)),
+      appBar: AppBar(title: Text(widget.receiver.name)),
       body: StreamBuilder(
         stream: chat.onValue,
         builder: (context, snapshot) {
@@ -47,12 +44,18 @@ class _ChatState extends State<Chat> {
             if (snapshot.data!.snapshot.value == null) {
               return const Placeholder();
             }
-            final data = snapshot.data!.snapshot.value as Map<dynamic, dynamic>;
-            final chatData = data[chatKey] as Map<dynamic, dynamic>;
-            final messages = chatData.entries
-                .map((entry) => MessageData.fromJson(entry.value))
-                .toList()
-              ..sort(((a, b) => b.timestamp.compareTo(a.timestamp)));
+            List<MessageData> messages;
+            try {
+              final data =
+                  snapshot.data!.snapshot.value as Map<dynamic, dynamic>;
+              final chatData = data[chatKey] as Map<dynamic, dynamic>;
+              messages = chatData.entries
+                  .map((entry) => MessageData.fromJson(entry.value))
+                  .toList()
+                ..sort(((a, b) => b.timestamp.compareTo(a.timestamp)));
+            } catch (error) {
+              messages = [];
+            }
             return Align(
               alignment: Alignment.bottomCenter,
               child: Container(
@@ -72,7 +75,6 @@ class _ChatState extends State<Chat> {
                             children: <Widget>[
                               MessageBubble(
                                 data: messages[index],
-                                alignment: Alignment.centerLeft,
                                 isSender:
                                     messages[index].senderId == widget.senderId,
                               ),
