@@ -45,7 +45,7 @@ void onPressed({
           }
         });
       }
-      if (code == 401 || code == 404) {
+      if (code == 401) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: AwesomeSnackbarContent(
