@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class StudentReservationData {
+  final int reservationId;
+  final int timeslotId;
   final String subjectName;
   final int subjectId;
   final String teacherName;
@@ -10,6 +12,8 @@ class StudentReservationData {
   final TimeOfDay endTime;
 
   StudentReservationData({
+    required this.reservationId,
+    required this.timeslotId,
     required this.subjectName,
     required this.subjectId,
     required this.teacherName,
@@ -21,6 +25,8 @@ class StudentReservationData {
 
   factory StudentReservationData.fromJson(Map<String, dynamic> json) {
     return StudentReservationData(
+      reservationId: json['reservation_id'],
+      timeslotId: json['timeslot_id'],
       subjectName: json['name_subject'],
       subjectId: json['subject_id'],
       teacherName: json['name_teacher'],
