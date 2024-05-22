@@ -66,5 +66,6 @@ final theme = ThemeData(
   navigationBarTheme: const NavigationBarThemeData(
     backgroundColor: Color.fromARGB(255, 43, 57, 68),
     indicatorColor: Color.fromARGB(255, 100, 201, 169),
+    labelBehavior: NavigationDestinationLabelBehavior.alwaysHide
   ),
 );

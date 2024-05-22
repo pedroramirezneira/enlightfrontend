@@ -8,7 +8,7 @@ class StudentOps {
   static Future<bool> reserveTimeslot(int timeslotId, String date) async {
     final token = await Token.getAccessToken();
     final response = await http.post(
-      Uri.https(
+      Uri.http(
         dotenv.env["SERVER"]!,
         "/reservation",
       ),

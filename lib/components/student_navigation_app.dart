@@ -1,6 +1,7 @@
 import 'package:enlight/pages/chats/chats.dart';
 import 'package:enlight/pages/search/search.dart';
 import 'package:enlight/pages/student_profile/student_profile.dart';
+import 'package:enlight/pages/student_profile/student_reservation.dart';
 import 'package:flutter/material.dart';
 
 class StudentNavigationApp extends StatefulWidget {
@@ -11,14 +12,15 @@ class StudentNavigationApp extends StatefulWidget {
 }
 
 class _StudentNavigationAppState extends State<StudentNavigationApp> {
-  int index = 2;
+  int index = 3;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: <Widget>[
-        const SearchTeachers(),
         const Chats(),
+        const SearchTeachers(),
+        const StudentReservations(),
         const StudentProfile(),
       ][index],
       bottomNavigationBar: NavigationBar(
@@ -26,12 +28,16 @@ class _StudentNavigationAppState extends State<StudentNavigationApp> {
         selectedIndex: index,
         destinations: const <Widget>[
           NavigationDestination(
+            icon: Icon(Icons.chat_rounded),
+            label: "Chats",
+          ),
+          NavigationDestination(
             icon: Icon(Icons.search_rounded),
             label: "Search",
           ),
           NavigationDestination(
-            icon: Icon(Icons.chat_rounded),
-            label: "Chats",
+            icon: Icon(Icons.bookmark_rounded),
+            label: "Reservations",
           ),
           NavigationDestination(
             icon: Icon(Icons.person_rounded),
