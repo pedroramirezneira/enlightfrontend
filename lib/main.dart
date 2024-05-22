@@ -1,7 +1,7 @@
+import 'package:enlight/components/student_navigation_app.dart';
+import 'package:enlight/components/teacher_navigation_app.dart';
 import 'package:enlight/firebase_options.dart';
 import 'package:enlight/pages/sign_in/sign_in.dart';
-import 'package:enlight/pages/student_profile/student_profile.dart';
-import 'package:enlight/pages/teacher_profile/teacher_profile.dart';
 import 'package:enlight/theme.dart';
 import 'package:enlight/util/io.dart';
 import 'package:enlight/util/token.dart';
@@ -30,8 +30,8 @@ Future<void> main() async {
   }
   runApp(MyApp(
     home: switch (role ?? "") {
-      "teacher" => const TeacherProfile(),
-      "student" => const StudentProfile(),
+      "teacher" => const TeacherNavigationApp(),
+      "student" => const StudentNavigationApp(),
       String() => const SignIn(),
     },
   ));

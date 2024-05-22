@@ -2,7 +2,6 @@ import 'package:enlight/pages/search/util/result_conatiner.dart';
 import 'package:enlight/pages/search/util/search_box.dart';
 import 'package:enlight/pages/search/util/teacher_result_container.dart';
 import 'package:enlight/util/search_ops.dart';
-import 'package:enlight/util/student_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:enlight/models/search_data.dart';
 
@@ -135,9 +134,6 @@ class _SearchTeachersState extends State<SearchTeachers> {
             );
           }
         },
-      ),
-      bottomNavigationBar: const StudentNavigationBar(
-        index: 0,
       ),
     );
   }
