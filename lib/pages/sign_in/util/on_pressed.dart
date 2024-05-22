@@ -45,24 +45,13 @@ void onPressed({
           }
         });
       }
-      if (code == 401) {
+      if (code == 401 || code == 404) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: AwesomeSnackbarContent(
-              title: "Warning",
-              message: "Incorrect password. Please try again.",
-              contentType: ContentType.warning,
-            ),
-          ),
-        );
-      }
-      if (code == 404) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: AwesomeSnackbarContent(
-              title: "Warning",
-              message: "This email is not registered. Please try again.",
-              contentType: ContentType.warning,
+              title: "Error",
+              message: "Incorrect password or email. Please try again.",
+              contentType: ContentType.failure,
             ),
           ),
         );
