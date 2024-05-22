@@ -57,8 +57,8 @@ class _StudentReservations extends State<StudentReservations> {
                                 },
                                 child: Center(
                                   child: Container(
-                                    width: MediaQuery.of(context).size.width *
-                                        0.5, 
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.5,
                                     margin: const EdgeInsets.symmetric(
                                         vertical: 10),
                                     padding: const EdgeInsets.all(10),
@@ -86,30 +86,29 @@ class _StudentReservations extends State<StudentReservations> {
                                             ],
                                           ),
                                         ),
-                                        const SizedBox(
-                                            height:
-                                                10), 
+                                        const SizedBox(height: 10),
                                         SizedBox(
                                           width: MediaQuery.of(context)
                                                   .size
                                                   .width *
-                                              0.5, 
+                                              0.5,
                                           child: ElevatedButton(
                                             onPressed: () {
                                               data.then((data) {
-                                              Messenger.showCancelReservation(
-                                                context: context,
-                                                data: data,
-                                                reservationId: reservation.reservationId,
-                                                onAccept: () => setState(
-                                                    () => loading = true),
-                                                onResponse: () {
-                                                  setState(() {
-                                                    loading = false;
-                                                  });
-                                                },
-                                              );
-                                            });
+                                                Messenger.showCancelReservation(
+                                                  context: context,
+                                                  data: data,
+                                                  reservationId:
+                                                      reservation.reservationId,
+                                                  onAccept: () => setState(
+                                                      () => loading = true),
+                                                  onResponse: () {
+                                                    setState(() {
+                                                      loading = false;
+                                                    });
+                                                  },
+                                                );
+                                              });
                                             },
                                             child: const Text("Cancel"),
                                           ),

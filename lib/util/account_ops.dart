@@ -224,15 +224,17 @@ class AccountOps {
       Uri.https(
         dotenv.env["SERVER"]!,
         "/reservation", 
-        {
-          "id": "$id",
-        }
       ),
-      headers: {"Authorization": "Bearer $token"},
+      headers: {
+        "Authorization": "Bearer $token",
+        "Content-Type": "application/json",
+      },
+      body: json.encode(
+        {
+          "id": id,
+        },
+      ),
     );
-    if (response.statusCode == 200) {
-      return true;
-    }
-    return false;
+    return response.statusCode == 200;
   }
 }
