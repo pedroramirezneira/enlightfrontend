@@ -1,7 +1,6 @@
 import 'package:enlight/models/student_reservation_data.dart';
 import 'package:enlight/util/account_ops.dart';
 import 'package:enlight/util/messenger.dart';
-import 'package:enlight/util/teacher_navigation_bar.dart';
 import 'package:flutter/material.dart';
 
 class TeacherReservations extends StatefulWidget {
@@ -117,9 +116,6 @@ class _TeacherReservations extends State<TeacherReservations> {
             );
           }
         },
-      ),
-      bottomNavigationBar: const TeacherNavigationBar(
-        index: 0,
       ),
     );
   }
