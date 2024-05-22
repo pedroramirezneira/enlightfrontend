@@ -1,4 +1,5 @@
 class AccountData {
+  final int? id;
   final String email;
   String name;
   String birthday;
@@ -6,6 +7,7 @@ class AccountData {
   String? picture;
 
   AccountData({
+    required this.id,
     required this.email,
     required this.name,
     required this.birthday,
@@ -15,6 +17,7 @@ class AccountData {
 
   factory AccountData.fromJson(Map<String, dynamic> json) {
     return AccountData(
+      id: json["id"],
       email: json["email"],
       name: json["name"],
       birthday: (json["birthday"] as String).split("T")[0],

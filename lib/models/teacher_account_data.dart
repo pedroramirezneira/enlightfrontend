@@ -5,6 +5,7 @@ class TeacherAccountData extends AccountData {
   TeacherData teacher;
 
   TeacherAccountData({
+    required super.id,
     required super.email,
     required super.name,
     required super.birthday,
@@ -15,6 +16,7 @@ class TeacherAccountData extends AccountData {
 
   factory TeacherAccountData.fromJson(Map<String, dynamic> json) {
     return TeacherAccountData(
+      id: json["id"],
       email: json["email"],
       name: json["name"],
       birthday: (json["birthday"] as String).split("T")[0],

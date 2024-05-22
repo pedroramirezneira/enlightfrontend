@@ -7,7 +7,6 @@ import 'package:enlight/pages/edit_teacher_profile/edit_teacher_profile.dart';
 import 'package:enlight/pages/teacher_profile/util/show_subject_dialog.dart';
 import 'package:enlight/pages/teacher_profile/util/tags_container.dart';
 import 'package:enlight/util/messenger.dart';
-import 'package:enlight/util/teacher_navigation_bar.dart';
 import 'package:enlight/util/teacher_ops.dart';
 import 'package:flutter/material.dart';
 
@@ -279,9 +278,6 @@ class _TeacherProfileState extends State<TeacherProfile> {
               }
               return const LoadingIndicator(visible: false);
             }),
-          ),
-          bottomNavigationBar: const TeacherNavigationBar(
-            index: 1,
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () {

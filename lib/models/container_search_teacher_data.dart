@@ -17,11 +17,7 @@ class ConatinerSearchTeacherData {
     String? picture = json["picture"];
     double rating = 0.0;
     if (json["rating"] != null) {
-      try {
-        rating = double.parse(json["rating"].toString());
-      } catch (e) {
-        print("Error parsing rating: $e");
-      }
+      rating = double.parse(json["rating"].toString());
     }
     return ConatinerSearchTeacherData(
       id: json["id"],

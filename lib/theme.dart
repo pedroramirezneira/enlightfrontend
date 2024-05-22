@@ -4,7 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 final theme = ThemeData(
   appBarTheme: AppBarTheme(
     backgroundColor: const Color.fromARGB(255, 43, 57, 68),
-    centerTitle: true,
     titleTextStyle: GoogleFonts.getFont(
       "Montserrat",
       color: Colors.white,
@@ -63,5 +62,9 @@ final theme = ThemeData(
   floatingActionButtonTheme: const FloatingActionButtonThemeData(
     backgroundColor: Color.fromARGB(255, 100, 201, 169),
     shape: CircleBorder(),
+  ),
+  navigationBarTheme: const NavigationBarThemeData(
+    backgroundColor: Color.fromARGB(255, 43, 57, 68),
+    indicatorColor: Color.fromARGB(255, 100, 201, 169),
   ),
 );
