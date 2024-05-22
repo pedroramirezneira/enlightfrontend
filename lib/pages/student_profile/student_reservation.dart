@@ -13,7 +13,7 @@ class StudentReservations extends StatefulWidget {
 }
 
 class _StudentReservations extends State<StudentReservations> {
-  late Future<List<StudentReservationData>> data;
+  late Future<List<ReservationData>> data;
   var loading = true;
 
   @override

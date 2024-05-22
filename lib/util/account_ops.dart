@@ -199,7 +199,7 @@ class AccountOps {
     return response.statusCode;
   }
 
-  static Future<List<StudentReservationData>> getReservation() async {
+  static Future<List<ReservationData>> getReservation() async {
     final token = await Token.getAccessToken();
     final response = await http.get(
       Uri.https(
@@ -212,7 +212,7 @@ class AccountOps {
     );
     if (response.statusCode == 200) {
       final List<dynamic> data = json.decode(response.body);
-      return data.map((json) => StudentReservationData.fromJson(json)).toList();
+      return data.map((json) => ReservationData.fromJson(json)).toList();
     } else {
       throw Exception('Failed to load reservations');
     }

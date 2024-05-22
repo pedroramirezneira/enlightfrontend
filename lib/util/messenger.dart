@@ -195,7 +195,7 @@ class Messenger {
   static void showCancelReservation({
     required BuildContext context,
     required int reservationId,
-    required List<StudentReservationData> data,
+    required List<ReservationData> data,
     required void Function() onAccept,
     required void Function() onResponse,
   }) {

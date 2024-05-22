@@ -109,62 +109,63 @@ class _StudentProfileState extends State<StudentProfile> {
                 final hasImage = snapshot.data!.picture != null;
                 final decoded = base64.decode(snapshot.data!.picture ?? "");
                 return Scaffold(
-                  body: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 100),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          InkWell(
-                            borderRadius: BorderRadius.circular(100),
-                            onTap: () {
-                              data.then((data) {
-                                Messenger.showPictureMenu(
-                                  context: context,
-                                  data: data,
-                                  onSubmit: () =>
-                                      setState(() => loading = true),
-                                  onResponse: () {
-                                    setState(() {
-                                      loading = false;
-                                      data.picture;
-                                    });
-                                  },
-                                );
-                              });
-                            },
-                            child: CircleAvatar(
-                              backgroundColor: Theme.of(context)
-                                  .colorScheme
-                                  .surface
-                                  .withOpacity(0.5),
-                              radius: 100,
-                              backgroundImage:
-                                  hasImage ? MemoryImage(decoded) : null,
-                              child: !hasImage
-                                  ? Text(
-                                      snapshot.data!.name[0].toUpperCase(),
-                                      style: const TextStyle(
-                                        fontSize: 50,
-                                      ),
-                                    )
-                                  : null,
+                    body: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 100),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            InkWell(
+                              borderRadius: BorderRadius.circular(100),
+                              onTap: () {
+                                data.then((data) {
+                                  Messenger.showPictureMenu(
+                                    context: context,
+                                    data: data,
+                                    onSubmit: () =>
+                                        setState(() => loading = true),
+                                    onResponse: () {
+                                      setState(() {
+                                        loading = false;
+                                        data.picture;
+                                      });
+                                    },
+                                  );
+                                });
+                              },
+                              child: CircleAvatar(
+                                backgroundColor: Theme.of(context)
+                                    .colorScheme
+                                    .surface
+                                    .withOpacity(0.5),
+                                radius: 100,
+                                backgroundImage:
+                                    hasImage ? MemoryImage(decoded) : null,
+                                child: !hasImage
+                                    ? Text(
+                                        snapshot.data!.name[0].toUpperCase(),
+                                        style: const TextStyle(
+                                          fontSize: 50,
+                                        ),
+                                      )
+                                    : null,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 10),
-                          Text(
-                            snapshot.data!.name,
-                            style: const TextStyle(
-                                fontSize: 25, fontWeight: FontWeight.bold),
-                          ),
-                          const Spacer(),
-                        ],
+                            const SizedBox(height: 10),
+                            Text(
+                              snapshot.data!.name,
+                              style: const TextStyle(
+                                  fontSize: 25, fontWeight: FontWeight.bold),
+                            ),
+                            const Spacer(),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  bottomNavigationBar: const StudentNavigationBar(index: 2,)
-                );
+                    bottomNavigationBar: const StudentNavigationBar(
+                      index: 2,
+                    ));
               }
               if (snapshot.hasError) {
                 WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
