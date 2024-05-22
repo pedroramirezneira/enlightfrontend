@@ -11,7 +11,7 @@ class TimeslotData {
 
   factory TimeslotData.fromJson(Map<String, dynamic> json) {
     return TimeslotData(
-      id: json["id"],
+      id: json["id"] ?? 0,
       startTime: json["start_time"],
       endTime: json["end_time"],
     );

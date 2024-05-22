@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:enlight/models/account_data.dart';
+import 'package:enlight/models/student_reservation_data.dart';
 import 'package:enlight/util/io.dart';
 import 'package:enlight/util/token.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -11,7 +12,7 @@ class AccountOps {
     required String password,
   }) async {
     final response = await http.post(
-      Uri.http(
+      Uri.https(
         dotenv.env["SERVER"]!,
         "/login",
       ),
@@ -38,7 +39,7 @@ class AccountOps {
   static Future<bool> logout() async {
     final token = await Token.getRefreshToken();
     final response = await http.get(
-      Uri.http(
+      Uri.https(
         dotenv.env["SERVER"]!,
         "/logout",
       ),
@@ -54,7 +55,7 @@ class AccountOps {
   static Future<bool> delete() async {
     final token = await Token.getAccessToken();
     final response = await http.delete(
-      Uri.http(
+      Uri.https(
         dotenv.env["SERVER"]!,
         "/account",
       ),
@@ -76,7 +77,7 @@ class AccountOps {
     required String role,
   }) async {
     final response = await http.post(
-      Uri.http(
+      Uri.https(
         dotenv.env["SERVER"]!,
         "/account",
       ),
@@ -98,7 +99,7 @@ class AccountOps {
   static Future<AccountData> getAccount() async {
     final token = await Token.getAccessToken();
     final response = await http.get(
-      Uri.http(
+      Uri.https(
         dotenv.env["SERVER"]!,
         "/account",
       ),
@@ -116,7 +117,7 @@ class AccountOps {
   static Future<AccountData> getAccounWithPicture({int? id}) async {
     final token = await Token.getAccessToken();
     final response = await http.get(
-      Uri.http(
+      Uri.https(
         dotenv.env["SERVER"]!,
         id != null ? "/acount/$id" : "/account",
         {
@@ -141,7 +142,7 @@ class AccountOps {
   }) async {
     final token = await Token.getAccessToken();
     final response = await http.put(
-      Uri.http(
+      Uri.https(
         dotenv.env["SERVER"]!,
         "/account",
       ),
@@ -163,7 +164,7 @@ class AccountOps {
   static Future<int> insertPicture({required String picture}) async {
     final token = await Token.getAccessToken();
     final response = await http.put(
-      Uri.http(
+      Uri.https(
         dotenv.env["SERVER"]!,
         "account/picture",
       ),
@@ -182,7 +183,7 @@ class AccountOps {
 
   static Future<int> requestPasswordReset({required String email}) async {
     final response = await http.post(
-      Uri.http(
+      Uri.https(
         dotenv.env["SERVER"]!,
         "/password-reset/request",
       ),
@@ -196,5 +197,44 @@ class AccountOps {
       ),
     );
     return response.statusCode;
+  }
+
+  static Future<List<ReservationData>> getReservation() async {
+    final token = await Token.getAccessToken();
+    final response = await http.get(
+      Uri.https(
+        dotenv.env["SERVER"]!,
+        "/reservation",
+      ),
+      headers: {
+        "Authorization": "Bearer $token",
+      },
+    );
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body);
+      return data.map((json) => ReservationData.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load reservations');
+    }
+  }
+
+  static Future<bool> cancelReservation(int id) async {
+    final token = await Token.getAccessToken();
+    final response = await http.delete(
+      Uri.https(
+        dotenv.env["SERVER"]!,
+        "/reservation", 
+      ),
+      headers: {
+        "Authorization": "Bearer $token",
+        "Content-Type": "application/json",
+      },
+      body: json.encode(
+        {
+          "id": id,
+        },
+      ),
+    );
+    return response.statusCode == 200;
   }
 }

@@ -19,7 +19,7 @@ class Token {
 
   static Future<bool> verifyAccessToken(String token) async {
     final response = await http.get(
-        Uri.http(
+        Uri.https(
           dotenv.env["SERVER"]!,
           "/verify",
         ),
@@ -61,7 +61,7 @@ class Token {
       return;
     }
     final response = await http.get(
-      Uri.http(
+      Uri.https(
         dotenv.env["SERVER"]!,
         "/refresh",
       ),

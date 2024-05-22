@@ -111,6 +111,9 @@ class _SubjectState extends State<Subject> {
                                       context: context,
                                       date: selectedDay.toIso8601String().split("T")[0],
                                       timeslotId: selectedTimeslot!.id,
+                                      onResponse: () {
+                                        setState(() => loading = false);
+                                      }
                                     );
                                   },
                                   child: const Text("Reserve timeslots"),

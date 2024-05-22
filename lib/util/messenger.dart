@@ -4,6 +4,7 @@ import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:enlight/components/confirm_picture_dialog.dart';
 import 'package:enlight/components/picture_menu.dart';
 import 'package:enlight/models/account_data.dart';
+import 'package:enlight/models/student_reservation_data.dart';
 import 'package:enlight/models/teacher_data.dart';
 import 'package:enlight/pages/sign_in/sign_in.dart';
 import 'package:enlight/util/account_ops.dart';
@@ -189,6 +190,65 @@ class Messenger {
         );
       },
     );
+  }
+
+  static void showCancelReservation({
+    required BuildContext context,
+    required int reservationId,
+    required List<ReservationData> data,
+    required void Function() onAccept,
+    required void Function() onResponse,
+  }) {
+    showAdaptiveDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog.adaptive(
+          title: const Text("Cancel reservation"),
+          content:
+              const Text("Are you sure you want to cancel this reservation?"),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text("Deny"),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text("Confirm"),
+            ),
+          ],
+        );
+      },
+    ).then((value) {
+      if (value != true) {
+        return;
+      }
+      onAccept();
+      AccountOps.cancelReservation(reservationId).then(
+        (success) {
+          if (success) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: AwesomeSnackbarContent(
+                  title: "Success",
+                  message: "You have successfully canceled the reservation.",
+                  contentType: ContentType.success,
+                ),
+              ),
+            );
+            data.removeWhere(
+                (element) => element.reservationId == reservationId);
+            onResponse();
+            return;
+          }
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Internal server error. Please try again."),
+            ),
+          );
+          onResponse();
+        },
+      );
+    });
   }
 
   static void showPictureMenu({

@@ -9,7 +9,7 @@ class SubjectOps {
   static Future<SubjectData> getSubject(int id) async {
     final token = await Token.getAccessToken();
     final response = await http.get(
-      Uri.http(
+      Uri.https(
         dotenv.env["SERVER"]!,
         "/subject/$id",
       ),
