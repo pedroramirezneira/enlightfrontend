@@ -1,4 +1,5 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:enlight/components/autocomplete_field.dart';
 import 'package:enlight/components/form_submission_button.dart';
 import 'package:enlight/components/enlight_text_field.dart';
@@ -18,6 +19,8 @@ class SubjectMenu extends StatefulWidget {
     required String name,
     required String description,
     required int price,
+    required int group,
+    required String modality,
     required List<DayData> days,
   }) onPressed;
 
@@ -38,8 +41,11 @@ class _SubjectMenuState extends State<SubjectMenu> {
   late final TextEditingController nameController;
   late final TextEditingController descriptionController;
   late final TextEditingController priceController;
+  late final TextEditingController groupController;
   final List<DayData> days = [];
   var loading = false;
+  final List<String> items = ['Face-to-face', 'Online', 'Both'];
+  String? selectedValue;
 
   @override
   void initState() {
@@ -50,6 +56,7 @@ class _SubjectMenuState extends State<SubjectMenu> {
     nameController = TextEditingController();
     descriptionController = TextEditingController();
     priceController = TextEditingController();
+    groupController = TextEditingController();
   }
 
   @override
@@ -88,9 +95,102 @@ class _SubjectMenuState extends State<SubjectMenu> {
                             number: true,
                           ),
                           EnlightTextField(
+                            text: "Group Size",
+                            controller: groupController,
+                            number: true,
+                          ),
+                          EnlightTextField(
                             text: "Description",
                             controller: descriptionController,
                             description: true,
+                          ),
+                          Center(
+                            child: DropdownButtonHideUnderline(
+                              child: Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: DropdownButton2<String>(
+                                  isExpanded: true,
+                                  hint: const Row(
+                                    children: [
+                                      SizedBox(
+                                        width: 4,
+                                      ),
+                                      Expanded(
+                                        child: Text(
+                                          'Select Modality',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  items: items
+                                      .map((String item) =>
+                                          DropdownMenuItem<String>(
+                                            value: item,
+                                            child: Text(
+                                              item,
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ))
+                                      .toList(),
+                                  value: selectedValue,
+                                  onChanged: (String? value) {
+                                    setState(() {
+                                      selectedValue = value!;
+                                    });
+                                  },
+                                  buttonStyleData: ButtonStyleData(
+                                    height: 55,
+                                    width: double.infinity,
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      border: Border.all(
+                                        color: Colors.white,
+                                      ),
+                                      color:
+                                          const Color.fromARGB(255, 43, 57, 68),
+                                    ),
+                                  ),
+                                  iconStyleData: const IconStyleData(
+                                    icon: Icon(
+                                      Icons.arrow_forward_ios_outlined,
+                                    ),
+                                    iconSize: 14,
+                                    iconEnabledColor: Colors.white,
+                                    iconDisabledColor: Colors.grey,
+                                  ),
+                                  dropdownStyleData: DropdownStyleData(
+                                    maxHeight: 200,
+                                    width: 200,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(14),
+                                      color:
+                                          const Color.fromARGB(255, 43, 57, 68),
+                                    ),
+                                    offset: const Offset(150, 0),
+                                    scrollbarTheme: ScrollbarThemeData(
+                                      radius: const Radius.circular(40),
+                                      thickness:
+                                          MaterialStateProperty.all<double>(6),
+                                      thumbVisibility:
+                                          MaterialStateProperty.all<bool>(true),
+                                    ),
+                                  ),
+                                  menuItemStyleData: const MenuItemStyleData(
+                                    height: 40,
+                                    padding:
+                                        EdgeInsets.only(left: 14, right: 14),
+                                  ),
+                                ),
+                              ),
+                            ),
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -194,6 +294,8 @@ class _SubjectMenuState extends State<SubjectMenu> {
                                 name: nameController.text,
                                 description: descriptionController.text,
                                 price: int.parse(priceController.text),
+                                group: int.parse(groupController.text),
+                                modality: selectedValue!,
                                 days: days,
                               );
                             },

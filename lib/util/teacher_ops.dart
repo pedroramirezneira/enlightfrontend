@@ -32,6 +32,8 @@ class TeacherOps {
     required String name,
     required String description,
     required int price,
+    required int group,
+    required String modality,
     required List<DayData> days,
   }) async {
     final token = await Token.getAccessToken();
@@ -50,6 +52,8 @@ class TeacherOps {
         "price": price,
         "description": description,
         "days": days.map((day) => day.toJson()).toList(),
+        "modality": modality,
+        "size": group,
       }),
     );
     return response;

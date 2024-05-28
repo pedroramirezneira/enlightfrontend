@@ -35,6 +35,8 @@ void _submit({
   required String name,
   required String description,
   required int price,
+  required int group,
+  required String modality,
   required List<DayData> days,
 }) {
   TeacherOps.createSubject(
@@ -42,6 +44,8 @@ void _submit({
     name: name,
     description: description,
     price: price,
+    group: group,
+    modality: modality,
     days: days,
   ).then((response) {
     if (response.statusCode == 200) {
@@ -73,6 +77,8 @@ void _submit({
           name: name,
           description: description,
           price: price,
+          group: group,
+          modality: modality,
           days: days,
         ),
       );
