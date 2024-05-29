@@ -5,7 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 class StudentOps {
-  static Future<bool> reserveTimeslot(int timeslotId, String date) async {
+  static Future<bool> reserveTimeslot(int timeslotId, String date, String modality) async {
     final token = await Token.getAccessToken();
     final response = await http.post(
       Uri.http(
@@ -20,6 +20,7 @@ class StudentOps {
         {
           "timeslot_id": timeslotId,
           "date": date,
+          "modality": modality,
         },
       ),
     );

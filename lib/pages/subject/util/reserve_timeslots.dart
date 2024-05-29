@@ -6,9 +6,10 @@ void reserveTimeslots({
   required BuildContext context,
   required int timeslotId,
   required String date,
+  required String modality,
   required void Function() onResponse,
 }) async {
-  final response = await StudentOps.reserveTimeslot(timeslotId, date);
+  final response = await StudentOps.reserveTimeslot(timeslotId, date, modality);
   if (!context.mounted) return;
   if (response == false) {
     ScaffoldMessenger.of(context).showSnackBar(

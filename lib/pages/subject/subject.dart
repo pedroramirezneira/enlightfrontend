@@ -1,7 +1,7 @@
 import 'package:enlight/components/loading_indicator.dart';
 import 'package:enlight/components/selectable_timeslot.dart';
 import 'package:enlight/models/day_data.dart';
-import 'package:enlight/models/subject_data.dart';
+import 'package:enlight/models/subject_timeslot.dart';
 import 'package:enlight/models/timeslot_data.dart';
 import 'package:enlight/pages/subject/util/reserve_timeslots.dart';
 import 'package:enlight/pages/subject/util/weekday.dart';
@@ -23,17 +23,18 @@ class Subject extends StatefulWidget {
 }
 
 class _SubjectState extends State<Subject> {
-  late Future<SubjectData> data;
+  late Future<SubjectTimeSlotData> data;
   late DateTime selectedDay;
   late DateTime focusedDay;
   late CalendarFormat calendarFormat;
   var loading = false;
+  String selectedModality = "";
   TimeslotData? selectedTimeslot;
 
   @override
   void initState() {
     super.initState();
-    data = SubjectOps.getSubject(widget.id);
+    data = SubjectOps.getSubjectWithTimeslot(widget.id);
     selectedDay = DateTime.now();
     focusedDay = DateTime.now();
     calendarFormat = CalendarFormat.month;
@@ -95,10 +96,89 @@ class _SubjectState extends State<Subject> {
                                     (timeslot) => SelectableTimeslot(
                                       text:
                                           "${timeslot.startTime.substring(0, 5)} - ${timeslot.endTime.substring(0, 5)}",
-                                      onPressed: () => setState(() => selectedTimeslot = timeslot),
+                                      onPressed: () => setState(
+                                          () => selectedTimeslot = timeslot),
                                     ),
                                   )
                                   .toList(),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(15),
+                              child: Column(
+                                children: [
+                                  Center(
+                                    child: Wrap(
+                                      children: [
+                                        if (snapshot.data!.modality ==
+                                            "both") ...[
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                selectedModality = "Online";
+                                              });
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor:
+                                                  selectedModality == "Online"
+                                                      ? const Color.fromARGB(
+                                                          255, 100, 201, 169)
+                                                      : const Color.fromARGB(
+                                                          255, 43, 57, 68),
+                                              maximumSize: const Size(150, 50),
+                                            ),
+                                            child: const Text("Online"),
+                                          ),
+                                          const SizedBox(width: 10),
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                selectedModality =
+                                                    "Face-to-face";
+                                              });
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor:
+                                                  selectedModality ==
+                                                          "Face-to-face"
+                                                      ? const Color.fromARGB(
+                                                          255, 100, 201, 169)
+                                                      : const Color.fromARGB(
+                                                          255, 43, 57, 68),
+                                              maximumSize: const Size(150, 50),
+                                            ),
+                                            child: const Text("Face-to-face"),
+                                          ),
+                                        ] else ...[
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                selectedModality =
+                                                    snapshot.data!.modality;
+                                              });
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                             backgroundColor:
+                                                  selectedModality ==
+                                                          snapshot.data!.modality
+                                                      ? const Color.fromARGB(
+                                                          255, 100, 201, 169)
+                                                      : const Color.fromARGB(
+                                                          255, 43, 57, 68),
+                                              maximumSize: const Size(150, 50),
+                                            ),
+                                            child:
+                                                Text(snapshot.data!.modality),
+                                          ),
+                                        ],
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(height: 15),
+                                  Text(
+                                    "Max group size: ${snapshot.data!.size}",
+                                  ),
+                                ],
+                              ),
                             ),
                             Padding(
                               padding: const EdgeInsets.all(15),
@@ -106,15 +186,20 @@ class _SubjectState extends State<Subject> {
                                 width: 500,
                                 child: ElevatedButton(
                                   onPressed: () {
+                                    if (selectedModality.isEmpty) {
+                                      return;
+                                    }
                                     setState(() => loading = true);
                                     reserveTimeslots(
-                                      context: context,
-                                      date: selectedDay.toIso8601String().split("T")[0],
-                                      timeslotId: selectedTimeslot!.id,
-                                      onResponse: () {
-                                        setState(() => loading = false);
-                                      }
-                                    );
+                                        modality: selectedModality,
+                                        context: context,
+                                        date: selectedDay
+                                            .toIso8601String()
+                                            .split("T")[0],
+                                        timeslotId: selectedTimeslot!.id,
+                                        onResponse: () {
+                                          setState(() => loading = false);
+                                        });
                                   },
                                   child: const Text("Reserve timeslots"),
                                 ),
@@ -130,7 +215,7 @@ class _SubjectState extends State<Subject> {
               if (snapshot.hasError) {
                 if (snapshot.error == 401) {
                   Token.refreshAccessToken().then(
-                    (_) => data = SubjectOps.getSubject(widget.id),
+                    (_) => data = SubjectOps.getSubjectWithTimeslot(widget.id),
                   );
                   return const LoadingIndicator(visible: true);
                 }
