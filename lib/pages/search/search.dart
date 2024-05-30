@@ -75,7 +75,6 @@ class _SearchTeachersState extends State<SearchTeachers> {
                                   hintText: "Search...",
                                   onSubmitted: _performSearch,
                                 ),
-                                const SizedBox(width: 8),
                                 Center(
                                   child: DropdownButtonHideUnderline(
                                     child: Padding(
@@ -177,11 +176,11 @@ class _SearchTeachersState extends State<SearchTeachers> {
                                 )
                             else if (selectedValue == "Tags")
                               for (var subject in snapshot.data!.subject!)
-                                ResultContainer(
+                                SubjectResultContainer(
+                                  price: subject.price,
                                   subjectId: subject.id,
                                   name: subject.name,
                                   description: subject.description,
-                                  picture: "",
                                 ),
                           ],
                         ),

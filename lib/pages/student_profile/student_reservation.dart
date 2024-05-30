@@ -34,92 +34,109 @@ class _StudentReservations extends State<StudentReservations> {
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return const Center(child: Text('No reservations available'));
           } else {
-            return CustomScrollView(
-              slivers: [
-                const SliverAppBar(
-                  title: Text("Reservations"),
-                  centerTitle: true,
-                ),
-                SliverList(
+            return CustomScrollView(slivers: [
+              const SliverAppBar(
+                title: Text("Reservations"),
+                centerTitle: true,
+              ),
+              SliverList(
                   delegate: SliverChildListDelegate(
-                    [
-                      Center(
-                        child: Column(
-                          children: [
-                            for (var reservation in snapshot.data!)
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) =>
-                                        TeacherProfileFromSearch(
-                                            id: reservation.teacherId),
-                                  ));
-                                },
-                                child: Center(
-                                  child: Container(
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.8,
-                                    margin: const EdgeInsets.symmetric(
-                                        vertical: 10),
-                                    padding: const EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.grey),
-                                      borderRadius: BorderRadius.circular(10),
+                [
+                  Center(
+                    child: Column(
+                      children: [
+                        for (var reservation in snapshot.data!)
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => TeacherProfileFromSearch(
+                                    id: reservation.teacherId),
+                              ));
+                            },
+                            child: Center(
+                              child: Container(
+                                width: MediaQuery.of(context).size.width * 0.8,
+                                margin:
+                                    const EdgeInsets.symmetric(vertical: 10),
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.grey),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Center(
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                              "Subject: ${reservation.subjectName}"),
+                                          Text(
+                                              "Teacher: ${reservation.teacherName}"),
+                                          Text(
+                                              "Date: ${reservation.date.toLocal().toString().split(' ')[0]}"),
+                                          Text(
+                                              "Start Time: ${reservation.startTime.format(context)}"),
+                                          Text(
+                                              "End Time: ${reservation.endTime.format(context)}"),
+                                        ],
+                                      ),
                                     ),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Center(
-                                          child: Column(
-                                            children: [
-                                              Text(
-                                                  "Subject: ${reservation.subjectName}"),
-                                              Text(
-                                                  "Teacher: ${reservation.teacherName}"),
-                                              Text(
-                                                  "Date: ${reservation.date.toLocal().toString().split(' ')[0]}"),
-                                              Text(
-                                                  "Start Time: ${reservation.startTime.format(context)}"),
-                                              Text(
-                                                  "End Time: ${reservation.endTime.format(context)}"),
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(height: 10),
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            data.then((data) {
-                                              Messenger.showCancelReservation(
-                                                context: context,
-                                                data: data,
-                                                reservationId:
-                                                    reservation.reservationId,
-                                                onAccept: () => setState(
-                                                    () => loading = true),
-                                                onResponse: () {
-                                                  setState(() {
-                                                    loading = false;
+                                    const SizedBox(height: 10),
+                                    Center(
+                                      child: SizedBox(
+                                        width: MediaQuery.of(context).size.width * 0.8,
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              child: ElevatedButton(
+                                                onPressed: () {
+                                                  data.then((data) {
+                                                    Messenger.showCancelReservation(
+                                                      context: context,
+                                                      data: data,
+                                                      reservationId:
+                                                          reservation.reservationId,
+                                                      onAccept: () => setState(
+                                                          () => loading = true),
+                                                      onResponse: () {
+                                                        setState(() {
+                                                          loading = false;
+                                                        });
+                                                      },
+                                                    );
                                                   });
                                                 },
-                                              );
-                                            });
-                                          },
-                                          child: const Text("Cancel"),
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor: Colors.red,
+                                                ),
+                                                child: const Text("Cancel"),
+                                              ),
+                                            ),
+                                            const SizedBox(width: 10),
+                                            Expanded(
+                                              child: ElevatedButton(
+                                                onPressed: () {
+                                                  print("siiii");
+                                                },
+                                                child: const Text("Completed"),
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                      ],
+                                      ),
                                     ),
-                                  ),
+                                  ],
                                 ),
-                              )
-                          ],
-                        ),
-                      )
-                    ],
+                              ),
+                            ),
+                          )
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            );
+                ],
+              ))
+            ]);
           }
         },
       ),

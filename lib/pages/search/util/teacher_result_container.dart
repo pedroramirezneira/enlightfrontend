@@ -71,7 +71,7 @@ class TeacherResultContainer extends StatelessWidget {
                 description,
                 style: const TextStyle(
                   fontFamily: 'Montserrat',
-                  fontSize: 16,
+                  fontSize: 15,
                   letterSpacing: 0,
                 ),
               ),

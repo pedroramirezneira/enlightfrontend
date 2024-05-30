@@ -9,7 +9,7 @@ class ChatOps {
   static Future<ChatData> getChats() async {
     final token = await Token.getAccessToken();
     final response = await http.get(
-      Uri.http(
+      Uri.https(
         dotenv.env["SERVER"]!,
         "/chat",
       ),

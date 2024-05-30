@@ -1,25 +1,25 @@
 import 'package:enlight/pages/subject/subject.dart';
 import 'package:flutter/material.dart';
 
-class ResultContainer extends StatefulWidget {
+class SubjectResultContainer extends StatefulWidget {
+  final int price;
   final int subjectId;
   final String name;
   final String description;
-  final String? picture;
 
-  const ResultContainer({
+  const SubjectResultContainer({
     super.key,
+    required this.price,
     required this.subjectId,
     required this.name,
     required this.description,
-    required this.picture,
   });
 
   @override
-  State<ResultContainer> createState() => _ResultContainer();
+  State<SubjectResultContainer> createState() => _SubjectResultContainer();
 }
 
-class _ResultContainer extends State<ResultContainer> {
+class _SubjectResultContainer extends State<SubjectResultContainer> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -45,6 +45,14 @@ class _ResultContainer extends State<ResultContainer> {
                   children: [
                     Text(
                       widget.name,
+                      style: const TextStyle(
+                        fontFamily: 'Montserrat',
+                        fontSize: 20,
+                        letterSpacing: 0,
+                      ),
+                    ),
+                    Text(
+                      "\$${widget.price.toStringAsFixed(2)}",
                       style: const TextStyle(
                         fontFamily: 'Montserrat',
                         fontSize: 20,
