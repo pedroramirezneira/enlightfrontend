@@ -1,3 +1,4 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:enlight/pages/search/util/result_conatiner.dart';
 import 'package:enlight/pages/search/util/search_box.dart';
 import 'package:enlight/pages/search/util/teacher_result_container.dart';
@@ -43,9 +44,6 @@ class _SearchTeachersState extends State<SearchTeachers> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Search"),
-      ),
       body: FutureBuilder<SearchData>(
         future: _searchResults,
         builder: (context, snapshot) {
@@ -60,6 +58,10 @@ class _SearchTeachersState extends State<SearchTeachers> {
           } else if (snapshot.hasData) {
             return CustomScrollView(
               slivers: [
+                const SliverAppBar(
+                  title: Text("Search"),
+                  centerTitle: true,
+                ),
                 SliverList(
                   delegate: SliverChildListDelegate(
                     [
@@ -73,33 +75,94 @@ class _SearchTeachersState extends State<SearchTeachers> {
                                   hintText: "Search...",
                                   onSubmitted: _performSearch,
                                 ),
-                                const SizedBox(width: 10),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Colors.white,
+                                const SizedBox(width: 8),
+                                Center(
+                                  child: DropdownButtonHideUnderline(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10),
+                                      child: SizedBox(
+                                        width: (MediaQuery.of(context).size.width - MediaQuery.of(context).size.width/1.7)/1.5,
+                                        child: DropdownButton2<String>(
+                                          isExpanded: true,
+                                          hint: const Row(
+                                            children: [
+                                              SizedBox(
+                                                width: 4,
+                                              ),
+                                            ],
+                                          ),
+                                          items: items
+                                              .map((String item) =>
+                                                  DropdownMenuItem<String>(
+                                                    value: item,
+                                                    child: Text(
+                                                      item,
+                                                      style: const TextStyle(
+                                                        color: Colors.white,
+                                                      ),
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ))
+                                              .toList(),
+                                          value: selectedValue,
+                                          onChanged: (String? value) {
+                                            setState(() {
+                                              selectedValue = value!;
+                                            });
+                                          },
+                                          buttonStyleData: ButtonStyleData(
+                                            height: 55,
+                                            width: double.infinity,
+                                            padding: const EdgeInsets.all(8),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              border: Border.all(
+                                                color: Colors.white,
+                                              ),
+                                              color: const Color.fromARGB(
+                                                  255, 43, 57, 68),
+                                            ),
+                                          ),
+                                          iconStyleData: const IconStyleData(
+                                            icon: Icon(
+                                              Icons.arrow_drop_down,
+                                            ),
+                                            iconSize: 14,
+                                            iconEnabledColor: Colors.white,
+                                            iconDisabledColor: Colors.grey,
+                                          ),
+                                          dropdownStyleData: DropdownStyleData(
+                                            maxHeight: 200,
+                                            width: 100,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(14),
+                                              color: const Color.fromARGB(
+                                                  255, 43, 57, 68),
+                                            ),
+                                            offset: const Offset(0, 0),
+                                            scrollbarTheme: ScrollbarThemeData(
+                                              radius: const Radius.circular(40),
+                                              thickness: MaterialStateProperty
+                                                  .all<double>(6),
+                                              thumbVisibility:
+                                                  MaterialStateProperty.all<
+                                                      bool>(true),
+                                            ),
+                                          ),
+                                          menuItemStyleData:
+                                              const MenuItemStyleData(
+                                            height: 40,
+                                            padding: EdgeInsets.only(
+                                                left: 14, right: 14),
+                                          ),
+                                        ),
+                                      ),
                                     ),
-                                    borderRadius: BorderRadius.circular(10),
                                   ),
-                                  child: SizedBox(
-                                    width: 200,
-                                    child: DropdownButton<String>(
-                                      borderRadius: BorderRadius.circular(10),
-                                      items: items.map((String value) {
-                                        return DropdownMenuItem<String>(
-                                          value: value,
-                                          child: Text(value),
-                                        );
-                                      }).toList(),
-                                      value: selectedValue,
-                                      onChanged: (String? newValue) {
-                                        setState(() {
-                                          selectedValue = newValue;
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                )
+                                ),
                               ],
                             ),
                             const SizedBox(height: 20),

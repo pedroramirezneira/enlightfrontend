@@ -35,6 +35,7 @@ class _StudentProfileState extends State<StudentProfile> {
             title: const Text(
               "Profile",
             ),
+            centerTitle: true,
           ),
           endDrawer: Drawer(
             child: ListView(

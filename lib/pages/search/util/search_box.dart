@@ -20,7 +20,7 @@ class _SearchBoxState extends State<SearchBox> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: SizedBox(
-          width: MediaQuery.of(context).size.width/1.25,
+          width: MediaQuery.of(context).size.width/1.7,
           child: TextField(
             controller: _controller,
             decoration: InputDecoration(
