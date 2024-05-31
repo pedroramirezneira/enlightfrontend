@@ -85,18 +85,21 @@ class _StudentReservations extends State<StudentReservations> {
                                     const SizedBox(height: 10),
                                     Center(
                                       child: SizedBox(
-                                        width: MediaQuery.of(context).size.width * 0.8,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.8,
                                         child: Row(
                                           children: [
                                             Expanded(
                                               child: ElevatedButton(
                                                 onPressed: () {
                                                   data.then((data) {
-                                                    Messenger.showCancelReservation(
+                                                    Messenger
+                                                        .showCancelReservation(
                                                       context: context,
                                                       data: data,
-                                                      reservationId:
-                                                          reservation.reservationId,
+                                                      reservationId: reservation
+                                                          .reservationId,
                                                       onAccept: () => setState(
                                                           () => loading = true),
                                                       onResponse: () {
@@ -116,9 +119,7 @@ class _StudentReservations extends State<StudentReservations> {
                                             const SizedBox(width: 10),
                                             Expanded(
                                               child: ElevatedButton(
-                                                onPressed: () {
-                                                  print("siiii");
-                                                },
+                                                onPressed: () {},
                                                 child: const Text("Completed"),
                                               ),
                                             ),

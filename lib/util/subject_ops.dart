@@ -10,7 +10,7 @@ class SubjectOps {
   static Future<SubjectTimeSlotData> getSubjectWithTimeslot(int id) async {
     final token = await Token.getAccessToken();
     final response = await http.get(
-      Uri.https(
+      Uri.http(
         dotenv.env["SERVER"]!,
         "/subject/$id",
         {
@@ -26,12 +26,12 @@ class SubjectOps {
     }
     final data = json.decode(response.body);
     return SubjectTimeSlotData.fromJson(data);
-}
+  }
 
-static Future<SubjectData> getSubject(int id) async {
+  static Future<SubjectData> getSubject(int id) async {
     final token = await Token.getAccessToken();
     final response = await http.get(
-      Uri.https(
+      Uri.http(
         dotenv.env["SERVER"]!,
         "/subject/$id",
       ),
@@ -44,6 +44,5 @@ static Future<SubjectData> getSubject(int id) async {
     }
     final data = json.decode(response.body);
     return SubjectData.fromJson(data);
-}
-
+  }
 }

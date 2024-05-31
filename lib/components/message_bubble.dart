@@ -15,11 +15,11 @@ class MessageBubble extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final surface = theme.colorScheme.surface;
-    var hour = data.timestamp.hour.toString();
+    var hour = data.timestamp.toLocal().hour.toString();
     while (hour.length < 2) {
       hour = "0$hour";
     }
-    var minute = data.timestamp.minute.toString();
+    var minute = data.timestamp.toLocal().minute.toString();
     while (minute.length < 2) {
       minute = "0$minute";
     }

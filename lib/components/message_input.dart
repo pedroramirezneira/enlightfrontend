@@ -44,21 +44,8 @@ class _MessageInputState extends State<MessageInput> {
               },
               actions: {
                 ActivateIntent: CallbackAction<Intent>(
-                  onInvoke: (intent) {
-                    if (controller.text.trim().isEmpty) {
-                      return null;
-                    }
-                    if (widget.onPressed != null) {
-                      final message = MessageData(
-                        senderId: widget.senderId,
-                        message: controller.text,
-                        timestamp: DateTime.timestamp(),
-                      );
-                      widget.onPressed!(message);
-                    }
-                    controller.clear();
-                    return null;
-                  },
+                  onInvoke: (intent) =>
+                      controller.text.trim().isEmpty ? null : _sendMessage(),
                 ),
               },
               child: TextField(
@@ -81,24 +68,24 @@ class _MessageInputState extends State<MessageInput> {
               color: surface,
             ),
             child: IconButton(
-              onPressed: controller.text.trim().isEmpty
-                  ? null
-                  : () {
-                      if (widget.onPressed != null) {
-                        final message = MessageData(
-                          senderId: widget.senderId,
-                          message: controller.text,
-                          timestamp: DateTime.timestamp(),
-                        );
-                        widget.onPressed!(message);
-                      }
-                      controller.clear();
-                    },
+              onPressed: controller.text.trim().isEmpty ? null : _sendMessage,
               icon: const Icon(Icons.send_rounded),
             ),
           ),
         ],
       ),
     );
+  }
+
+  void _sendMessage() {
+    if (widget.onPressed != null) {
+      final message = MessageData(
+        senderId: widget.senderId,
+        message: controller.text.trim(),
+        timestamp: DateTime.timestamp(),
+      );
+      widget.onPressed!(message);
+    }
+    controller.clear();
   }
 }

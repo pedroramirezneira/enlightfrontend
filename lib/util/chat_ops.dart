@@ -9,7 +9,7 @@ class ChatOps {
   static Future<ChatData> getChats() async {
     final token = await Token.getAccessToken();
     final response = await http.get(
-      Uri.https(
+      Uri.http(
         dotenv.env["SERVER"]!,
         "/chat",
       ),
@@ -22,5 +22,26 @@ class ChatOps {
     }
     final data = json.decode(response.body);
     return ChatData.fromJson(data);
+  }
+
+  static Future<bool> createChat({required int receiverId}) async {
+    final token = await Token.getAccessToken();
+    final response = await http.post(
+      Uri.http(
+        dotenv.env["SERVER"]!,
+        "/chat",
+      ),
+      headers: {
+        "Authorization": "Bearer $token",
+        "Content-Type": "application/json",
+      },
+      body: json.encode(
+        {
+          "receiver_id": receiverId,
+        },
+      ),
+    );
+    if (response.statusCode != 200) return false;
+    return true;
   }
 }

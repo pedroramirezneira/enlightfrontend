@@ -1,10 +1,14 @@
+import 'dart:convert';
+
 import 'package:enlight/components/loading_indicator.dart';
 import 'package:enlight/components/message_bubble.dart';
 import 'package:enlight/components/message_input.dart';
 import 'package:enlight/models/account_data.dart';
 import 'package:enlight/models/message_data.dart';
+import 'package:enlight/pages/profile_picture/profile_picture.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class Chat extends StatefulWidget {
   final int senderId;
@@ -35,8 +39,35 @@ class _ChatState extends State<Chat> {
 
   @override
   Widget build(BuildContext context) {
+    final hasImage = widget.receiver.picture != null;
+    final decoded = base64.decode(widget.receiver.picture ?? "");
     return Scaffold(
-      appBar: AppBar(title: Text(widget.receiver.name)),
+      appBar: AppBar(
+        title: InkWell(
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              fullscreenDialog: true,
+              barrierDismissible: true,
+              builder: (context) => ProfilePicture(
+                receiver: widget.receiver,
+                picture: decoded,
+              ),
+            ),
+          ),
+          child: Row(
+            children: <Widget>[
+              Hero(
+                tag: "picture",
+                child: CircleAvatar(
+                  backgroundImage: hasImage ? MemoryImage(decoded) : null,
+                ),
+              ),
+              const SizedBox(width: 20),
+              Text(widget.receiver.name),
+            ],
+          ),
+        ),
+      ),
       body: StreamBuilder(
         stream: chat.onValue,
         builder: (context, snapshot) {
@@ -67,20 +98,38 @@ class _ChatState extends State<Chat> {
                       child: ListView.builder(
                         reverse: true,
                         itemCount: messages.length,
-                        itemBuilder: (context, index) => Align(
-                          alignment: messages[index].senderId == widget.senderId
-                              ? Alignment.centerRight
-                              : Alignment.centerLeft,
-                          child: Column(
-                            children: <Widget>[
-                              MessageBubble(
+                        itemBuilder: (context, index) => Column(
+                          children: <Widget>[
+                            () {
+                              final timestamp =
+                                  messages[index].timestamp.toLocal();
+                              final date =
+                                  DateFormat("MMMM d, yyyy").format(timestamp);
+                              if (index == messages.length - 1) {
+                                return Text(date);
+                              }
+                              final previous = messages[index + 1].timestamp.toLocal();
+                              if (date != DateFormat("MMMM d, yyyy").format(previous)) {
+                                return Text(date);
+                              }
+                              return const Visibility(
+                                visible: false,
+                                child: Placeholder(),
+                              );
+                            }(),
+                            Align(
+                              alignment:
+                                  messages[index].senderId == widget.senderId
+                                      ? Alignment.centerRight
+                                      : Alignment.centerLeft,
+                              child: MessageBubble(
                                 data: messages[index],
                                 isSender:
                                     messages[index].senderId == widget.senderId,
                               ),
-                              const SizedBox(height: 20),
-                            ],
-                          ),
+                            ),
+                            const SizedBox(height: 20),
+                          ],
                         ),
                       ),
                     ),

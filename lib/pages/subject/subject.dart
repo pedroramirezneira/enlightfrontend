@@ -157,9 +157,10 @@ class _SubjectState extends State<Subject> {
                                               });
                                             },
                                             style: ElevatedButton.styleFrom(
-                                             backgroundColor:
+                                              backgroundColor:
                                                   selectedModality ==
-                                                          snapshot.data!.modality
+                                                          snapshot
+                                                              .data!.modality
                                                       ? const Color.fromARGB(
                                                           255, 100, 201, 169)
                                                       : const Color.fromARGB(
@@ -189,17 +190,20 @@ class _SubjectState extends State<Subject> {
                                     if (selectedModality.isEmpty) {
                                       return;
                                     }
-                                    setState(() => loading = true);
-                                    reserveTimeslots(
-                                        modality: selectedModality,
-                                        context: context,
-                                        date: selectedDay
-                                            .toIso8601String()
-                                            .split("T")[0],
-                                        timeslotId: selectedTimeslot!.id,
-                                        onResponse: () {
-                                          setState(() => loading = false);
-                                        });
+                                    data.then((data) {
+                                      setState(() => loading = true);
+                                      reserveTimeslots(
+                                          teacherId: data.teacherId,
+                                          modality: selectedModality,
+                                          context: context,
+                                          date: selectedDay
+                                              .toIso8601String()
+                                              .split("T")[0],
+                                          timeslotId: selectedTimeslot!.id,
+                                          onResponse: () {
+                                            setState(() => loading = false);
+                                          });
+                                    });
                                   },
                                   child: const Text("Reserve timeslots"),
                                 ),

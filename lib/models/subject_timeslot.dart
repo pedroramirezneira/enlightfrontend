@@ -2,7 +2,7 @@ import 'package:enlight/models/day_data.dart';
 import 'package:enlight/models/subject_data.dart';
 
 class SubjectTimeSlotData extends SubjectData {
-
+  final int teacherId;
   final String modality;
   final int size;
 
@@ -13,6 +13,7 @@ class SubjectTimeSlotData extends SubjectData {
     required super.description,
     required super.price,
     required super.days,
+    required this.teacherId,
     required this.modality,
     required this.size,
   });
@@ -25,12 +26,11 @@ class SubjectTimeSlotData extends SubjectData {
       name: json["name"],
       price: json["price"],
       description: json["description"],
-      days: days != null
-          ? days.map((day) => DayData.fromJson(day)).toList()
-          : [],
+      days:
+          days != null ? days.map((day) => DayData.fromJson(day)).toList() : [],
+          teacherId: json["teacher_id"],
       modality: json["modality"],
       size: json["size"],
     );
   }
-
 }

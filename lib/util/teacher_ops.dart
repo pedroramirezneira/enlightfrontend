@@ -12,7 +12,7 @@ class TeacherOps {
   }) async {
     final token = await Token.getAccessToken();
     final response = await http.put(
-      Uri.https(
+      Uri.http(
         dotenv.env["SERVER"]!,
         "/teacher",
       ),
@@ -38,7 +38,7 @@ class TeacherOps {
   }) async {
     final token = await Token.getAccessToken();
     final response = await http.post(
-      Uri.https(
+      Uri.http(
         dotenv.env["SERVER"]!,
         "/subject",
       ),
@@ -64,7 +64,7 @@ class TeacherOps {
   }) async {
     final token = await Token.getAccessToken();
     final response = await http.delete(
-      Uri.https(
+      Uri.http(
         dotenv.env["SERVER"]!,
         "/subject",
       ),
@@ -84,7 +84,7 @@ class TeacherOps {
   static Future<TeacherAccountData> getTeacher() async {
     final token = await Token.getAccessToken();
     final response = await http.get(
-      Uri.https(
+      Uri.http(
         dotenv.env["SERVER"]!,
         "/account",
         {
@@ -103,7 +103,7 @@ class TeacherOps {
   static Future<SearchTeacherData> getTeacherFromSearch(int id) async {
     final token = await Token.getAccessToken();
     final response = await http.get(
-      Uri.https(
+      Uri.http(
         dotenv.env["SERVER"]!,
         "/teacher",
         {
