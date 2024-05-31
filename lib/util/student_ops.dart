@@ -12,7 +12,7 @@ class StudentOps {
   ) async {
     final token = await Token.getAccessToken();
     final response = await http.post(
-      Uri.http(
+      Uri.https(
         dotenv.env["SERVER"]!,
         "/reservation",
       ),

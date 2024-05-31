@@ -9,7 +9,7 @@ class SearchOps {
   static Future<SearchData> getSearch(String query) async {
     final token = await Token.getAccessToken();
     final response = await http.get(
-      Uri.http(
+      Uri.https(
         dotenv.env["SERVER"]!,
         "/search",
         {
