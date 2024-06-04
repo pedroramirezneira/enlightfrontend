@@ -31,4 +31,27 @@ class StudentOps {
     if (response.statusCode != 200) return false;
     return true;
   }
+
+  static Future<bool> rateTeacher(int reservationID, int teacherID, double rating) async {
+    final token = await Token.getAccessToken();
+    final response = await http.put(
+      Uri.http(
+        dotenv.env["SERVER"]!,
+        "/reservation",
+      ),
+      headers: {
+        "Authorization": "Bearer $token",
+        "Content-Type": "application/json",
+      },
+      body: json.encode(
+        {
+          "reservation_id": reservationID,
+          "teacher_id": teacherID,
+          "rating": rating,
+        },
+      ),
+    );
+    if (response.statusCode != 200) return false;
+    return true;
+  }
 }
