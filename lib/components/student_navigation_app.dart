@@ -1,8 +1,11 @@
+import 'package:badges/badges.dart' as badges;
 import 'package:enlight/pages/chats/chats.dart';
 import 'package:enlight/pages/search/search.dart';
 import 'package:enlight/pages/student_profile/student_profile.dart';
 import 'package:enlight/pages/student_profile/student_reservation.dart';
+import 'package:enlight/services/messaging_service.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class StudentNavigationApp extends StatefulWidget {
   const StudentNavigationApp({super.key});
@@ -26,20 +29,26 @@ class _StudentNavigationAppState extends State<StudentNavigationApp> {
       bottomNavigationBar: NavigationBar(
         onDestinationSelected: (value) => setState(() => index = value),
         selectedIndex: index,
-        destinations: const <Widget>[
+        destinations: <Widget>[
           NavigationDestination(
-            icon: Icon(Icons.chat_rounded),
+            icon: Consumer<MessagingService>(
+              builder: (context, value, child) => badges.Badge(
+                badgeContent: Text(value.newMessages.toString()),
+                showBadge: context.watch<MessagingService>().newMessages > 0,
+                child: const Icon(Icons.chat_rounded),
+              ),
+            ),
             label: "Chats",
           ),
-          NavigationDestination(
+          const NavigationDestination(
             icon: Icon(Icons.search_rounded),
             label: "Search",
           ),
-          NavigationDestination(
+          const NavigationDestination(
             icon: Icon(Icons.bookmark_rounded),
             label: "Reservations",
           ),
-          NavigationDestination(
+          const NavigationDestination(
             icon: Icon(Icons.person_rounded),
             label: "Account",
           ),

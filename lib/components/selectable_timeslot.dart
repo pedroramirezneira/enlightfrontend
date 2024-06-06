@@ -26,7 +26,7 @@ class _SelectableTimeslotState extends State<SelectableTimeslot> {
   @override
   Widget build(BuildContext context) {
     final surface = Theme.of(context).colorScheme.surface;
-    final background = Theme.of(context).colorScheme.background;
+    final background = Theme.of(context).colorScheme.surface;
     final onPrimary = Theme.of(context).colorScheme.onPrimary;
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -34,10 +34,10 @@ class _SelectableTimeslotState extends State<SelectableTimeslot> {
         width: 150,
         child: ElevatedButton(
           style: ButtonStyle(
-            backgroundColor: MaterialStatePropertyAll(
+            backgroundColor: WidgetStatePropertyAll(
               selected ? surface : background,
             ),
-            side: MaterialStatePropertyAll(
+            side: WidgetStatePropertyAll(
               BorderSide(
                 width: 1,
                 color: onPrimary,

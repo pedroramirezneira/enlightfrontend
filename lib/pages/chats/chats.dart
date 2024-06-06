@@ -1,31 +1,19 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:enlight/components/chat_bubble.dart';
 import 'package:enlight/components/loading_indicator.dart';
-import 'package:enlight/models/chat_data.dart';
 import 'package:enlight/pages/chat/chat.dart';
-import 'package:enlight/util/chat_ops.dart';
+import 'package:enlight/services/messaging_service.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class Chats extends StatefulWidget {
+class Chats extends StatelessWidget {
   const Chats({super.key});
-
-  @override
-  State<Chats> createState() => _ChatsState();
-}
-
-class _ChatsState extends State<Chats> {
-  late final Future<ChatData> chats;
-  @override
-  void initState() {
-    super.initState();
-    chats = ChatOps.getChats();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilder(
-        future: chats,
+        future: context.read<MessagingService>().chats,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return Container(
@@ -34,14 +22,19 @@ class _ChatsState extends State<Chats> {
               child: ListView.builder(
                 itemCount: snapshot.data!.chats.length,
                 itemBuilder: (context, index) => ChatBubble(
-                  onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => Chat(
-                        senderId: snapshot.data!.accountId,
-                        receiver: snapshot.data!.chats[index],
+                  onTap: () {
+                    context.read<MessagingService>().readMessages(index);
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => Chat(
+                          senderId: snapshot.data!.accountId,
+                          receiver: snapshot.data!.chats[index],
+                          index: index,
+                        ),
                       ),
-                    ),
-                  ),
+                    );
+                  },
+                  index: index,
                   name: snapshot.data!.chats[index].name,
                   picture: snapshot.data!.chats[index].picture,
                 ),

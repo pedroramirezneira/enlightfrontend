@@ -144,10 +144,10 @@ class _SearchTeachersState extends State<SearchTeachers> {
                                             offset: const Offset(0, 0),
                                             scrollbarTheme: ScrollbarThemeData(
                                               radius: const Radius.circular(40),
-                                              thickness: MaterialStateProperty
+                                              thickness: WidgetStateProperty
                                                   .all<double>(6),
                                               thumbVisibility:
-                                                  MaterialStateProperty.all<
+                                                  WidgetStateProperty.all<
                                                       bool>(true),
                                             ),
                                           ),

@@ -178,9 +178,9 @@ class _SubjectMenuState extends State<SubjectMenu> {
                                     scrollbarTheme: ScrollbarThemeData(
                                       radius: const Radius.circular(40),
                                       thickness:
-                                          MaterialStateProperty.all<double>(6),
+                                          WidgetStateProperty.all<double>(6),
                                       thumbVisibility:
-                                          MaterialStateProperty.all<bool>(true),
+                                          WidgetStateProperty.all<bool>(true),
                                     ),
                                   ),
                                   menuItemStyleData: const MenuItemStyleData(

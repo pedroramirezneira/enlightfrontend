@@ -19,24 +19,22 @@ final theme = ThemeData(
     onSecondary: Colors.white,
     error: Colors.red,
     onError: Colors.white,
-    background: const Color.fromARGB(255, 43, 57, 68),
-    onBackground: Colors.white,
-    surface: const Color.fromARGB(255, 100, 201, 169),
+    surface: const Color.fromARGB(255, 43, 57, 68),
     onSurface: Colors.white,
   ),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ButtonStyle(
-      fixedSize: const MaterialStatePropertyAll(
+      fixedSize: const WidgetStatePropertyAll(
         Size(double.maxFinite, 50),
       ),
-      shape: const MaterialStatePropertyAll(
+      shape: const WidgetStatePropertyAll(
         RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(10))),
       ),
       backgroundColor:
-          const MaterialStatePropertyAll(Color.fromARGB(255, 100, 201, 169)),
-      foregroundColor: const MaterialStatePropertyAll(Colors.white),
-      overlayColor: MaterialStatePropertyAll(Colors.white.withOpacity(0.11)),
+          const WidgetStatePropertyAll(Color.fromARGB(255, 100, 201, 169)),
+      foregroundColor: const WidgetStatePropertyAll(Colors.white),
+      overlayColor: WidgetStatePropertyAll(Colors.white.withOpacity(0.11)),
     ),
   ),
   snackBarTheme: const SnackBarThemeData(
@@ -64,8 +62,8 @@ final theme = ThemeData(
     shape: CircleBorder(),
   ),
   navigationBarTheme: const NavigationBarThemeData(
-    backgroundColor: Color.fromARGB(255, 43, 57, 68),
+    backgroundColor: Color.fromARGB(255, 49, 54, 63),
     indicatorColor: Color.fromARGB(255, 100, 201, 169),
-    labelBehavior: NavigationDestinationLabelBehavior.alwaysHide
+    labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
   ),
 );

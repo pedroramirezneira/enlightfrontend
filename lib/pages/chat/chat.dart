@@ -6,18 +6,22 @@ import 'package:enlight/components/message_input.dart';
 import 'package:enlight/models/account_data.dart';
 import 'package:enlight/models/message_data.dart';
 import 'package:enlight/pages/profile_picture/profile_picture.dart';
+import 'package:enlight/services/messaging_service.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class Chat extends StatefulWidget {
   final int senderId;
   final AccountData receiver;
+  final int index;
 
   const Chat({
     super.key,
     required this.senderId,
     required this.receiver,
+    required this.index,
   });
 
   @override
@@ -72,6 +76,7 @@ class _ChatState extends State<Chat> {
         stream: chat.onValue,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
+            context.read<MessagingService>().readMessages(widget.index);
             if (snapshot.data!.snapshot.value == null) {
               return const Placeholder();
             }
@@ -108,8 +113,10 @@ class _ChatState extends State<Chat> {
                               if (index == messages.length - 1) {
                                 return Text(date);
                               }
-                              final previous = messages[index + 1].timestamp.toLocal();
-                              if (date != DateFormat("MMMM d, yyyy").format(previous)) {
+                              final previous =
+                                  messages[index + 1].timestamp.toLocal();
+                              if (date !=
+                                  DateFormat("MMMM d, yyyy").format(previous)) {
                                 return Text(date);
                               }
                               return const Visibility(

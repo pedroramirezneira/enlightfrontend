@@ -182,13 +182,14 @@ class _SignUpState extends State<SignUp> {
                                                   255, 43, 57, 68),
                                             ),
                                             offset: const Offset(150, 0),
-                                            scrollbarTheme: ScrollbarThemeData(
-                                              radius: const Radius.circular(40),
-                                              thickness: MaterialStateProperty
-                                                  .all<double>(6),
+                                            scrollbarTheme:
+                                                const ScrollbarThemeData(
+                                              radius: Radius.circular(40),
+                                              thickness: WidgetStatePropertyAll<
+                                                  double>(6),
                                               thumbVisibility:
-                                                  MaterialStateProperty.all<
-                                                      bool>(true),
+                                                  WidgetStatePropertyAll<bool>(
+                                                      true),
                                             ),
                                           ),
                                           menuItemStyleData:
