@@ -17,10 +17,10 @@ class TeacherData {
   factory TeacherData.fromJson(Map<String, dynamic> json) {
     List<dynamic>? subjects = json["subjects"];
     List<dynamic>? categories = json["categories"];
-    final rating = json["rating"];
+    final rating = json["rating"].toString();
     return TeacherData(
       description: json["description"],
-      rating: rating != 0 ? rating : 0,
+      rating: double.tryParse(rating) ?? 0.0,
       subjects: subjects != null
           ? subjects.map((subject) => SubjectData.fromJson(subject)).toList()
           : [],
