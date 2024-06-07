@@ -17,3 +17,11 @@ class ChatsData {
     );
   }
 }
+
+class EmptyChatsData implements ChatsData {
+  @override
+  int get accountId => -1;
+
+  @override
+  List<ChatData> get chats => [];
+}

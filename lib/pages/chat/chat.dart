@@ -1,5 +1,4 @@
-import 'dart:convert';
-
+import 'dart:typed_data';
 import 'package:enlight/components/loading_indicator.dart';
 import 'package:enlight/components/message_bubble.dart';
 import 'package:enlight/components/message_input.dart';
@@ -44,7 +43,6 @@ class _ChatState extends State<Chat> {
   @override
   Widget build(BuildContext context) {
     final hasImage = widget.receiver.picture != null;
-    final decoded = base64.decode(widget.receiver.picture ?? "");
     return Scaffold(
       appBar: AppBar(
         title: InkWell(
@@ -54,7 +52,7 @@ class _ChatState extends State<Chat> {
               barrierDismissible: true,
               builder: (context) => ProfilePicture(
                 receiver: widget.receiver,
-                picture: decoded,
+                picture: widget.receiver.picture ?? Uint8List(0),
               ),
             ),
           ),
@@ -63,7 +61,11 @@ class _ChatState extends State<Chat> {
               Hero(
                 tag: "picture",
                 child: CircleAvatar(
-                  backgroundImage: hasImage ? MemoryImage(decoded) : null,
+                  backgroundImage: hasImage
+                      ? MemoryImage(
+                          widget.receiver.picture ?? Uint8List(0),
+                        )
+                      : null,
                 ),
               ),
               const SizedBox(width: 20),

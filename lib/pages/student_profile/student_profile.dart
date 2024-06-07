@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:typed_data';
 import 'package:enlight/components/loading_indicator.dart';
 import 'package:enlight/models/account_data.dart';
@@ -107,7 +106,6 @@ class _StudentProfileState extends State<StudentProfile> {
                   });
                 }
                 final hasImage = snapshot.data!.picture != null;
-                final decoded = base64.decode(snapshot.data!.picture ?? "");
                 return Scaffold(
                   body: Center(
                     child: Padding(
@@ -140,8 +138,11 @@ class _StudentProfileState extends State<StudentProfile> {
                                   .surface
                                   .withOpacity(0.5),
                               radius: 100,
-                              backgroundImage:
-                                  hasImage ? MemoryImage(decoded) : null,
+                              backgroundImage: hasImage
+                                  ? MemoryImage(
+                                      snapshot.data!.picture ?? Uint8List(0),
+                                    )
+                                  : null,
                               child: !hasImage
                                   ? Text(
                                       snapshot.data!.name[0].toUpperCase(),

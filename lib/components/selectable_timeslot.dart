@@ -25,7 +25,7 @@ class _SelectableTimeslotState extends State<SelectableTimeslot> {
 
   @override
   Widget build(BuildContext context) {
-    final surface = Theme.of(context).colorScheme.surface;
+    final surface = Theme.of(context).navigationBarTheme.indicatorColor!;
     final background = Theme.of(context).colorScheme.surface;
     final onPrimary = Theme.of(context).colorScheme.onPrimary;
     return Padding(
