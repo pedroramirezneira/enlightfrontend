@@ -20,6 +20,7 @@ class MessagingService extends ChangeNotifier {
         final list = [value.accountId, chat.id];
         list.sort();
         final chatKey = list.join("-");
+        // FirebaseMessaging.instance.subscribeToTopic(chatKey);
         final ref = database.child(chatKey);
         ref.onValue.listen(
           (event) {

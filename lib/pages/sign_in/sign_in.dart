@@ -116,8 +116,9 @@ class _SignInState extends State<SignIn> {
                                 context: context,
                                 email: emailController.text,
                                 password: passwordController.text,
-                                onResponse: () =>
-                                    setState(() => loading = false),
+                                onResponse: () => setState(
+                                  () => loading = false,
+                                ),
                               );
                             },
                           ),

@@ -29,12 +29,16 @@ final theme = ThemeData(
       ),
       shape: const WidgetStatePropertyAll(
         RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(10))),
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+        ),
       ),
-      backgroundColor:
-          const WidgetStatePropertyAll(Color.fromARGB(255, 100, 201, 169)),
+      backgroundColor: const WidgetStatePropertyAll(
+        Color.fromARGB(255, 100, 201, 169),
+      ),
       foregroundColor: const WidgetStatePropertyAll(Colors.white),
-      overlayColor: WidgetStatePropertyAll(Colors.white.withOpacity(0.11)),
+      overlayColor: WidgetStatePropertyAll(
+        Colors.white.withOpacity(0.11),
+      ),
     ),
   ),
   snackBarTheme: const SnackBarThemeData(

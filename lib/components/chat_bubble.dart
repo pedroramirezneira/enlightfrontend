@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'dart:typed_data';
 import 'package:badges/badges.dart' as badges;
 import 'package:enlight/services/messaging_service.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 class ChatBubble extends StatelessWidget {
   final int index;
   final String name;
-  final String? picture;
+  final Uint8List? picture;
   final void Function() onTap;
 
   const ChatBubble({
@@ -21,13 +21,16 @@ class ChatBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hasImage = picture != null;
-    final decoded = base64.decode(picture ?? "");
     return InkWell(
       onTap: onTap,
       child: Row(
         children: <Widget>[
           CircleAvatar(
-            backgroundImage: hasImage ? MemoryImage(decoded) : null,
+            backgroundImage: hasImage
+                ? MemoryImage(
+                    picture ?? Uint8List(0),
+                  )
+                : null,
           ),
           const SizedBox(width: 10),
           Text(name),

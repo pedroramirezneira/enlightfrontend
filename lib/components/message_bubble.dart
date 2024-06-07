@@ -14,7 +14,7 @@ class MessageBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final surface = theme.colorScheme.surface;
+    final surface = theme.navigationBarTheme.indicatorColor!;
     var hour = data.timestamp.toLocal().hour.toString();
     while (hour.length < 2) {
       hour = "0$hour";
@@ -27,9 +27,8 @@ class MessageBubble extends StatelessWidget {
       builder: (context, constraints) => Container(
         constraints: BoxConstraints(maxWidth: constraints.maxWidth - 50),
         decoration: BoxDecoration(
-          color: isSender
-              ? surface.withOpacity(0.5)
-              : Colors.grey.withOpacity(0.5),
+          color:
+              isSender ? surface.withOpacity(0.5) : Colors.grey.withOpacity(0.5),
           borderRadius: BorderRadius.circular(10),
         ),
         padding: const EdgeInsets.all(10),

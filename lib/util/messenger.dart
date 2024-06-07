@@ -325,7 +325,7 @@ class Messenger {
     AccountOps.insertPicture(picture: encoded).then(
       (code) {
         if (code == 200) {
-          data.picture = encoded;
+          data.picture = bytes;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: AwesomeSnackbarContent(

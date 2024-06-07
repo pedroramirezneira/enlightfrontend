@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'dart:typed_data';
 import 'package:enlight/components/loading_indicator.dart';
 import 'package:enlight/models/account_data.dart';
 import 'package:enlight/models/teacher_account_data.dart';
@@ -121,7 +121,6 @@ class _TeacherProfileState extends State<TeacherProfile> {
                   });
                 }
                 final hasImage = snapshot.data!.picture != null;
-                final decoded = base64.decode(snapshot.data!.picture ?? "");
                 return CustomScrollView(
                   slivers: [
                     const SliverAppBar(
@@ -162,7 +161,10 @@ class _TeacherProfileState extends State<TeacherProfile> {
                                             .withOpacity(0.5),
                                         radius: 50,
                                         backgroundImage: hasImage
-                                            ? MemoryImage(decoded)
+                                            ? MemoryImage(
+                                                snapshot.data!.picture ??
+                                                    Uint8List(0),
+                                              )
                                             : null,
                                         child: !hasImage
                                             ? Text(

@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:enlight/models/account_data.dart';
 
 class ChatData implements AccountData {
@@ -17,7 +20,7 @@ class ChatData implements AccountData {
   String address;
 
   @override
-  String? picture;
+  Uint8List? picture;
 
   int newMessages = 0;
 
@@ -31,13 +34,14 @@ class ChatData implements AccountData {
   });
 
   factory ChatData.fromJson(Map<String, dynamic> json) {
+    final picture = base64.decode(json["picture"] ?? "");
     return ChatData(
       id: json["id"],
       email: json["email"],
       name: json["name"],
       birthday: (json["birthday"] as String).split("T")[0],
       address: json["address"],
-      picture: json["picture"],
+      picture: picture,
     );
   }
 }

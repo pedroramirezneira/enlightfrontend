@@ -1,4 +1,5 @@
 import 'package:enlight/models/message_data.dart';
+import 'package:enlight/util/device.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -30,7 +31,7 @@ class _MessageInputState extends State<MessageInput> {
 
   @override
   Widget build(BuildContext context) {
-    final surface = Theme.of(context).colorScheme.surface;
+    final surface = Theme.of(context).navigationBarTheme.indicatorColor;
     return LayoutBuilder(
       builder: (context, constraints) => Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -43,10 +44,12 @@ class _MessageInputState extends State<MessageInput> {
                 LogicalKeySet(LogicalKeyboardKey.enter): const ActivateIntent()
               },
               actions: {
-                ActivateIntent: CallbackAction<Intent>(
-                  onInvoke: (intent) =>
-                      controller.text.trim().isEmpty ? null : _sendMessage(),
-                ),
+                ActivateIntent: CallbackAction<Intent>(onInvoke: (intent) {
+                  if (Device.isComputer()) {
+                    controller.text.trim().isEmpty ? null : _sendMessage();
+                  }
+                  return null;
+                }),
               },
               child: TextField(
                 controller: controller,
