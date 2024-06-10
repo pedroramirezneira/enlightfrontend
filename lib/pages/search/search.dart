@@ -1,3 +1,4 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:enlight/pages/search/util/result_conatiner.dart';
 import 'package:enlight/pages/search/util/search_box.dart';
@@ -20,8 +21,47 @@ class _SearchTeachersState extends State<SearchTeachers> {
     'Tags',
   ];
   String? selectedValue = 'Teacher';
+  late final TextEditingController _priceController = TextEditingController();
+  late final TextEditingController _ratingController = TextEditingController();
 
   void _performSearch(String query) {
+    if (_priceController.text.isEmpty || _ratingController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: AwesomeSnackbarContent(
+            title: "Error",
+            message: "Fill the price and rating fields",
+            contentType: ContentType.failure,
+          ),
+        ),
+      );
+      return;
+    }
+    if (int.parse(_priceController.text) < 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: AwesomeSnackbarContent(
+            title: "Error",
+            message: "Price has to equal or greater than 0",
+            contentType: ContentType.failure,
+          ),
+        ),
+      );
+      return;
+    }
+    if ((int.parse(_ratingController.text) < 0 ||
+        int.parse(_ratingController.text) > 10)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: AwesomeSnackbarContent(
+            title: "Error",
+            message: "Rating has to be between 0 and 10",
+            contentType: ContentType.failure,
+          ),
+        ),
+      );
+      return;
+    }
     setState(() {
       _searchResults = SearchOps.getSearch(query).catchError((error) {
         return SearchData(
@@ -80,7 +120,13 @@ class _SearchTeachersState extends State<SearchTeachers> {
                                     child: Padding(
                                       padding: const EdgeInsets.all(10),
                                       child: SizedBox(
-                                        width: (MediaQuery.of(context).size.width - MediaQuery.of(context).size.width/1.7)/1.5,
+                                        width:
+                                            (MediaQuery.of(context).size.width -
+                                                    MediaQuery.of(context)
+                                                            .size
+                                                            .width /
+                                                        1.7) /
+                                                1.5,
                                         child: DropdownButton2<String>(
                                           isExpanded: true,
                                           hint: const Row(
@@ -147,8 +193,8 @@ class _SearchTeachersState extends State<SearchTeachers> {
                                               thickness: WidgetStateProperty
                                                   .all<double>(6),
                                               thumbVisibility:
-                                                  WidgetStateProperty.all<
-                                                      bool>(true),
+                                                  WidgetStateProperty.all<bool>(
+                                                      true),
                                             ),
                                           ),
                                           menuItemStyleData:
@@ -164,24 +210,58 @@ class _SearchTeachersState extends State<SearchTeachers> {
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 20),
+                            const SizedBox(height: 10),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: TextField(
+                                      controller: _priceController,
+                                      keyboardType: TextInputType.number,
+                                      decoration: const InputDecoration(
+                                        labelText: "Max Price",
+                                        border: OutlineInputBorder(),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: TextField(
+                                      controller: _ratingController,
+                                      keyboardType: TextInputType.number,
+                                      decoration: const InputDecoration(
+                                        labelText: "Min Rating",
+                                        border: OutlineInputBorder(),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 20),
                             if (selectedValue == "Teacher")
                               for (var teacher in snapshot.data!.teacher!)
-                                TeacherResultContainer(
-                                  name: teacher.name,
-                                  description: teacher.description,
-                                  picture: teacher.picture,
-                                  id: teacher.id,
-                                  rating: teacher.rating,
-                                )
-                            else if (selectedValue == "Tags")
+                                if (teacher.rating >=
+                                    double.parse(_ratingController.text))
+                                  TeacherResultContainer(
+                                    name: teacher.name,
+                                    description: teacher.description,
+                                    picture: teacher.picture,
+                                    id: teacher.id,
+                                    rating: teacher.rating,
+                                  ),
+                            if (selectedValue == "Tags")
                               for (var subject in snapshot.data!.subject!)
-                                SubjectResultContainer(
-                                  price: subject.price,
-                                  subjectId: subject.id,
-                                  name: subject.name,
-                                  description: subject.description,
-                                ),
+                                if (subject.price <=
+                                    double.parse(_priceController.text))
+                                  SubjectResultContainer(
+                                    price: subject.price,
+                                    subjectId: subject.id,
+                                    name: subject.name,
+                                    description: subject.description,
+                                  ),
                           ],
                         ),
                       ),
