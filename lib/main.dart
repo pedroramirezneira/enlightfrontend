@@ -4,6 +4,7 @@ import 'package:enlight/firebase_options.dart';
 import 'package:enlight/models/chats_data.dart';
 import 'package:enlight/pages/sign_in/sign_in.dart';
 import 'package:enlight/services/messaging_service.dart';
+import 'package:enlight/services/reservation_service.dart';
 import 'package:enlight/theme.dart';
 import 'package:enlight/util/chat_ops.dart';
 import 'package:enlight/util/io.dart';
@@ -26,10 +27,25 @@ Future<void> main() async {
   final refreshToken = await Token.getRefreshToken();
   final role = await IO.getRole();
   if (refreshToken == null) {
-    runApp(ChangeNotifierProvider(
-      create: (context) => MessagingService(),
-      child: const MyApp(
-        home: SignIn(),
+    runApp(MultiProvider(
+      providers: <SingleChildWidget>[
+        ChangeNotifierProvider<MessagingService>(
+          create: (context) => MessagingService(),
+        ),
+        FutureProvider<ChatsData>(
+          create: (context) => ChatOps.getChats(),
+          initialData: EmptyChatsData(),
+        ),
+        ChangeNotifierProvider<ReservationService>(
+          create: (context) => ReservationService(),
+        ),
+      ],
+      child: MyApp(
+        home: switch (role ?? "") {
+          "teacher" => const TeacherNavigationApp(),
+          "student" => const StudentNavigationApp(),
+          String() => const SignIn(),
+        },
       ),
     ));
     return;
@@ -46,6 +62,9 @@ Future<void> main() async {
       FutureProvider<ChatsData>(
         create: (context) => ChatOps.getChats(),
         initialData: EmptyChatsData(),
+      ),
+      ChangeNotifierProvider<ReservationService>(
+        create: (context) => ReservationService(),
       ),
     ],
     child: MyApp(

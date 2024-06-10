@@ -44,3 +44,32 @@ class ReservationData {
     return TimeOfDay(hour: hour, minute: minute);
   }
 }
+
+class EmptyReservationData implements ReservationData {
+  @override
+  DateTime get date => DateTime.now();
+
+  @override
+  TimeOfDay get endTime => TimeOfDay.now();
+
+  @override
+  int get reservationId => -1;
+
+  @override
+  TimeOfDay get startTime => TimeOfDay.now();
+
+  @override
+  int get subjectId => -1;
+
+  @override
+  String get subjectName => "";
+
+  @override
+  int get teacherId => -1;
+
+  @override
+  String get teacherName => "";
+
+  @override
+  int get timeslotId => -1;
+}

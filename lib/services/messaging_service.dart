@@ -6,15 +6,14 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 class MessagingService extends ChangeNotifier {
-  late final Future<ChatsData> chats;
-  late final StreamSubscription<DatabaseEvent> subscription;
+  late Future<ChatsData>? chats;
   int _newMessages = 0;
   int get newMessages => _newMessages;
 
   MessagingService() {
     chats = ChatOps.getChats();
     final database = FirebaseDatabase.instance.ref("chat");
-    chats.then((value) {
+    chats!.then((value) {
       _newMessages = -value.chats.length;
       for (final chat in value.chats) {
         final list = [value.accountId, chat.id];
@@ -50,7 +49,7 @@ class MessagingService extends ChangeNotifier {
   }
 
   void readMessages(int index) {
-    chats.then(
+    chats!.then(
       (value) {
         final messages = value.chats[index].newMessages;
         value.chats[index].newMessages = 0;

@@ -7,12 +7,15 @@ import 'package:enlight/models/account_data.dart';
 import 'package:enlight/models/student_reservation_data.dart';
 import 'package:enlight/models/teacher_data.dart';
 import 'package:enlight/pages/sign_in/sign_in.dart';
+import 'package:enlight/services/messaging_service.dart';
+import 'package:enlight/services/reservation_service.dart';
 import 'package:enlight/util/account_ops.dart';
 import 'package:enlight/util/teacher_ops.dart';
 import 'package:enlight/util/token.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 class Messenger {
   static void showLogoutDialog({
@@ -56,6 +59,12 @@ class Messenger {
                   ),
                 ),
               );
+              context.read<MessagingService>().chats = null;
+              try {
+                context.read<ReservationService>().reservations = null;
+              } catch (error) {
+                null;
+              }
               Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(builder: (context) => const SignIn()),
                 (route) => false,

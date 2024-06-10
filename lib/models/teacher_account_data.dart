@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:enlight/models/account_data.dart';
 import 'package:enlight/models/teacher_data.dart';
 
@@ -15,13 +17,14 @@ class TeacherAccountData extends AccountData {
   });
 
   factory TeacherAccountData.fromJson(Map<String, dynamic> json) {
+    final si = base64.decode(json["picture"] ?? "");
     return TeacherAccountData(
       id: json["id"],
       email: json["email"],
       name: json["name"],
       birthday: (json["birthday"] as String).split("T")[0],
       address: json["address"],
-      picture: json["picture"],
+      picture: si,
       teacher: TeacherData.fromJson(json["teacher"]),
     );
   }

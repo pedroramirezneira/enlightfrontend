@@ -12,7 +12,7 @@ class StudentOps {
   ) async {
     final token = await Token.getAccessToken();
     final response = await http.post(
-      Uri.https(
+      Uri.http(
         dotenv.env["SERVER"]!,
         "/reservation",
       ),
@@ -32,7 +32,8 @@ class StudentOps {
     return true;
   }
 
-  static Future<bool> rateTeacher(int reservationID, int teacherID, double rating) async {
+  static Future<bool> rateTeacher(
+      int reservationID, int teacherID, double rating) async {
     final token = await Token.getAccessToken();
     final response = await http.put(
       Uri.http(
