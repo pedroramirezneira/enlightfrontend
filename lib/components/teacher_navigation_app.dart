@@ -26,7 +26,16 @@ class _TeacherNavigationAppState extends State<TeacherNavigationApp> {
         const TeacherProfile(),
       ][index],
       bottomNavigationBar: NavigationBar(
-        onDestinationSelected: (value) => setState(() => index = value),
+        onDestinationSelected: (value) {
+          setState(() => index = value);
+          if (index == 1) {
+            try {
+              context.read<ReservationService>().readReservations();
+            } catch (error) {
+              null;
+            }
+          }
+        },
         selectedIndex: index,
         destinations: <Widget>[
           NavigationDestination(
