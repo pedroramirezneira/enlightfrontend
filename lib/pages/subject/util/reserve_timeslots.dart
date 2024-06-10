@@ -1,4 +1,5 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:enlight/services/reservation_service.dart';
 import 'package:enlight/util/chat_ops.dart';
 import 'package:enlight/util/student_ops.dart';
 import 'package:flutter/material.dart';
@@ -36,5 +37,6 @@ void reserveTimeslots({
     ),
   );
   ChatOps.createChat(receiverId: teacherId);
+  ReservationService.addReservation(teacherId);
   onResponse();
 }

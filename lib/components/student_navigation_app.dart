@@ -34,7 +34,7 @@ class _StudentNavigationAppState extends State<StudentNavigationApp> {
             icon: Consumer<MessagingService>(
               builder: (context, value, child) => badges.Badge(
                 badgeContent: Text(value.newMessages.toString()),
-                showBadge: context.watch<MessagingService>().newMessages > 0,
+                showBadge: value.newMessages > 0,
                 child: const Icon(Icons.chat_rounded),
               ),
             ),

@@ -4,15 +4,14 @@ import 'package:enlight/models/teacher_data.dart';
 class SearchTeacherData extends TeacherData {
   final String name;
   final String? picture;
-  final int id;
 
   SearchTeacherData({
     required this.name,
     required super.description,
     required this.picture,
-    required this.id, 
-    required super.rating, 
-    required super.subjects, 
+    required super.id,
+    required super.rating,
+    required super.subjects,
     required super.categories,
   });
 
