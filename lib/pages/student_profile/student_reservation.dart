@@ -1,4 +1,5 @@
 import 'package:enlight/models/student_reservation_data.dart';
+import 'package:enlight/pages/student_profile/util/on_pressed.dart';
 import 'package:enlight/pages/teacher_profile/teacher_profile_from_search.dart';
 import 'package:enlight/util/account_ops.dart';
 import 'package:enlight/util/messenger.dart';
@@ -119,7 +120,22 @@ class _StudentReservations extends State<StudentReservations> {
                                             const SizedBox(width: 10),
                                             Expanded(
                                               child: ElevatedButton(
-                                                onPressed: () {},
+                                                onPressed: () {
+                                                  data.then((data) {
+                                                    setState(
+                                                        () => loading = true);
+                                                    onPressed(
+                                                        context: context,
+                                                        data: data,
+                                                        reservationId: reservation
+                                                            .reservationId,
+                                                        teacherId:
+                                                            reservation.teacherId,
+                                                        );
+                                                    setState(
+                                                        () => loading = false);
+                                                  });
+                                                },
                                                 child: const Text("Completed"),
                                               ),
                                             ),

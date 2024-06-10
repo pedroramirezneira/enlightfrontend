@@ -32,13 +32,30 @@ class StudentOps {
     return true;
   }
 
-  static Future<bool> rateTeacher(
-      int reservationID, int teacherID, double rating) async {
+  static Future<bool> completeReservation(int reservationID) async {
+    final token = await Token.getAccessToken();
+    final response = await http.get(
+      Uri.http(
+        dotenv.env["SERVER"]!,
+        "/rating",
+        {
+          "reservation_id": "$reservationID",
+        }
+      ),
+      headers: {
+        "Authorization": "Bearer $token",
+      },
+    );
+    if (response.statusCode != 200) return false;
+    return true;
+  }
+
+  static Future<bool> rateTeacher(int reservationID, int teacherID, double rating) async {
     final token = await Token.getAccessToken();
     final response = await http.put(
       Uri.http(
         dotenv.env["SERVER"]!,
-        "/reservation",
+        "/rating",
       ),
       headers: {
         "Authorization": "Bearer $token",
