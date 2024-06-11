@@ -59,8 +59,8 @@ class Messenger {
                   ),
                 ),
               );
-              context.read<MessagingService>().chats = null;
               try {
+                context.read<MessagingService>().chats = null;
                 context.read<ReservationService>().reservations = null;
               } catch (error) {
                 null;
@@ -244,6 +244,12 @@ class Messenger {
                 ),
               ),
             );
+            final reservation = data
+                .where(
+                  (e) => e.reservationId == reservationId,
+                )
+                .first;
+            ReservationService.addReservation(reservation.teacherId);
             data.removeWhere(
                 (element) => element.reservationId == reservationId);
             onResponse();

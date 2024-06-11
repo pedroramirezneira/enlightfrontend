@@ -30,6 +30,13 @@ void onPressed({
             ),
           ),
         );
+        try {
+          context.read<MessagingService>().chats = ChatOps.getChats();
+          context.read<ReservationService>().reservations =
+              AccountOps.getReservation();
+        } catch (error) {
+          null;
+        }
         IO.getRole().then((value) {
           if (value == "student") {
             Navigator.of(context).pushAndRemoveUntil(
@@ -40,9 +47,6 @@ void onPressed({
             );
           }
           if (value == "teacher") {
-            context.read<MessagingService>().chats = ChatOps.getChats();
-            context.read<ReservationService>().reservations =
-                AccountOps.getReservation();
             Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
                 builder: (context) => const TeacherNavigationApp(),

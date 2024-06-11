@@ -26,10 +26,13 @@ class MessagingService extends ChangeNotifier {
             if (newMessages >= 0) {
               try {
                 final data = event.snapshot.value as Map<dynamic, dynamic>;
-                final lastMessage = MessageData.fromJson(
-                  data.entries.last.value,
-                );
-                if (lastMessage.senderId != value.accountId) {
+                final messages = data.entries
+                    .map(
+                      (e) => MessageData.fromJson(e.value),
+                    )
+                    .toList();
+                messages.sort((a, b) => a.timestamp.compareTo(b.timestamp));
+                if (messages.last.senderId != value.accountId) {
                   chat.newMessages++;
                   _newMessages++;
                   notifyListeners();

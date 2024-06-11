@@ -9,7 +9,7 @@ class ChatOps {
   static Future<ChatsData> getChats() async {
     final token = await Token.getAccessToken();
     final response = await http.get(
-      Uri.http(
+      Uri.https(
         dotenv.env["SERVER"]!,
         "/chat",
       ),
@@ -27,7 +27,7 @@ class ChatOps {
   static Future<bool> createChat({required int receiverId}) async {
     final token = await Token.getAccessToken();
     final response = await http.post(
-      Uri.http(
+      Uri.https(
         dotenv.env["SERVER"]!,
         "/chat",
       ),

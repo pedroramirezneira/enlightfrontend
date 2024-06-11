@@ -12,7 +12,7 @@ class StudentOps {
   ) async {
     final token = await Token.getAccessToken();
     final response = await http.post(
-      Uri.http(
+      Uri.https(
         dotenv.env["SERVER"]!,
         "/reservation",
       ),
@@ -35,13 +35,9 @@ class StudentOps {
   static Future<bool> completeReservation(int reservationID) async {
     final token = await Token.getAccessToken();
     final response = await http.get(
-      Uri.http(
-        dotenv.env["SERVER"]!,
-        "/rating",
-        {
-          "reservation_id": "$reservationID",
-        }
-      ),
+      Uri.https(dotenv.env["SERVER"]!, "/rating", {
+        "reservation_id": "$reservationID",
+      }),
       headers: {
         "Authorization": "Bearer $token",
       },
@@ -50,10 +46,11 @@ class StudentOps {
     return true;
   }
 
-  static Future<bool> rateTeacher(int reservationID, int teacherID, double rating) async {
+  static Future<bool> rateTeacher(
+      int reservationID, int teacherID, double rating) async {
     final token = await Token.getAccessToken();
     final response = await http.put(
-      Uri.http(
+      Uri.https(
         dotenv.env["SERVER"]!,
         "/rating",
       ),

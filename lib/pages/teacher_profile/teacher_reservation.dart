@@ -26,7 +26,7 @@ class _TeacherReservations extends State<TeacherReservations> {
           return FutureBuilder(
             future: value.reservations,
             builder: (context, snapshot) {
-              if (snapshot.hasData) {
+              if (snapshot.hasData && snapshot.data!.isNotEmpty) {
                 return CustomScrollView(
                   slivers: [
                     const SliverAppBar(
@@ -109,7 +109,7 @@ class _TeacherReservations extends State<TeacherReservations> {
                   ],
                 );
               }
-              if (snapshot.hasError) {
+              if (snapshot.hasData && snapshot.data!.isEmpty) {
                 return const Center(child: Text('No reservations available'));
               }
               return const Center(child: CircularProgressIndicator());

@@ -11,6 +11,7 @@ Future<void> onPressed({
   required int teacherId,
 }) async {
   if (await StudentOps.completeReservation(reservationId)) {
+    if (!context.mounted) return;
     showRateMenu(
       data: data,
       context: context,
@@ -18,6 +19,7 @@ Future<void> onPressed({
       teacherId: teacherId,
     );
   } else {
+    if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: AwesomeSnackbarContent(
