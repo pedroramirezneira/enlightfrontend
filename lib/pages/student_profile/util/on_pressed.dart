@@ -9,6 +9,7 @@ Future<void> onPressed({
   required List<ReservationData> data,
   required int reservationId,
   required int teacherId,
+  required void Function() onAccept,
 }) async {
   if (await StudentOps.completeReservation(reservationId)) {
     if (!context.mounted) return;
@@ -17,6 +18,7 @@ Future<void> onPressed({
       context: context,
       reservationId: reservationId,
       teacherId: teacherId,
+      onAccept: onAccept,
     );
   } else {
     if (!context.mounted) return;

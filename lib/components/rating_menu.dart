@@ -12,11 +12,13 @@ class RatingMenu extends StatefulWidget {
     required double rate,
     required int reservationId,
     required int teacherId,
+    required void Function() onAccept,
   }) onPressed;
   final int reservationId;
   final int teacherId;
   final BuildContext context;
   final List<ReservationData> data;
+  final void Function() onAccept;
 
   const RatingMenu({
     super.key,
@@ -25,6 +27,7 @@ class RatingMenu extends StatefulWidget {
     required this.onPressed,
     required this.reservationId,
     required this.teacherId,
+    required this.onAccept,
   });
 
   @override
@@ -92,6 +95,7 @@ class _RateMenuState extends State<RatingMenu> {
                                 reservationId: widget.reservationId,
                                 teacherId: widget.teacherId,
                                 rate: double.parse(rateController.text),
+                                onAccept: widget.onAccept,
                               );
                             }
                           },

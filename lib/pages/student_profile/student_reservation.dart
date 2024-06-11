@@ -125,13 +125,16 @@ class _StudentReservations extends State<StudentReservations> {
                                                     setState(
                                                         () => loading = true);
                                                     onPressed(
-                                                        context: context,
-                                                        data: data,
-                                                        reservationId: reservation
-                                                            .reservationId,
-                                                        teacherId:
-                                                            reservation.teacherId,
-                                                        );
+                                                      context: context,
+                                                      data: data,
+                                                      reservationId: reservation
+                                                          .reservationId,
+                                                      teacherId:
+                                                          reservation.teacherId,
+                                                      onAccept: () => setState(
+                                                        () => data,
+                                                      ),
+                                                    );
                                                     setState(
                                                         () => loading = false);
                                                   });

@@ -9,6 +9,7 @@ void showRateMenu({
   required List<ReservationData> data,
   required int reservationId,
   required int teacherId,
+  required void Function() onAccept,
 }) {
   showModalBottomSheet<ReservationData>(
     useSafeArea: true,
@@ -19,6 +20,7 @@ void showRateMenu({
       reservationId: reservationId,
       teacherId: teacherId,
       onPressed: _submit,
+      onAccept: onAccept,
     ),
   );
 }
@@ -29,6 +31,7 @@ void _submit({
   required int reservationId,
   required int teacherId,
   required double rate,
+  required void Function() onAccept,
 }) {
   StudentOps.rateTeacher(
     reservationId,
@@ -45,8 +48,8 @@ void _submit({
           ),
         ),
       );
-      data.removeWhere(
-                (element) => element.reservationId == reservationId);
+      data.removeWhere((element) => element.reservationId == reservationId);
+      onAccept();
     }
     if (!response) {
       ScaffoldMessenger.of(context).showSnackBar(
