@@ -21,33 +21,45 @@ class Chats extends StatelessWidget {
               );
             }
             if (snapshot.data!.chats.isEmpty) {
-              return const Center(
-                child: Text(
-                  "You have no chats. Make a reservation to start chatting with teachers!",
+              return RefreshIndicator(
+                onRefresh: () async {
+                  context.read<MessagingService>().refreshChats();
+                  return;
+                },
+                child: const Center(
+                  child: Text(
+                    "You have no chats. Make a reservation to start chatting with teachers!",
+                  ),
                 ),
               );
             }
-            return Container(
-              padding: const EdgeInsets.all(10),
-              width: 500,
-              child: ListView.builder(
-                itemCount: snapshot.data!.chats.length,
-                itemBuilder: (context, index) => ChatBubble(
-                  onTap: () {
-                    context.read<MessagingService>().readMessages(index);
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => Chat(
-                          senderId: snapshot.data!.accountId,
-                          receiver: snapshot.data!.chats[index],
-                          index: index,
+            return RefreshIndicator(
+              onRefresh: () async {
+                context.read<MessagingService>().refreshChats();
+                return;
+              },
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                width: 500,
+                child: ListView.builder(
+                  itemCount: snapshot.data!.chats.length,
+                  itemBuilder: (context, index) => ChatBubble(
+                    onTap: () {
+                      context.read<MessagingService>().readMessages(index);
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => Chat(
+                            senderId: snapshot.data!.accountId,
+                            receiver: snapshot.data!.chats[index],
+                            index: index,
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                  index: index,
-                  name: snapshot.data!.chats[index].name,
-                  picture: snapshot.data!.chats[index].picture,
+                      );
+                    },
+                    index: index,
+                    name: snapshot.data!.chats[index].name,
+                    picture: snapshot.data!.chats[index].picture,
+                  ),
                 ),
               ),
             );

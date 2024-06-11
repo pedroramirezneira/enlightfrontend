@@ -61,4 +61,12 @@ class MessagingService extends ChangeNotifier {
       },
     );
   }
+
+  void refreshChats() {
+    chats = ChatOps.getChats();
+    notifyListeners();
+    chats!.then(
+      (value) => notifyListeners(),
+    );
+  }
 }
