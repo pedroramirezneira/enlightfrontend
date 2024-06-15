@@ -2,6 +2,7 @@ import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:enlight/components/student_navigation_app.dart';
 import 'package:enlight/components/teacher_navigation_app.dart';
 import 'package:enlight/services/messaging_service.dart';
+import 'package:enlight/services/notification_service.dart';
 import 'package:enlight/services/reservation_service.dart';
 import 'package:enlight/util/account_ops.dart';
 import 'package:enlight/util/chat_ops.dart';
@@ -34,6 +35,7 @@ void onPressed({
           context.read<MessagingService>().chats = ChatOps.getChats();
           context.read<ReservationService>().reservations =
               AccountOps.getReservation();
+          NotificationService.start(context);
         } catch (error) {
           null;
         }
