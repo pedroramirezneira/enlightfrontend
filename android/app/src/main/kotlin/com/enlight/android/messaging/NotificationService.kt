@@ -95,7 +95,7 @@ class NotificationService : Service() {
         fun ensureNotificationChannelExists(manager: NotificationManager) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 val channel = NotificationChannel(
-                    "notifications", "Notifications", NotificationManager.IMPORTANCE_DEFAULT
+                    "notifications", "Notifications", NotificationManager.IMPORTANCE_HIGH
                 )
                 manager.createNotificationChannel(channel)
             }
