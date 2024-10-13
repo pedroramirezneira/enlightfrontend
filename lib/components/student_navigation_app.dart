@@ -1,8 +1,8 @@
 import 'package:badges/badges.dart' as badges;
 import 'package:enlight/pages/chats/chats.dart';
+import 'package:enlight/pages/reservations/reservations.dart';
 import 'package:enlight/pages/search/search.dart';
 import 'package:enlight/pages/student_profile/student_profile.dart';
-import 'package:enlight/pages/student_profile/student_reservation.dart';
 import 'package:enlight/services/messaging_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -23,7 +23,7 @@ class _StudentNavigationAppState extends State<StudentNavigationApp> {
       body: <Widget>[
         const Chats(),
         const SearchTeachers(),
-        const StudentReservations(),
+        const Reservations(),
         const StudentProfile(),
       ][index],
       bottomNavigationBar: NavigationBar(

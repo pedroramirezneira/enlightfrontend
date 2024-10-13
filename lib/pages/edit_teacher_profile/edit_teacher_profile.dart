@@ -1,18 +1,13 @@
 import 'package:enlight/components/form_submission_button.dart';
 import 'package:enlight/components/loading_indicator.dart';
 import 'package:enlight/components/enlight_text_field.dart';
-import 'package:enlight/models/teacher_data.dart';
-import 'package:enlight/pages/edit_teacher_profile/util/on_pressed.dart';
+import 'package:enlight/services/teacher_service.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class EditTeacherProfile extends StatefulWidget {
-  final TeacherData data;
-  final void Function() onUpdate;
-
   const EditTeacherProfile({
     super.key,
-    required this.data,
-    required this.onUpdate,
   });
 
   @override
@@ -23,17 +18,24 @@ class _EditAccountState extends State<EditTeacherProfile> {
   late final GlobalKey<FormState> formKey;
   late final TextEditingController descriptionController;
   var loading = false;
+  var initialized = false;
 
   @override
   void initState() {
     super.initState();
     formKey = GlobalKey<FormState>();
-    descriptionController =
-        TextEditingController(text: widget.data.description);
+    descriptionController = TextEditingController();
   }
 
   @override
   Widget build(BuildContext context) {
+    final teacherService = Provider.of<TeacherService>(context);
+    if (!initialized) {
+      setState(() {
+        descriptionController.text = teacherService.data.description;
+        initialized = true;
+      });
+    }
     return Stack(
       children: <Widget>[
         Scaffold(
@@ -59,14 +61,17 @@ class _EditAccountState extends State<EditTeacherProfile> {
                       FormSubmissionButton(
                         text: "Save",
                         formKey: formKey,
-                        onPressed: () {
+                        onPressed: () async {
                           setState(() => loading = true);
-                          onPressed(
-                            context: context,
-                            description: descriptionController.text,
-                            widget: widget,
-                            onResponse: () => setState(() => loading = false),
+                          final response = await teacherService.updateTeacher(
+                            context,
+                            descriptionController.text,
                           );
+                          setState(() => loading = false);
+                          if (!context.mounted) return;
+                          if (response.statusCode == 200) {
+                            Navigator.of(context).pop();
+                          }
                         },
                       ),
                     ],

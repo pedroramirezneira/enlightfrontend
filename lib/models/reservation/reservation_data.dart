@@ -7,6 +7,8 @@ class ReservationData {
   final int subjectId;
   final String teacherName;
   final int teacherId;
+  final String studentName;
+  final int studentId;
   final DateTime date;
   final TimeOfDay startTime;
   final TimeOfDay endTime;
@@ -18,6 +20,8 @@ class ReservationData {
     required this.subjectId,
     required this.teacherName,
     required this.teacherId,
+    required this.studentName,
+    required this.studentId,
     required this.date,
     required this.startTime,
     required this.endTime,
@@ -27,10 +31,12 @@ class ReservationData {
     return ReservationData(
       reservationId: json['reservation_id'],
       timeslotId: json['timeslot_id'],
-      subjectName: json['name_subject'],
+      subjectName: json['subject_name'],
       subjectId: json['subject_id'],
-      teacherName: json['name_teacher'],
+      teacherName: json['teacher_name'],
       teacherId: json['teacher_id'],
+      studentName: json['student_name'],
+      studentId: json['student_id'],
       date: DateTime.parse(json['date']),
       startTime: _parseTimeOfDay(json['start_time']),
       endTime: _parseTimeOfDay(json['end_time']),
@@ -43,33 +49,37 @@ class ReservationData {
     final minute = int.parse(parts[1]);
     return TimeOfDay(hour: hour, minute: minute);
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'reservation_id': reservationId,
+      'timeslot_id': timeslotId,
+      'subject_name': subjectName,
+      'subject_id': subjectId,
+      'teacher_name': teacherName,
+      'teacher_id': teacherId,
+      'student_name': studentName,
+      'student_id': studentId,
+      'date': date.toIso8601String(),
+      'start_time': startTime.toString(),
+      'end_time': endTime.toString(),
+    };
+  }
 }
 
-class EmptyReservationData implements ReservationData {
-  @override
-  DateTime get date => DateTime.now();
-
-  @override
-  TimeOfDay get endTime => TimeOfDay.now();
-
-  @override
-  int get reservationId => -1;
-
-  @override
-  TimeOfDay get startTime => TimeOfDay.now();
-
-  @override
-  int get subjectId => -1;
-
-  @override
-  String get subjectName => "";
-
-  @override
-  int get teacherId => -1;
-
-  @override
-  String get teacherName => "";
-
-  @override
-  int get timeslotId => -1;
+class EmptyReservationData extends ReservationData {
+  EmptyReservationData()
+      : super(
+          reservationId: -1,
+          timeslotId: -1,
+          subjectName: '',
+          subjectId: -1,
+          teacherName: '',
+          teacherId: -1,
+          studentName: '',
+          studentId: -1,
+          date: DateTime.now(),
+          startTime: TimeOfDay.now(),
+          endTime: TimeOfDay.now(),
+        );
 }

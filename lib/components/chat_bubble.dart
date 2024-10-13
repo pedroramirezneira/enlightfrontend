@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:badges/badges.dart' as badges;
+import 'package:enlight/models/chats_data.dart';
 import 'package:enlight/services/messaging_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -26,30 +27,23 @@ class ChatBubble extends StatelessWidget {
       child: Row(
         children: <Widget>[
           CircleAvatar(
-            backgroundImage: hasImage
-                ? MemoryImage(
-                    picture ?? Uint8List(0),
-                  )
-                : null,
+            backgroundImage: hasImage ? MemoryImage(picture!) : null,
           ),
           const SizedBox(width: 10),
           Text(name),
           const SizedBox(width: 10),
           Consumer<MessagingService>(
-            builder: (context, value, child) => FutureBuilder(
-              future: value.chats,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return badges.Badge(
-                    showBadge: snapshot.data!.chats[index].newMessages > 0,
-                    badgeContent: Text(
-                      snapshot.data!.chats[index].newMessages.toString(),
-                    ),
-                  );
-                }
-                return const Visibility(visible: false, child: Placeholder());
-              },
-            ),
+            builder: (context, value, child) {
+              if (value.data is! EmptyChatsData) {
+                return badges.Badge(
+                  showBadge: value.data.chats[index].newMessages > 0,
+                  badgeContent: Text(
+                    value.data.chats[index].newMessages.toString(),
+                  ),
+                );
+              }
+              return const Visibility(visible: false, child: Placeholder());
+            },
           ),
         ],
       ),

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:enlight/models/account_data.dart';
+import 'package:enlight/models/account/account_data.dart';
 
 class ChatData implements AccountData {
   @override
@@ -43,5 +43,17 @@ class ChatData implements AccountData {
       address: json["address"],
       picture: picture,
     );
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      "id": id,
+      "email": email,
+      "name": name,
+      "birthday": birthday,
+      "address": address,
+      "picture": picture,
+    };
   }
 }

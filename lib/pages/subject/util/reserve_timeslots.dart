@@ -1,42 +1,21 @@
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:enlight/models/reservation/create_reservation_data.dart';
+import 'package:enlight/services/messaging_service.dart';
 import 'package:enlight/services/reservation_service.dart';
-import 'package:enlight/util/chat_ops.dart';
-import 'package:enlight/util/student_ops.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-void reserveTimeslots({
+Future<void> reserveTimeslots({
   required BuildContext context,
   required int teacherId,
-  required int timeslotId,
-  required String date,
-  required String modality,
-  required void Function() onResponse,
+  required CreateReservationData data,
 }) async {
-  final response = await StudentOps.reserveTimeslot(timeslotId, date, modality);
+  final reservationService =
+      Provider.of<ReservationService>(context, listen: false);
+  final messagingService =
+      Provider.of<MessagingService>(context, listen: false);
+  await reservationService.addReservation(context, data);
   if (!context.mounted) return;
-  if (response == false) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: AwesomeSnackbarContent(
-          title: "Error",
-          message: "Internal server error.",
-          contentType: ContentType.failure,
-        ),
-      ),
-    );
-    onResponse();
-    return;
+  if (messagingService.data.chats.where((e) => e.id == teacherId).isNotEmpty) {
+    messagingService.createChat(context, teacherId);
   }
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: AwesomeSnackbarContent(
-        title: "Success",
-        message: "Successful reservation.",
-        contentType: ContentType.success,
-      ),
-    ),
-  );
-  ChatOps.createChat(receiverId: teacherId);
-  ReservationService.addReservation(teacherId);
-  onResponse();
 }

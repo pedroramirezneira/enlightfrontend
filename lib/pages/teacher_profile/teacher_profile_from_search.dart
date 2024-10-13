@@ -1,12 +1,14 @@
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:enlight/components/loading_indicator.dart';
-import 'package:enlight/models/searched_teacher_data.dart';
+import 'package:enlight/models/search_teacher_data.dart';
 import 'package:enlight/pages/teacher_profile/util/tags_container_from_search.dart';
-import 'package:enlight/util/teacher_ops.dart';
+import 'package:enlight/services/teacher_service.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class TeacherProfileFromSearch extends StatefulWidget {
-  final int id; 
+  final int id;
 
   const TeacherProfileFromSearch({super.key, required this.id});
 
@@ -16,36 +18,39 @@ class TeacherProfileFromSearch extends StatefulWidget {
 }
 
 class _TeacherProfileFromSearchState extends State<TeacherProfileFromSearch> {
-  late Future<SearchTeacherData> data;
-  var loading = true;
-  var initialLoaded = false;
+  SearchTeacherData data = EmptySearchTeacherData();
+  var loading = false;
+  Uint8List? decoded;
 
   @override
   void initState() {
     super.initState();
-    data = TeacherOps.getTeacherFromSearch(widget.id); 
+    _fetchData();
+  }
+
+  Future<void> _fetchData() async {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final data =
+          await TeacherService.getTeacherFromSearch(context, widget.id);
+
+      setState(() {
+        this.data = data;
+        if (data.picture != null) {
+          decoded = base64Decode(data.picture!);
+        }
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    final hasImage = data.picture != null;
     return Stack(
       children: [
         Scaffold(
-          body: FutureBuilder(
-            future: data,
-            builder: ((context, snapshot) {
-              if (snapshot.hasData) {
-                if (!initialLoaded) {
-                  WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                    setState(() {
-                      loading = false;
-                      initialLoaded = true;
-                    });
-                  });
-                }
-                final hasImage = snapshot.data!.picture != null;
-                final decoded = base64.decode(snapshot.data!.picture ?? "");
-                return CustomScrollView(
+          body: data is EmptySearchTeacherData
+              ? const LoadingIndicator(visible: true)
+              : CustomScrollView(
                   slivers: [
                     const SliverAppBar(
                       title: Text("Profile"),
@@ -67,12 +72,11 @@ class _TeacherProfileFromSearchState extends State<TeacherProfileFromSearch> {
                                           .withOpacity(0.5),
                                       radius: 50,
                                       backgroundImage: hasImage
-                                          ? MemoryImage(decoded)
+                                          ? MemoryImage(decoded!)
                                           : null,
                                       child: !hasImage
                                           ? Text(
-                                              snapshot.data!.name[0]
-                                                  .toUpperCase(),
+                                              data.name[0].toUpperCase(),
                                               style: const TextStyle(
                                                 fontSize: 50,
                                               ),
@@ -86,11 +90,11 @@ class _TeacherProfileFromSearchState extends State<TeacherProfileFromSearch> {
                                     child: Column(
                                       children: <Widget>[
                                         Text(
-                                          snapshot.data!.name,
+                                          data.name,
                                           style: const TextStyle(fontSize: 30),
                                         ),
                                         Text(
-                                          "${snapshot.data!.rating}/10",
+                                          "${data.rating}/10",
                                           style: const TextStyle(fontSize: 18),
                                         )
                                       ],
@@ -113,7 +117,7 @@ class _TeacherProfileFromSearchState extends State<TeacherProfileFromSearch> {
                                       ),
                                     ),
                                     Text(
-                                      snapshot.data!.description,
+                                      data.description,
                                       style: const TextStyle(fontSize: 18),
                                     ),
                                     const Text(
@@ -133,12 +137,11 @@ class _TeacherProfileFromSearchState extends State<TeacherProfileFromSearch> {
                                   const SizedBox(
                                     height: 10,
                                   ),
-                                  for (var tag
-                                      in snapshot.data!.subjects)
+                                  for (var tag in data.subjects)
                                     Column(
                                       children: [
                                         TagContainerFromSearch(
-                                          subjectId: tag.id,
+                                            subjectId: tag.id,
                                             name: tag.name,
                                             price: tag.price,
                                             description: tag.description),
@@ -155,20 +158,9 @@ class _TeacherProfileFromSearchState extends State<TeacherProfileFromSearch> {
                       ),
                     ),
                   ],
-                );
-              }
-              if (snapshot.hasError) {
-                WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                  setState(() {
-                    loading = false;
-                  });
-                });
-              }
-              return const LoadingIndicator(visible: false);
-            }),
-          ),
+                ),
         ),
-        LoadingIndicator(visible: loading),
+        if (loading) const LoadingIndicator(visible: true),
       ],
     );
   }

@@ -30,3 +30,16 @@ class SearchTeacherData extends TeacherData {
     );
   }
 }
+
+class EmptySearchTeacherData extends SearchTeacherData {
+  EmptySearchTeacherData()
+      : super(
+          id: -1,
+          name: "",
+          description: "",
+          picture: "",
+          rating: -1,
+          subjects: [],
+          categories: [],
+        );
+}

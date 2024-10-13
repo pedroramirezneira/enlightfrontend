@@ -1,8 +1,10 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:enlight/components/form_submission_button.dart';
 import 'package:enlight/components/loading_indicator.dart';
 import 'package:enlight/components/enlight_text_field.dart';
-import 'package:enlight/pages/sign_up/util/on_pressed.dart';
+import 'package:enlight/models/account/create_account_data.dart';
+import 'package:enlight/services/unauthorized_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -205,19 +207,39 @@ class _SignUpState extends State<SignUp> {
                                   FormSubmissionButton(
                                     text: "Sign up",
                                     formKey: formKey,
-                                    onPressed: () {
+                                    onPressed: () async {
                                       setState(() => loading = true);
-                                      onPressed(
-                                        context: context,
+                                      if (selectedValue == null) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: AwesomeSnackbarContent(
+                                              title: "Watch out",
+                                              message: "Role cannot be empty.",
+                                              contentType: ContentType.help,
+                                            ),
+                                          ),
+                                        );
+                                        setState(() => loading = false);
+                                        return;
+                                      }
+                                      final data = CreateAccountData(
                                         email: emailController.text,
                                         password: passwordController.text,
                                         name: nameController.text,
                                         birthday: birthdayController.text,
                                         address: addressController.text,
-                                        selectedValue: selectedValue,
-                                        onResponse: () =>
-                                            setState(() => loading = false),
+                                        role: selectedValue!.toLowerCase(),
                                       );
+                                      final response = await UnauthorizedService.register(
+                                        context,
+                                        data,
+                                      );
+                                      setState(() => loading = false);
+                                      if (!context.mounted) return;
+                                      if (response.statusCode == 200) {
+                                        Navigator.of(context).pop();
+                                      }
                                     },
                                   ),
                                 ],

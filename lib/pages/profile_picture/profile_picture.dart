@@ -1,5 +1,5 @@
 import 'dart:typed_data';
-import 'package:enlight/models/account_data.dart';
+import 'package:enlight/models/account/account_data.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePicture extends StatelessWidget {

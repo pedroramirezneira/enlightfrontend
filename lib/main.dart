@@ -2,11 +2,12 @@ import 'package:enlight/components/student_navigation_app.dart';
 import 'package:enlight/components/teacher_navigation_app.dart';
 import 'package:enlight/firebase_options.dart';
 import 'package:enlight/pages/sign_in/sign_in.dart';
+import 'package:enlight/services/account_service.dart';
+import 'package:enlight/services/auth_service.dart';
 import 'package:enlight/services/messaging_service.dart';
 import 'package:enlight/services/reservation_service.dart';
+import 'package:enlight/services/teacher_service.dart';
 import 'package:enlight/theme.dart';
-import 'package:enlight/util/io.dart';
-import 'package:enlight/util/token.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -19,70 +20,73 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  // await MessagingHandler.initializePlugin();
-  // FirebaseMessaging.onBackgroundMessage(MessagingHandler.handler);
-  final accessToken = await Token.getAccessToken();
-  final refreshToken = await Token.getRefreshToken();
-  final role = await IO.getRole();
-  if (refreshToken == null) {
-    runApp(MultiProvider(
-      providers: <SingleChildWidget>[
-        ChangeNotifierProvider<MessagingService>(
-          create: (context) => MessagingService(),
-        ),
-        ChangeNotifierProvider<ReservationService>(
-          create: (context) => ReservationService(),
-        ),
-      ],
-      child: MyApp(
-        home: switch (role ?? "") {
-          "teacher" => const TeacherNavigationApp(),
-          "student" => const StudentNavigationApp(),
-          String() => const SignIn(),
-        },
-      ),
-    ));
-    return;
-  }
-  final valid = await Token.verifyAccessToken(accessToken!);
-  if (!valid) {
-    await Token.refreshAccessToken();
-  }
-  runApp(MultiProvider(
-    providers: <SingleChildWidget>[
-      ChangeNotifierProvider<MessagingService>(
-        create: (context) => MessagingService(),
-      ),
-      ChangeNotifierProvider<ReservationService>(
-        create: (context) => ReservationService(),
-      ),
-    ],
-    child: MyApp(
-      home: switch (role ?? "") {
-        "teacher" => const TeacherNavigationApp(),
-        "student" => const StudentNavigationApp(),
-        String() => const SignIn(),
-      },
-    ),
-  ));
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final Widget home;
+  const MyApp({super.key});
 
-  const MyApp({
-    super.key,
-    required this.home,
-  });
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Enlight',
-      theme: theme,
-      home: home,
-      debugShowCheckedModeBanner: false,
+    return AuthServiceProvider(
+      serverAddress: dotenv.env["SERVER"]!,
+      child: const _MyApp(),
+    );
+  }
+}
+
+class _MyApp extends StatelessWidget {
+  const _MyApp();
+
+  @override
+  Widget build(BuildContext context) {
+    final authService = AuthService.of(context);
+
+    if (authService.accessToken == AuthService.emptyToken ||
+        authService.refreshToken == AuthService.emptyToken) {
+      return MaterialApp(
+        title: "Enlight",
+        theme: theme,
+        home: const SignIn(),
+        debugShowCheckedModeBanner: false,
+      );
+    }
+
+    final Widget home;
+
+    switch (authService.role) {
+      case 1:
+        home = const StudentNavigationApp();
+        break;
+      case 2:
+        home = const TeacherNavigationApp();
+        break;
+      default:
+        home = const SignIn();
+        break;
+    }
+
+    return MultiProvider(
+      providers: <SingleChildWidget>[
+        ChangeNotifierProvider<MessagingService>(
+          create: (context) => MessagingService(context: context),
+        ),
+        ChangeNotifierProvider<ReservationService>(
+          create: (context) => ReservationService(context: context),
+        ),
+        ChangeNotifierProvider<AccountService>(
+          create: (context) => AccountService(context: context),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => TeacherService(context: context),
+        ),
+      ],
+      child: MaterialApp(
+        title: "Enlight",
+        theme: theme,
+        home: home,
+        debugShowCheckedModeBanner: false,
+      ),
     );
   }
 }

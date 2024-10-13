@@ -1,7 +1,7 @@
 import 'package:enlight/components/form_submission_button.dart';
 import 'package:enlight/components/loading_indicator.dart';
 import 'package:enlight/components/enlight_text_field.dart';
-import 'package:enlight/pages/recover_password/util/on_pressed.dart';
+import 'package:enlight/services/unauthorized_service.dart';
 import 'package:flutter/material.dart';
 
 class PasswordRecoveryPage extends StatefulWidget {
@@ -57,15 +57,13 @@ class _PasswordRecoveryPageState extends State<PasswordRecoveryPage> {
                       FormSubmissionButton(
                         text: "Send recovery email",
                         formKey: formKey,
-                        onPressed: () {
+                        onPressed: () async {
                           setState(() => loading = true);
-                          onPressed(
-                            context: context,
-                            email: emailController.text,
-                            onResponse: () {
-                              setState(() => loading = false);
-                            },
+                          await UnauthorizedService.resetPassword(
+                            context,
+                            emailController.text,
                           );
+                          setState(() => loading = false);
                         },
                       ),
                     ],

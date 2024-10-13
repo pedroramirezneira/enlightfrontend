@@ -28,9 +28,24 @@ class SubjectTimeSlotData extends SubjectData {
       description: json["description"],
       days:
           days != null ? days.map((day) => DayData.fromJson(day)).toList() : [],
-          teacherId: json["teacher_id"],
+      teacherId: json["teacher_id"],
       modality: json["modality"],
       size: json["size"],
     );
   }
+}
+
+class EmptySubjectTimeSlotData extends SubjectTimeSlotData {
+  EmptySubjectTimeSlotData()
+      : super(
+          id: -1,
+          categoryName: "",
+          name: "",
+          description: "",
+          price: 0,
+          days: [],
+          teacherId: -1,
+          modality: "",
+          size: -1,
+        );
 }

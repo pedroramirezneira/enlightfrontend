@@ -2,32 +2,14 @@ import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:enlight/components/form_submission_button.dart';
 import 'package:enlight/components/enlight_text_field.dart';
 import 'package:enlight/components/loading_indicator.dart';
-import 'package:enlight/models/student_reservation_data.dart';
 import 'package:flutter/material.dart';
 
 class RatingMenu extends StatefulWidget {
-  final void Function({
-    required BuildContext context,
-    required List<ReservationData> data,
-    required double rate,
-    required int reservationId,
-    required int teacherId,
-    required void Function() onAccept,
-  }) onPressed;
-  final int reservationId;
-  final int teacherId;
   final BuildContext context;
-  final List<ReservationData> data;
-  final void Function() onAccept;
 
   const RatingMenu({
     super.key,
-    required this.data,
     required this.context,
-    required this.onPressed,
-    required this.reservationId,
-    required this.teacherId,
-    required this.onAccept,
   });
 
   @override
@@ -88,14 +70,8 @@ class _RateMenuState extends State<RatingMenu> {
                               return;
                             }
                             if (formKey.currentState!.validate()) {
-                              setState(() => loading = true);
-                              widget.onPressed(
-                                data: widget.data,
-                                context: widget.context,
-                                reservationId: widget.reservationId,
-                                teacherId: widget.teacherId,
-                                rate: double.parse(rateController.text),
-                                onAccept: widget.onAccept,
+                              Navigator.of(context).pop(
+                                double.parse(rateController.text),
                               );
                             }
                           },

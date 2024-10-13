@@ -1,18 +1,14 @@
 import 'package:enlight/components/form_submission_button.dart';
 import 'package:enlight/components/loading_indicator.dart';
 import 'package:enlight/components/enlight_text_field.dart';
-import 'package:enlight/models/account_data.dart';
-import 'package:enlight/pages/edit_account/util/on_pressed.dart';
+import 'package:enlight/models/account/update_account_data.dart';
+import 'package:enlight/services/account_service.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class EditAccount extends StatefulWidget {
-  final AccountData data;
-  final void Function() onUpdate;
-
   const EditAccount({
     super.key,
-    required this.data,
-    required this.onUpdate,
   });
 
   @override
@@ -24,21 +20,32 @@ class _EditAccountState extends State<EditAccount> {
   late final TextEditingController nameController;
   late final TextEditingController birthdayController;
   late final TextEditingController addressController;
+  var initialized = false;
   var loading = false;
 
   @override
   void initState() {
     super.initState();
     formKey = GlobalKey<FormState>();
-    nameController = TextEditingController(text: widget.data.name);
-    birthdayController = TextEditingController(text: widget.data.birthday);
-    addressController = TextEditingController(text: widget.data.address);
+    nameController = TextEditingController();
+    birthdayController = TextEditingController();
+    addressController = TextEditingController();
   }
 
   @override
   Widget build(BuildContext context) {
+    final accountService = Provider.of<AccountService>(context, listen: false);
+    if (!initialized) {
+      setState(() {
+        nameController.text = accountService.data.name;
+        birthdayController.text = accountService.data.birthday;
+        addressController.text = accountService.data.address;
+        initialized = true;
+      });
+    }
+
     return Stack(
-      children: <Widget>[
+      children: [
         Scaffold(
           appBar: AppBar(
             title: const Text(
@@ -70,16 +77,20 @@ class _EditAccountState extends State<EditAccount> {
                       FormSubmissionButton(
                         text: "Save",
                         formKey: formKey,
-                        onPressed: () {
+                        onPressed: () async {
                           setState(() => loading = true);
-                          onPressed(
-                            context: context,
+                          final data = UpdateAccountData(
                             name: nameController.text,
                             birthday: birthdayController.text,
                             address: addressController.text,
-                            widget: widget,
-                            onResponse: () => setState(() => loading = false),
                           );
+                          final response =
+                              await accountService.updateAccount(context, data);
+                          if (!context.mounted) return;
+                          setState(() => loading = false);
+                          if (response.statusCode == 200) {
+                            Navigator.of(context).pop();
+                          }
                         },
                       ),
                     ],
@@ -89,7 +100,7 @@ class _EditAccountState extends State<EditAccount> {
             ),
           ),
         ),
-        LoadingIndicator(visible: loading),
+        if (loading) const LoadingIndicator(visible: true)
       ],
     );
   }

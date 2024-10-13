@@ -10,13 +10,14 @@ class TeacherResultContainer extends StatelessWidget {
   final double rating;
   final int id;
 
-  const TeacherResultContainer(
-      {super.key,
-      required this.name,
-      required this.description,
-      required this.picture,
-      required this.rating,
-      required this.id});
+  const TeacherResultContainer({
+    super.key,
+    required this.name,
+    required this.description,
+    required this.picture,
+    required this.rating,
+    required this.id,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +25,11 @@ class TeacherResultContainer extends StatelessWidget {
       padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 20),
       child: GestureDetector(
         onTap: () {
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => TeacherProfileFromSearch(id: id)));
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => TeacherProfileFromSearch(id: id),
+            ),
+          );
         },
         child: Container(
           width: double.infinity,

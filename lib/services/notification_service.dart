@@ -1,3 +1,4 @@
+import 'package:enlight/models/chats_data.dart';
 import 'package:enlight/services/messaging_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,8 +10,8 @@ class NotificationService {
   );
 
   static Future<void> start(BuildContext context) async {
-    final chats = await context.read<MessagingService>().chats;
-    if (chats == null) {
+    final chats = context.read<MessagingService>().data;
+    if (chats is EmptyChatsData) {
       debugPrint("Failed to start service: Chats have not been loaded.");
       return;
     }

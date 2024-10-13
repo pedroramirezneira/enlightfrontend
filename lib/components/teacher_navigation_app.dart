@@ -1,6 +1,6 @@
 import 'package:enlight/pages/chats/chats.dart';
 import 'package:enlight/pages/teacher_profile/teacher_profile.dart';
-import 'package:enlight/pages/teacher_profile/teacher_reservation.dart';
+import 'package:enlight/pages/reservations/reservations.dart';
 import 'package:enlight/services/messaging_service.dart';
 import 'package:enlight/services/reservation_service.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +22,7 @@ class _TeacherNavigationAppState extends State<TeacherNavigationApp> {
     return Scaffold(
       body: <Widget>[
         const Chats(),
-        const TeacherReservations(),
+        const Reservations(),
         const TeacherProfile(),
       ][index],
       bottomNavigationBar: NavigationBar(

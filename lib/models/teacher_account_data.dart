@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:enlight/models/account_data.dart';
+import 'package:enlight/models/account/account_data.dart';
 import 'package:enlight/models/teacher_data.dart';
 
 class TeacherAccountData extends AccountData {

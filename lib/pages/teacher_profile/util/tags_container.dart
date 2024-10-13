@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class TagContainer extends StatefulWidget {
+class TagContainer extends StatelessWidget {
   final String name;
   final String description;
   final int price;
@@ -15,11 +15,6 @@ class TagContainer extends StatefulWidget {
   });
 
   @override
-  State<TagContainer> createState() => _TagContainer();
-}
-
-class _TagContainer extends State<TagContainer> {
-  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
@@ -33,7 +28,7 @@ class _TagContainer extends State<TagContainer> {
             mainAxisSize: MainAxisSize.max,
             children: [
               Text(
-                widget.name,
+                name,
                 style: const TextStyle(
                   fontFamily: 'Montserrat',
                   fontSize: 20,
@@ -43,7 +38,7 @@ class _TagContainer extends State<TagContainer> {
               Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(8, 0, 0, 0),
                 child: Text(
-                  "price: \$${widget.price}",
+                  "price: \$$price",
                   style: const TextStyle(
                     fontFamily: 'Montserrat',
                     fontSize: 16,
@@ -54,7 +49,7 @@ class _TagContainer extends State<TagContainer> {
               Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(8, 0, 0, 0),
                 child: Text(
-                  widget.description,
+                  description,
                   style: const TextStyle(
                     fontFamily: 'Montserrat',
                     fontSize: 16,
@@ -66,7 +61,7 @@ class _TagContainer extends State<TagContainer> {
                 padding: const EdgeInsetsDirectional.fromSTEB(8, 0, 0, 0),
                 child: TextButton(
                   onPressed: () {
-                    widget.deleteSubject();
+                    deleteSubject();
                   },
                   style: TextButton.styleFrom(
                     backgroundColor: Colors.red,

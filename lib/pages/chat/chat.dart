@@ -2,7 +2,7 @@ import 'dart:typed_data';
 import 'package:enlight/components/loading_indicator.dart';
 import 'package:enlight/components/message_bubble.dart';
 import 'package:enlight/components/message_input.dart';
-import 'package:enlight/models/account_data.dart';
+import 'package:enlight/models/account/account_data.dart';
 import 'package:enlight/models/message_data.dart';
 import 'package:enlight/pages/profile_picture/profile_picture.dart';
 import 'package:enlight/services/messaging_service.dart';
@@ -78,7 +78,9 @@ class _ChatState extends State<Chat> {
         stream: chat.onValue,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            context.read<MessagingService>().readMessages(widget.index);
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              context.read<MessagingService>().readMessages(widget.index);
+            });
             if (snapshot.data!.snapshot.value == null) {
               return const Placeholder();
             }

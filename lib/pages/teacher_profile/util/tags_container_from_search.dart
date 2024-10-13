@@ -1,7 +1,7 @@
 import 'package:enlight/pages/subject/subject.dart';
 import 'package:flutter/material.dart';
 
-class TagContainerFromSearch extends StatefulWidget {
+class TagContainerFromSearch extends StatelessWidget {
   final int subjectId;
   final String name;
   final String description;
@@ -16,17 +16,12 @@ class TagContainerFromSearch extends StatefulWidget {
   });
 
   @override
-  State<TagContainerFromSearch> createState() => _TagContainer();
-}
-
-class _TagContainer extends State<TagContainerFromSearch> {
-  @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () => Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => Subject(
-            id: widget.subjectId,
+            id: subjectId,
           ),
         ),
       ),
@@ -42,7 +37,7 @@ class _TagContainer extends State<TagContainerFromSearch> {
               mainAxisSize: MainAxisSize.max,
               children: [
                 Text(
-                  widget.name,
+                  name,
                   style: const TextStyle(
                     fontFamily: 'Montserrat',
                     fontSize: 20,
@@ -52,7 +47,7 @@ class _TagContainer extends State<TagContainerFromSearch> {
                 Padding(
                   padding: const EdgeInsetsDirectional.fromSTEB(8, 0, 0, 0),
                   child: Text(
-                    "price: \$${widget.price}",
+                    "price: \$$price",
                     style: const TextStyle(
                       fontFamily: 'Montserrat',
                       fontSize: 16,
@@ -63,7 +58,7 @@ class _TagContainer extends State<TagContainerFromSearch> {
                 Padding(
                   padding: const EdgeInsetsDirectional.fromSTEB(8, 0, 0, 0),
                   child: Text(
-                    widget.description,
+                    description,
                     style: const TextStyle(
                       fontFamily: 'Montserrat',
                       fontSize: 16,

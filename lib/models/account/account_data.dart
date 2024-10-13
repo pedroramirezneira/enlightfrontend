@@ -29,4 +29,38 @@ class AccountData {
       picture: picture,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "id": id,
+      "email": email,
+      "name": name,
+      "birthday": birthday,
+      "address": address,
+      "picture": picture,
+    };
+  }
+
+  static AccountData empty() {
+    return AccountData(
+      id: null,
+      email: "",
+      name: "",
+      birthday: "",
+      address: "",
+      picture: null,
+    );
+  }
+}
+
+class EmptyAccountData extends AccountData {
+  EmptyAccountData()
+      : super(
+          id: null,
+          email: "",
+          name: "",
+          birthday: "",
+          address: "",
+          picture: null,
+        );
 }

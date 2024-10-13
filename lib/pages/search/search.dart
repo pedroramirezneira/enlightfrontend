@@ -1,9 +1,10 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:enlight/pages/search/util/result_conatiner.dart';
+import 'package:enlight/components/loading_indicator.dart';
+import 'package:enlight/pages/search/util/subject_result_container.dart';
 import 'package:enlight/pages/search/util/search_box.dart';
 import 'package:enlight/pages/search/util/teacher_result_container.dart';
-import 'package:enlight/util/search_ops.dart';
+import 'package:enlight/services/search_service.dart';
 import 'package:flutter/material.dart';
 import 'package:enlight/models/search_data.dart';
 
@@ -15,7 +16,7 @@ class SearchTeachers extends StatefulWidget {
 }
 
 class _SearchTeachersState extends State<SearchTeachers> {
-  late Future<SearchData> _searchResults;
+  SearchData _searchResults = EmptySearchData();
   final List<String> items = [
     'Teacher',
     'Tags',
@@ -23,8 +24,9 @@ class _SearchTeachersState extends State<SearchTeachers> {
   String? selectedValue = 'Teacher';
   late final TextEditingController _priceController = TextEditingController();
   late final TextEditingController _ratingController = TextEditingController();
+  var loading = false;
 
-  void _performSearch(String query) {
+  void _performSearch(String query) async {
     if (_priceController.text.isEmpty || _ratingController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -63,186 +65,172 @@ class _SearchTeachersState extends State<SearchTeachers> {
       return;
     }
     setState(() {
-      _searchResults = SearchOps.getSearch(query).catchError((error) {
-        return SearchData(
-          teacher: [],
-          subject: [],
-        );
-      });
+      loading = true;
+    });
+    final result = await SearchService.search(context, query);
+    setState(() {
+      _searchResults = result;
+      loading = false;
     });
   }
 
   @override
-  void initState() {
-    super.initState();
-    _searchResults = Future.value(SearchData(
-      teacher: [],
-      subject: [],
-    ));
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: FutureBuilder<SearchData>(
-        future: _searchResults,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text("Error: ${snapshot.error}"),
-            );
-          } else if (snapshot.hasData) {
-            return CustomScrollView(
-              slivers: [
-                const SliverAppBar(
-                  title: Text("Search"),
-                  centerTitle: true,
-                ),
-                SliverList(
-                  delegate: SliverChildListDelegate(
-                    [
-                      Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            Row(
-                              children: <Widget>[
-                                SearchBox(
-                                  hintText: "Search...",
-                                  onSubmitted: _performSearch,
-                                ),
-                                Center(
-                                  child: DropdownButtonHideUnderline(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(10),
-                                      child: SizedBox(
-                                        width:
-                                            (MediaQuery.of(context).size.width -
-                                                    MediaQuery.of(context)
-                                                            .size
-                                                            .width /
-                                                        1.7) /
-                                                1.5,
-                                        child: DropdownButton2<String>(
-                                          isExpanded: true,
-                                          hint: const Row(
-                                            children: [
-                                              SizedBox(
-                                                width: 4,
-                                              ),
-                                            ],
-                                          ),
-                                          items: items
-                                              .map((String item) =>
-                                                  DropdownMenuItem<String>(
-                                                    value: item,
-                                                    child: Text(
-                                                      item,
-                                                      style: const TextStyle(
-                                                        color: Colors.white,
-                                                      ),
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
+    return Stack(
+      children: [
+        Scaffold(
+          body: CustomScrollView(
+            slivers: [
+              const SliverAppBar(
+                title: Text("Search"),
+                centerTitle: true,
+              ),
+              SliverList(
+                delegate: SliverChildListDelegate(
+                  [
+                    Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Row(
+                            children: <Widget>[
+                              SearchBox(
+                                hintText: "Search...",
+                                onSubmitted: _performSearch,
+                              ),
+                              Center(
+                                child: DropdownButtonHideUnderline(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10),
+                                    child: SizedBox(
+                                      width:
+                                          (MediaQuery.of(context).size.width -
+                                                  MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                      1.7) /
+                                              1.5,
+                                      child: DropdownButton2<String>(
+                                        isExpanded: true,
+                                        hint: const Row(
+                                          children: [
+                                            SizedBox(
+                                              width: 4,
+                                            ),
+                                          ],
+                                        ),
+                                        items: items
+                                            .map((String item) =>
+                                                DropdownMenuItem<String>(
+                                                  value: item,
+                                                  child: Text(
+                                                    item,
+                                                    style: const TextStyle(
+                                                      color: Colors.white,
                                                     ),
-                                                  ))
-                                              .toList(),
-                                          value: selectedValue,
-                                          onChanged: (String? value) {
-                                            setState(() {
-                                              selectedValue = value!;
-                                            });
-                                          },
-                                          buttonStyleData: ButtonStyleData(
-                                            height: 55,
-                                            width: double.infinity,
-                                            padding: const EdgeInsets.all(8),
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              border: Border.all(
-                                                color: Colors.white,
-                                              ),
-                                              color: const Color.fromARGB(
-                                                  255, 43, 57, 68),
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ))
+                                            .toList(),
+                                        value: selectedValue,
+                                        onChanged: (String? value) {
+                                          setState(() {
+                                            selectedValue = value!;
+                                          });
+                                        },
+                                        buttonStyleData: ButtonStyleData(
+                                          height: 55,
+                                          width: double.infinity,
+                                          padding: const EdgeInsets.all(8),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            border: Border.all(
+                                              color: Colors.white,
                                             ),
+                                            color: const Color.fromARGB(
+                                                255, 43, 57, 68),
                                           ),
-                                          iconStyleData: const IconStyleData(
-                                            icon: Icon(
-                                              Icons.arrow_drop_down,
-                                            ),
-                                            iconSize: 14,
-                                            iconEnabledColor: Colors.white,
-                                            iconDisabledColor: Colors.grey,
+                                        ),
+                                        iconStyleData: const IconStyleData(
+                                          icon: Icon(
+                                            Icons.arrow_drop_down,
                                           ),
-                                          dropdownStyleData: DropdownStyleData(
-                                            maxHeight: 200,
-                                            width: 100,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(14),
-                                              color: const Color.fromARGB(
-                                                  255, 43, 57, 68),
-                                            ),
-                                            offset: const Offset(0, 0),
-                                            scrollbarTheme: ScrollbarThemeData(
-                                              radius: const Radius.circular(40),
-                                              thickness: WidgetStateProperty
-                                                  .all<double>(6),
-                                              thumbVisibility:
-                                                  WidgetStateProperty.all<bool>(
-                                                      true),
-                                            ),
+                                          iconSize: 14,
+                                          iconEnabledColor: Colors.white,
+                                          iconDisabledColor: Colors.grey,
+                                        ),
+                                        dropdownStyleData: DropdownStyleData(
+                                          maxHeight: 200,
+                                          width: 100,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(14),
+                                            color: const Color.fromARGB(
+                                                255, 43, 57, 68),
                                           ),
-                                          menuItemStyleData:
-                                              const MenuItemStyleData(
-                                            height: 40,
-                                            padding: EdgeInsets.only(
-                                                left: 14, right: 14),
+                                          offset: const Offset(0, 0),
+                                          scrollbarTheme: ScrollbarThemeData(
+                                            radius: const Radius.circular(40),
+                                            thickness:
+                                                WidgetStateProperty.all<double>(
+                                                    6),
+                                            thumbVisibility:
+                                                WidgetStateProperty.all<bool>(
+                                                    true),
                                           ),
+                                        ),
+                                        menuItemStyleData:
+                                            const MenuItemStyleData(
+                                          height: 40,
+                                          padding: EdgeInsets.only(
+                                              left: 14, right: 14),
                                         ),
                                       ),
                                     ),
                                   ),
                                 ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: TextField(
+                                    controller: _priceController,
+                                    keyboardType: TextInputType.number,
+                                    decoration: const InputDecoration(
+                                      labelText: "Max Price",
+                                      border: OutlineInputBorder(),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: TextField(
+                                    controller: _ratingController,
+                                    keyboardType: TextInputType.number,
+                                    decoration: const InputDecoration(
+                                      labelText: "Min Rating",
+                                      border: OutlineInputBorder(),
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
-                            const SizedBox(height: 10),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: TextField(
-                                      controller: _priceController,
-                                      keyboardType: TextInputType.number,
-                                      decoration: const InputDecoration(
-                                        labelText: "Max Price",
-                                        border: OutlineInputBorder(),
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 10),
-                                  Expanded(
-                                    child: TextField(
-                                      controller: _ratingController,
-                                      keyboardType: TextInputType.number,
-                                      decoration: const InputDecoration(
-                                        labelText: "Min Rating",
-                                        border: OutlineInputBorder(),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(width: 20),
-                            if (selectedValue == "Teacher")
-                              for (var teacher in snapshot.data!.teacher!)
+                          ),
+                          const SizedBox(width: 20),
+                          if (selectedValue == "Teacher")
+                            if (_searchResults.teacher!.isEmpty)
+                              const Center(
+                                child: Text("No data found"),
+                              )
+                            else
+                              for (var teacher in _searchResults.teacher!)
                                 if (teacher.rating >=
                                     double.parse(_ratingController.text))
                                   TeacherResultContainer(
@@ -252,8 +240,13 @@ class _SearchTeachersState extends State<SearchTeachers> {
                                     id: teacher.id,
                                     rating: teacher.rating,
                                   ),
-                            if (selectedValue == "Tags")
-                              for (var subject in snapshot.data!.subject!)
+                          if (selectedValue == "Tags")
+                            if (_searchResults.subject!.isEmpty)
+                              const Center(
+                                child: Text("No data found"),
+                              )
+                            else
+                              for (var subject in _searchResults.subject!)
                                 if (subject.price <=
                                     double.parse(_priceController.text))
                                   SubjectResultContainer(
@@ -262,21 +255,17 @@ class _SearchTeachersState extends State<SearchTeachers> {
                                     name: subject.name,
                                     description: subject.description,
                                   ),
-                          ],
-                        ),
+                        ],
                       ),
-                    ],
-                  ),
-                )
-              ],
-            );
-          } else {
-            return const Center(
-              child: Text("No data found"),
-            );
-          }
-        },
-      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+        if (loading) const LoadingIndicator(visible: true),
+      ],
     );
   }
 }

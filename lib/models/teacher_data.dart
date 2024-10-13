@@ -35,3 +35,14 @@ class TeacherData {
     );
   }
 }
+
+class EmptyTeacherData extends TeacherData {
+  EmptyTeacherData()
+      : super(
+          id: -1,
+          description: "",
+          rating: -1.0,
+          subjects: [],
+          categories: [],
+        );
+}

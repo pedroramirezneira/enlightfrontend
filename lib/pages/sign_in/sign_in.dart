@@ -1,9 +1,9 @@
 import 'package:enlight/components/enlight_text_field.dart';
 import 'package:enlight/components/form_submission_button.dart';
 import 'package:enlight/components/loading_indicator.dart';
-import 'package:enlight/pages/sign_in/util/on_pressed.dart';
 import 'package:enlight/pages/recover_password/recover_password.dart';
 import 'package:enlight/pages/sign_up/sign_up.dart';
+import 'package:enlight/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -30,6 +30,7 @@ class _SignInState extends State<SignIn> {
 
   @override
   Widget build(BuildContext context) {
+    final authService = AuthService.of(context);
     return Stack(
       children: [
         Scaffold(
@@ -112,14 +113,13 @@ class _SignInState extends State<SignIn> {
                             formKey: formKey,
                             onPressed: () {
                               setState(() => loading = true);
-                              onPressed(
-                                context: context,
-                                email: emailController.text,
-                                password: passwordController.text,
-                                onResponse: () => setState(
-                                  () => loading = false,
-                                ),
-                              );
+                              authService
+                                  .login(
+                                    emailController.text,
+                                    passwordController.text,
+                                    context: context,
+                                  )
+                                  .then((_) => setState(() => loading = false));
                             },
                           ),
                           TextButton(
