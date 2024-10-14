@@ -16,13 +16,15 @@ class SearchTeacherData extends TeacherData {
   });
 
   factory SearchTeacherData.fromJson(Map<String, dynamic> json) {
+    final rating = json["rating"];
+    final decoded = rating is double ? rating : (rating as int).toDouble();
     List<dynamic>? subjects = json["subjects"];
     return SearchTeacherData(
       id: json["id"],
       name: json["name"],
       description: json["description"],
       picture: json["picture"],
-      rating: json["rating"],
+      rating: decoded,
       subjects: subjects != null
           ? subjects.map((subject) => SubjectData.fromJson(subject)).toList()
           : [],

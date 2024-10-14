@@ -19,14 +19,15 @@ class AccountData {
   });
 
   factory AccountData.fromJson(Map<String, dynamic> json) {
-    final picture = base64.decode(json["picture"] ?? "");
+    final picture = json["picture"];
+    final decoded = picture is String ? base64.decode(picture) : null;
     return AccountData(
       id: json["id"],
       email: json["email"],
       name: json["name"],
       birthday: (json["birthday"] as String).split("T")[0],
       address: json["address"],
-      picture: picture,
+      picture: decoded,
     );
   }
 

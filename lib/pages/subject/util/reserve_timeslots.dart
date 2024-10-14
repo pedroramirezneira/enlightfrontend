@@ -11,11 +11,14 @@ Future<void> reserveTimeslots({
 }) async {
   final reservationService =
       Provider.of<ReservationService>(context, listen: false);
+
+  final response = await reservationService.addReservation(context, data);
+  if (response.statusCode != 200 || !context.mounted) return;
   final messagingService =
       Provider.of<MessagingService>(context, listen: false);
-  await reservationService.addReservation(context, data);
-  if (!context.mounted) return;
-  if (messagingService.data.chats.where((e) => e.id == teacherId).isNotEmpty) {
-    messagingService.createChat(context, teacherId);
+  if (messagingService.data.chats.where((e) => e.id == teacherId).isEmpty) {
+    await messagingService.createChat(context, teacherId);
   }
+  if (!context.mounted) return;
+  Navigator.of(context).pop();
 }

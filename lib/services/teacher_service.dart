@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:enlight/models/search_teacher_data.dart';
 import 'package:enlight/models/subject_data.dart';
-import 'package:enlight/models/teacher_account_data.dart';
 import 'package:enlight/models/teacher_data.dart';
 import 'package:enlight/util/web_client.dart';
 import 'package:flutter/cupertino.dart';
@@ -89,18 +88,6 @@ class TeacherService extends ChangeNotifier {
       _data.subjects.removeWhere((subject) => subject.id == id);
       notifyListeners();
     }
-  }
-
-  static Future<TeacherAccountData> getTeacher(BuildContext context) async {
-    final response = await WebClient.get(
-      context,
-      "account?include_picture=true",
-    );
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      return TeacherAccountData.fromJson(data);
-    }
-    throw response.statusCode;
   }
 
   static Future<SearchTeacherData> getTeacherFromSearch(

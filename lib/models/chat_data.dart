@@ -1,59 +1,29 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:enlight/models/account/account_data.dart';
 
-class ChatData implements AccountData {
-  @override
-  final int? id;
-
-  @override
-  final String email;
-
-  @override
-  String name;
-
-  @override
-  String birthday;
-
-  @override
-  String address;
-
-  @override
-  Uint8List? picture;
-
+class ChatData extends AccountData {
   int newMessages = 0;
 
   ChatData({
-    required this.name,
-    required this.address,
-    required this.birthday,
-    required this.picture,
-    required this.id,
-    required this.email,
+    required super.id,
+    required super.email,
+    required super.name,
+    required super.birthday,
+    required super.address,
+    required super.picture,
   });
 
   factory ChatData.fromJson(Map<String, dynamic> json) {
-    final picture = base64.decode(json["picture"] ?? "");
+    final picture = json["picture"];
+    final decoded = picture is String ? base64.decode(picture) : null;
     return ChatData(
       id: json["id"],
       email: json["email"],
       name: json["name"],
-      birthday: (json["birthday"] as String).split("T")[0],
+      birthday: json["birthday"],
       address: json["address"],
-      picture: picture,
+      picture: decoded,
     );
-  }
-
-  @override
-  Map<String, dynamic> toJson() {
-    return {
-      "id": id,
-      "email": email,
-      "name": name,
-      "birthday": birthday,
-      "address": address,
-      "picture": picture,
-    };
   }
 }

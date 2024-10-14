@@ -207,8 +207,6 @@ class _SubjectState extends State<Subject> {
                                   data: data,
                                 );
                                 setState(() => loading = false);
-                                if (!context.mounted) return;
-                                Navigator.of(context).pop();
                               },
                               child: const Text("Reserve timeslots"),
                             ),

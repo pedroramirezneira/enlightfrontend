@@ -56,8 +56,10 @@ class _RateMenuState extends State<RatingMenu> {
                           text: "Submit",
                           formKey: formKey,
                           onPressed: () {
-                            if (double.parse(rateController.text) > 10 ||
-                                double.parse(rateController.text) < 1) {
+                            final result =
+                                double.tryParse(rateController.text) ??
+                                    int.parse(rateController.text).toDouble();
+                            if (result > 10 || result < 1) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: AwesomeSnackbarContent(
@@ -70,9 +72,7 @@ class _RateMenuState extends State<RatingMenu> {
                               return;
                             }
                             if (formKey.currentState!.validate()) {
-                              Navigator.of(context).pop(
-                                double.parse(rateController.text),
-                              );
+                              Navigator.of(context).pop(result);
                             }
                           },
                         ),

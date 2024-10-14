@@ -46,16 +46,19 @@ class _ChatState extends State<Chat> {
     return Scaffold(
       appBar: AppBar(
         title: InkWell(
-          onTap: () => Navigator.of(context).push(
-            MaterialPageRoute(
-              fullscreenDialog: true,
-              barrierDismissible: true,
-              builder: (context) => ProfilePicture(
-                receiver: widget.receiver,
-                picture: widget.receiver.picture ?? Uint8List(0),
+          onTap: () {
+            if (!hasImage) return;
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                fullscreenDialog: true,
+                barrierDismissible: true,
+                builder: (context) => ProfilePicture(
+                  receiver: widget.receiver,
+                  picture: widget.receiver.picture!,
+                ),
               ),
-            ),
-          ),
+            );
+          },
           child: Row(
             children: <Widget>[
               Hero(

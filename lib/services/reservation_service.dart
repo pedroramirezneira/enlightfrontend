@@ -59,7 +59,7 @@ class ReservationService extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addReservation(
+  Future<Response> addReservation(
     BuildContext context,
     CreateReservationData data,
   ) async {
@@ -71,7 +71,7 @@ class ReservationService extends ChangeNotifier {
       },
       body: json.encode(data.toJson()),
     );
-    if (!context.mounted) return;
+    if (!context.mounted) return response;
     if (response.statusCode == 200) {
       final newResponse = Response("Reservation created successfully", 200);
       WebClient.info(newResponse, context);
@@ -79,16 +79,15 @@ class ReservationService extends ChangeNotifier {
       if (reload.statusCode == 200) {
         final List<dynamic> newData = json.decode(reload.body)["reservations"];
         _data = newData.map((json) => ReservationData.fromJson(json)).toList();
-        notifyListeners();
         final reservationId = response.body;
         final reservation = _data.firstWhere(
           (e) => e.reservationId == int.parse(reservationId),
         );
         _notifyFirebase(reservation.teacherId);
+        notifyListeners();
       }
     }
-    if (!context.mounted) return;
-    WebClient.info(response, context);
+    return response;
   }
 
   Future<void> cancelReservation(
