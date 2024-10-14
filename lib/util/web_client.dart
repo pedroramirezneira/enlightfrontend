@@ -13,23 +13,27 @@ class WebClient {
     Map<String, String>? headers,
     bool info = true,
   }) async {
-    final serverAddress = dotenv.env["SERVER"]!;
-    final authService = AuthService.of(context);
-    final response = await http.get(
-      Uri.parse("$serverAddress/$path"),
-      headers: {
-        "Authorization": "Bearer ${authService.accessToken}",
-        ...headers ?? {},
-      },
-    );
-    if (!context.mounted) return response;
-    if (response.statusCode == 401) {
-      await authService.refresh();
+    try {
+      final serverAddress = dotenv.env["SERVER"]!;
+      final authService = AuthService.of(context);
+      final response = await http.get(
+        Uri.parse("$serverAddress/$path"),
+        headers: {
+          "Authorization": "Bearer ${authService.accessToken}",
+          ...headers ?? {},
+        },
+      );
       if (!context.mounted) return response;
-      return get(context, path, headers: headers);
+      if (response.statusCode == 401) {
+        await authService.refresh();
+        if (!context.mounted) return response;
+        return get(context, path, headers: headers);
+      }
+      if (info) WebClient.info(response, context);
+      return response;
+    } catch (e) {
+      return http.Response(e.toString(), 500);
     }
-    if (info) WebClient.info(response, context);
-    return response;
   }
 
   static Future<http.Response> post(
@@ -39,24 +43,28 @@ class WebClient {
     Object? body,
     bool info = true,
   }) async {
-    final serverAddress = dotenv.env["SERVER"]!;
-    final authService = AuthService.of(context);
-    final response = await http.post(
-      Uri.parse("$serverAddress/$path"),
-      headers: {
-        "Authorization": "Bearer ${authService.accessToken}",
-        ...headers ?? {},
-      },
-      body: body,
-    );
-    if (!context.mounted) return response;
-    if (response.statusCode == 401) {
-      await authService.refresh();
+    try {
+      final serverAddress = dotenv.env["SERVER"]!;
+      final authService = AuthService.of(context);
+      final response = await http.post(
+        Uri.parse("$serverAddress/$path"),
+        headers: {
+          "Authorization": "Bearer ${authService.accessToken}",
+          ...headers ?? {},
+        },
+        body: body,
+      );
       if (!context.mounted) return response;
-      return post(context, path, headers: headers, body: body);
+      if (response.statusCode == 401) {
+        await authService.refresh();
+        if (!context.mounted) return response;
+        return post(context, path, headers: headers, body: body);
+      }
+      if (info) WebClient.info(response, context);
+      return response;
+    } catch (e) {
+      return http.Response(e.toString(), 500);
     }
-    if (info) WebClient.info(response, context);
-    return response;
   }
 
   static Future<http.Response> put(
@@ -66,24 +74,28 @@ class WebClient {
     Object? body,
     bool info = true,
   }) async {
-    final serverAddress = dotenv.env["SERVER"]!;
-    final authService = AuthService.of(context);
-    final response = await http.put(
-      Uri.parse("$serverAddress/$path"),
-      headers: {
-        "Authorization": "Bearer ${authService.accessToken}",
-        ...headers ?? {},
-      },
-      body: body,
-    );
-    if (!context.mounted) return response;
-    if (response.statusCode == 401) {
-      await authService.refresh();
+    try {
+      final serverAddress = dotenv.env["SERVER"]!;
+      final authService = AuthService.of(context);
+      final response = await http.put(
+        Uri.parse("$serverAddress/$path"),
+        headers: {
+          "Authorization": "Bearer ${authService.accessToken}",
+          ...headers ?? {},
+        },
+        body: body,
+      );
       if (!context.mounted) return response;
-      return put(context, path, headers: headers, body: body);
+      if (response.statusCode == 401) {
+        await authService.refresh();
+        if (!context.mounted) return response;
+        return put(context, path, headers: headers, body: body);
+      }
+      if (info) WebClient.info(response, context);
+      return response;
+    } catch (e) {
+      return http.Response(e.toString(), 500);
     }
-    if (info) WebClient.info(response, context);
-    return response;
   }
 
   static Future<http.Response> delete(
@@ -93,24 +105,28 @@ class WebClient {
     Object? body,
     bool info = true,
   }) async {
-    final authService = AuthService.of(context);
-    final serverAddress = dotenv.env["SERVER"]!;
-    final response = await http.delete(
-      Uri.parse("$serverAddress/$path"),
-      headers: {
-        "Authorization": "Bearer ${authService.accessToken}",
-        ...headers ?? {},
-      },
-      body: body,
-    );
-    if (!context.mounted) return response;
-    if (response.statusCode == 401) {
-      await authService.refresh();
+    try {
+      final authService = AuthService.of(context);
+      final serverAddress = dotenv.env["SERVER"]!;
+      final response = await http.delete(
+        Uri.parse("$serverAddress/$path"),
+        headers: {
+          "Authorization": "Bearer ${authService.accessToken}",
+          ...headers ?? {},
+        },
+        body: body,
+      );
       if (!context.mounted) return response;
-      return delete(context, path, headers: headers);
+      if (response.statusCode == 401) {
+        await authService.refresh();
+        if (!context.mounted) return response;
+        return delete(context, path, headers: headers);
+      }
+      if (info) WebClient.info(response, context);
+      return response;
+    } catch (e) {
+      return http.Response(e.toString(), 500);
     }
-    if (info) WebClient.info(response, context);
-    return response;
   }
 
   static void info(http.Response response, BuildContext context) {

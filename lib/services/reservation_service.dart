@@ -13,6 +13,8 @@ class ReservationService extends ChangeNotifier {
   List<ReservationData> get data => _data;
   int _newReservations = -1;
   int get newReservations => _newReservations;
+  var _loading = true;
+  bool get loading => _loading;
 
   ReservationService({required BuildContext context}) {
     WidgetsBinding.instance.addPostFrameCallback(
@@ -29,6 +31,7 @@ class ReservationService extends ChangeNotifier {
               .toList();
           accountId = data["account_id"];
         }
+        _loading = false;
         notifyListeners();
         if (!context.mounted) return;
         final ref = database.child(accountId.toString());

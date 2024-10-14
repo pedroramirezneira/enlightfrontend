@@ -1,9 +1,11 @@
+import 'dart:convert';
+import 'dart:typed_data';
 import 'package:enlight/models/subject_data.dart';
 import 'package:enlight/models/teacher_data.dart';
 
 class SearchTeacherData extends TeacherData {
   final String name;
-  final String? picture;
+  final Uint8List? picture;
 
   SearchTeacherData({
     required this.name,
@@ -18,12 +20,14 @@ class SearchTeacherData extends TeacherData {
   factory SearchTeacherData.fromJson(Map<String, dynamic> json) {
     final rating = json["rating"];
     final decoded = rating is double ? rating : (rating as int).toDouble();
+    final picture = json["picture"];
+    final decodedPicture = picture is String ? base64.decode(picture) : null;
     List<dynamic>? subjects = json["subjects"];
     return SearchTeacherData(
       id: json["id"],
       name: json["name"],
       description: json["description"],
-      picture: json["picture"],
+      picture: decodedPicture,
       rating: decoded,
       subjects: subjects != null
           ? subjects.map((subject) => SubjectData.fromJson(subject)).toList()
@@ -39,7 +43,7 @@ class EmptySearchTeacherData extends SearchTeacherData {
           id: -1,
           name: "",
           description: "",
-          picture: "",
+          picture: null,
           rating: -1,
           subjects: [],
           categories: [],

@@ -11,6 +11,8 @@ import 'package:http/http.dart' as http;
 class AccountService extends ChangeNotifier {
   AccountData _data = EmptyAccountData();
   AccountData get data => _data;
+  var _loading = true;
+  bool get loading => _loading;
 
   AccountService({required BuildContext context}) {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -21,8 +23,9 @@ class AccountService extends ChangeNotifier {
       if (response.statusCode == 200) {
         Map<String, dynamic> data = json.decode(response.body);
         _data = AccountData.fromJson(data);
-        notifyListeners();
       }
+      _loading = false;
+      notifyListeners();
     });
   }
 

@@ -54,7 +54,6 @@ class _ChatState extends State<Chat> {
                 barrierDismissible: true,
                 builder: (context) => ProfilePicture(
                   receiver: widget.receiver,
-                  picture: widget.receiver.picture!,
                 ),
               ),
             );

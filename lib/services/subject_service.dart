@@ -16,7 +16,7 @@ class SubjectService {
       info: false,
     );
     if (response.statusCode != 200) {
-      throw response.statusCode;
+      return EmptySubjectTimeSlotData();
     }
     final data = json.decode(response.body);
     return SubjectTimeSlotData.fromJson(data);
@@ -28,7 +28,7 @@ class SubjectService {
       "subject/$id",
     );
     if (response.statusCode != 200) {
-      throw response.statusCode;
+      return EmptySubjectTimeSlotData();
     }
     final data = json.decode(response.body);
     return SubjectData.fromJson(data);

@@ -26,6 +26,7 @@ class _TeacherNavigationAppState extends State<TeacherNavigationApp> {
         const TeacherProfile(),
       ][index],
       bottomNavigationBar: NavigationBar(
+        height: 60,
         onDestinationSelected: (value) {
           setState(() => index = value);
           if (index == 1) {

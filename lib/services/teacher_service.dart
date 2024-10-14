@@ -10,6 +10,8 @@ import 'package:http/http.dart' as http;
 class TeacherService extends ChangeNotifier {
   TeacherData _data = EmptyTeacherData();
   TeacherData get data => _data;
+  var _loading = true;
+  bool get loading => _loading;
 
   TeacherService({required BuildContext context}) {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -20,8 +22,9 @@ class TeacherService extends ChangeNotifier {
       if (response.statusCode == 200) {
         Map<String, dynamic> data = json.decode(response.body);
         _data = TeacherData.fromJson(data);
-        notifyListeners();
       }
+      _loading = false;
+      notifyListeners();
     });
   }
 
@@ -103,6 +106,6 @@ class TeacherService extends ChangeNotifier {
       final data = json.decode(response.body);
       return SearchTeacherData.fromJson(data);
     }
-    throw response.statusCode;
+    return EmptySearchTeacherData();
   }
 }

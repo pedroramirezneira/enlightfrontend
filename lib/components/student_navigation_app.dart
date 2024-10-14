@@ -27,6 +27,7 @@ class _StudentNavigationAppState extends State<StudentNavigationApp> {
         const StudentProfile(),
       ][index],
       bottomNavigationBar: NavigationBar(
+        height: 60,
         onDestinationSelected: (value) => setState(() => index = value),
         selectedIndex: index,
         destinations: <Widget>[

@@ -1,7 +1,8 @@
 import 'package:enlight/components/chat_bubble.dart';
-import 'package:enlight/components/loading_indicator.dart';
+import 'package:enlight/components/fixed_scaffold.dart';
 import 'package:enlight/models/chats_data.dart';
 import 'package:enlight/pages/chat/chat.dart';
+import 'package:enlight/services/auth_service.dart';
 import 'package:enlight/services/messaging_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -11,58 +12,55 @@ class Chats extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final chatsService = Provider.of<MessagingService>(context);
+    final authService = AuthService.of(context);
+    final role = authService.role;
+    if (chatsService.loading) {
+      return const FixedScaffold(
+          title: "Chats", child: CircularProgressIndicator.adaptive());
+    }
+    if (chatsService.data is EmptyChatsData && role == 1) {
+      return const FixedScaffold(
+        title: "Chats",
+        child: Text(
+          "You have no chats. Make a reservation to start chatting with teachers!",
+        ),
+      );
+    }
+    if (chatsService.data is EmptyChatsData) {
+      return const FixedScaffold(
+        title: "Chats",
+        child: Text("You have no chats."),
+      );
+    }
     return Scaffold(
-      body: Consumer<MessagingService>(
-        builder: (context, value, child) {
-          if (value.data.chats is EmptyChatsData) {
-            return const Center(
-              child: LoadingIndicator(visible: true),
-            );
-          }
-          if (value.data.chats.isEmpty) {
-            return RefreshIndicator(
-              onRefresh: () async {
-                context.read<MessagingService>().refreshChats(context);
-                return;
+      body: CustomScrollView(
+        shrinkWrap: true,
+        slivers: [
+          const SliverAppBar(
+            title: Text("Chats"),
+            floating: true,
+            snap: true,
+          ),
+          SliverList.builder(
+            itemCount: chatsService.data.chats.length,
+            itemBuilder: (context, index) => ChatBubble(
+              onTap: () {
+                chatsService.readMessages(index);
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => Chat(
+                      index: index,
+                      receiver: chatsService.data.chats[index],
+                      senderId: chatsService.data.accountId,
+                    ),
+                  ),
+                );
               },
-              child: const Center(
-                child: Text(
-                  "You have no chats. Make a reservation to start chatting with teachers!",
-                ),
-              ),
-            );
-          }
-          return RefreshIndicator(
-            onRefresh: () async {
-              context.read<MessagingService>().refreshChats(context);
-              return;
-            },
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              width: 500,
-              child: ListView.builder(
-                itemCount: value.data.chats.length,
-                itemBuilder: (context, index) => ChatBubble(
-                  onTap: () {
-                    context.read<MessagingService>().readMessages(index);
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => Chat(
-                          senderId: value.data.accountId,
-                          receiver: value.data.chats[index],
-                          index: index,
-                        ),
-                      ),
-                    );
-                  },
-                  index: index,
-                  name: value.data.chats[index].name,
-                  picture: value.data.chats[index].picture,
-                ),
-              ),
+              index: index,
             ),
-          );
-        },
+          ),
+        ],
       ),
     );
   }

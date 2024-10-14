@@ -83,7 +83,6 @@ class _SearchTeachersState extends State<SearchTeachers> {
             slivers: [
               const SliverAppBar(
                 title: Text("Search"),
-                centerTitle: true,
               ),
               SliverList(
                 delegate: SliverChildListDelegate(

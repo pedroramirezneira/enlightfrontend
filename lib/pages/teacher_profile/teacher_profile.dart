@@ -1,5 +1,6 @@
-import 'package:enlight/components/loading_indicator.dart';
+import 'package:enlight/components/fixed_scaffold.dart';
 import 'package:enlight/models/account/account_data.dart';
+import 'package:enlight/models/teacher_data.dart';
 import 'package:enlight/pages/edit_account/edit_account.dart';
 import 'package:enlight/pages/edit_teacher_profile/edit_teacher_profile.dart';
 import 'package:enlight/pages/teacher_profile/util/show_subject_dialog.dart';
@@ -22,12 +23,21 @@ class _TeacherProfileState extends State<TeacherProfile> {
 
   @override
   Widget build(BuildContext context) {
-    final accountService = Provider.of<AccountService>(context);
-    final teacherService = Provider.of<TeacherService>(context);
-    if (accountService.data is EmptyAccountData) {
-      return const LoadingIndicator(visible: true);
+    final account = Provider.of<AccountService>(context);
+    final teacher = Provider.of<TeacherService>(context);
+    if (account.loading || teacher.loading) {
+      return const FixedScaffold(
+        title: "Account",
+        child: CircularProgressIndicator.adaptive()
+      );
     }
-    final hasImage = accountService.data.picture != null;
+    if (account.data is EmptyAccountData || teacher.data is EmptyTeacherData) {
+      return const FixedScaffold(
+        title: "Account",
+        child: Text("An error occurred while loading your account."),
+      );
+    }
+    final hasImage = account.data.picture != null;
     return Scaffold(
       endDrawer: Drawer(
         child: ListView(
@@ -89,7 +99,9 @@ class _TeacherProfileState extends State<TeacherProfile> {
       body: CustomScrollView(
         slivers: [
           const SliverAppBar(
-            title: Text("Profile"),
+            title: Text("Account"),
+            floating: true,
+            snap: true,
           ),
           SliverList(
             delegate: SliverChildListDelegate(
@@ -106,7 +118,7 @@ class _TeacherProfileState extends State<TeacherProfile> {
                             onTap: () {
                               Messenger.showPictureMenu(
                                 context: context,
-                                data: accountService.data,
+                                data: account.data,
                               );
                             },
                             child: CircleAvatar(
@@ -116,11 +128,11 @@ class _TeacherProfileState extends State<TeacherProfile> {
                                   .withOpacity(0.5),
                               radius: 50,
                               backgroundImage: hasImage
-                                  ? MemoryImage(accountService.data.picture!)
+                                  ? MemoryImage(account.data.picture!)
                                   : null,
                               child: !hasImage
                                   ? Text(
-                                      accountService.data.name[0].toUpperCase(),
+                                      account.data.name[0].toUpperCase(),
                                       style: const TextStyle(
                                         fontSize: 50,
                                       ),
@@ -135,11 +147,11 @@ class _TeacherProfileState extends State<TeacherProfile> {
                           child: Column(
                             children: <Widget>[
                               Text(
-                                accountService.data.name,
+                                account.data.name,
                                 style: const TextStyle(fontSize: 30),
                               ),
                               Text(
-                                "${teacherService.data.rating}/10.0",
+                                "${teacher.data.rating}/10.0",
                                 style: const TextStyle(fontSize: 18),
                               )
                             ],
@@ -162,7 +174,7 @@ class _TeacherProfileState extends State<TeacherProfile> {
                             ),
                           ),
                           Text(
-                            teacherService.data.description,
+                            teacher.data.description,
                             style: const TextStyle(fontSize: 18),
                           ),
                           const Text(
@@ -182,7 +194,7 @@ class _TeacherProfileState extends State<TeacherProfile> {
                         const SizedBox(
                           height: 10,
                         ),
-                        for (var tag in teacherService.data.subjects)
+                        for (var tag in teacher.data.subjects)
                           Column(
                             children: [
                               TagContainer(
@@ -192,7 +204,7 @@ class _TeacherProfileState extends State<TeacherProfile> {
                                 deleteSubject: () {
                                   Messenger.showDeleteSubjectDialog(
                                     context: context,
-                                    data: teacherService.data,
+                                    data: teacher.data,
                                     subjectId: tag.id,
                                     onAccept: () =>
                                         setState(() => loading = true),
