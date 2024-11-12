@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'package:macros/macros.dart';
 
+/// A macro that generates a data class with a maximum of 19 fields, due to the hash method limit.
 macro class DataClass implements ClassDeclarationsMacro {
   const DataClass();
 
@@ -25,20 +26,33 @@ macro class DataClass implements ClassDeclarationsMacro {
     final identical =
         await builder.resolveIdentifier(Uri.parse('dart:core'), 'identical');
 
-    // Buffer to build constructor parameters and initialization
-    final constructorBuffer = StringBuffer();
-
-    // Start the constructor definition
-    constructorBuffer.write('  ${clazz.identifier.name}');
-    constructorBuffer.write('({\n');
-
     // Collect field information
     final fields = await builder.fieldsOf(clazz);
     final fieldNames = <String>[];
+    final constructorBuffer = StringBuffer();
     final copyWithParams = <Object>[];
     final copyWithBody = StringBuffer();
     final toStringParams = <Object>[];
     final toStringBody = StringBuffer();
+
+    // Check if there are no fields
+    if (fields.isEmpty) {
+      return;
+    }
+
+    // Check if there are more than 19 fields
+    if (fields.length > 19) {
+      return;
+    }
+
+    // Start the constructor definition
+    if (fields.any((field) => !field.hasFinal)) {
+      constructorBuffer.write('  ');
+    } else {
+      constructorBuffer.write('  const ');
+    }
+    constructorBuffer.write(clazz.identifier.name);
+    constructorBuffer.write('({\n');
 
     for (final field in fields) {
       final fieldName = field.identifier.name;
