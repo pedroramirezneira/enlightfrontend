@@ -27,8 +27,9 @@ class MessageBubble extends StatelessWidget {
       builder: (context, constraints) => Container(
         constraints: BoxConstraints(maxWidth: constraints.maxWidth - 50),
         decoration: BoxDecoration(
-          color:
-              isSender ? surface.withOpacity(0.5) : Colors.grey.withOpacity(0.5),
+          color: isSender
+              ? surface.withOpacity(0.5)
+              : Colors.grey.withOpacity(0.5),
           borderRadius: BorderRadius.circular(10),
         ),
         padding: const EdgeInsets.all(10),

@@ -1,5 +1,7 @@
 import 'package:enlight/models/timeslot_data.dart';
+import 'package:json/json.dart';
 
+@JsonCodable()
 class DayData {
   final String name;
   List<TimeslotData> timeslots;
@@ -8,23 +10,4 @@ class DayData {
     required this.name,
     required this.timeslots,
   });
-
-  factory DayData.fromJson(Map<String, dynamic> json) {
-    List<dynamic>? timeslots = json["timeslots"];
-    return DayData(
-      name: json["name"],
-      timeslots: timeslots != null
-          ? timeslots
-              .map((timeslot) => TimeslotData.fromJson(timeslot))
-              .toList()
-          : [],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      "name": name,
-      "timeslots": timeslots.map((timeslot) => timeslot.toJson()).toList(),
-    };
-  }
 }

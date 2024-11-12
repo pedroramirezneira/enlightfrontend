@@ -1,6 +1,6 @@
 import 'package:enlight/components/chat_bubble.dart';
 import 'package:enlight/components/fixed_scaffold.dart';
-import 'package:enlight/models/chats_data.dart';
+import 'package:enlight/models/chat/chats_data.dart';
 import 'package:enlight/pages/chat/chat.dart';
 import 'package:enlight/services/auth_service.dart';
 import 'package:enlight/services/messaging_service.dart';
@@ -51,7 +51,7 @@ class Chats extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (context) => Chat(
                       index: index,
-                      receiver: chatsService.data.chats[index],
+                      receiver: chatsService.data.chats[index].account,
                       senderId: chatsService.data.accountId,
                     ),
                   ),

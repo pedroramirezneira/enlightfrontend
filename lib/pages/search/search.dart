@@ -29,7 +29,7 @@ class _SearchTeachersState extends State<SearchTeachers> {
   void _performSearch(String query) async {
     if (_priceController.text.isEmpty || _ratingController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: AwesomeSnackbarContent(
             title: "Error",
             message: "Fill the price and rating fields",
@@ -41,7 +41,7 @@ class _SearchTeachersState extends State<SearchTeachers> {
     }
     if (int.parse(_priceController.text) < 0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: AwesomeSnackbarContent(
             title: "Error",
             message: "Price has to equal or greater than 0",
@@ -54,7 +54,7 @@ class _SearchTeachersState extends State<SearchTeachers> {
     if ((int.parse(_ratingController.text) < 0 ||
         int.parse(_ratingController.text) > 10)) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: AwesomeSnackbarContent(
             title: "Error",
             message: "Rating has to be between 0 and 10",

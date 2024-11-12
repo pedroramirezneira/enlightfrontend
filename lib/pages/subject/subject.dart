@@ -105,7 +105,7 @@ class _SubjectState extends State<Subject> {
                               .map(
                                 (timeslot) => SelectableTimeslot(
                                   text:
-                                      "${timeslot.startTime.substring(0, 5)} - ${timeslot.endTime.substring(0, 5)}",
+                                      "${timeslot.start_time.substring(0, 5)} - ${timeslot.end_time.substring(0, 5)}",
                                   onPressed: () => setState(
                                       () => selectedTimeslot = timeslot),
                                 ),

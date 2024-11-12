@@ -64,7 +64,8 @@ class _TimeslotMenuState extends State<TimeslotMenu> {
                       fontWeight: FontWeight.w500,
                       days: widget.days,
                       border: false,
-                      daysFillColor: const Color.fromARGB(255, 100, 201, 169),
+                      selectedDaysFillColor:
+                          const Color.fromARGB(255, 100, 201, 169),
                       boxDecoration: BoxDecoration(
                         border: Border.all(color: Colors.white),
                         borderRadius: BorderRadius.circular(10.0),
@@ -100,7 +101,7 @@ class _TimeslotMenuState extends State<TimeslotMenu> {
                     onPressed: () {
                       if (selectedDays.isEmpty) {
                         messengerKey.currentState!.showSnackBar(
-                          SnackBar(
+                          const SnackBar(
                             content: AwesomeSnackbarContent(
                               title: "Watch out",
                               message: "Please select at least one day.",
@@ -115,8 +116,8 @@ class _TimeslotMenuState extends State<TimeslotMenu> {
                           days: selectedDays,
                           timeslot: TimeslotData(
                             id: 0,
-                            startTime: startTimeController.text,
-                            endTime: endTimeController.text,
+                            start_time: startTimeController.text,
+                            end_time: endTimeController.text,
                           ),
                         ),
                       );

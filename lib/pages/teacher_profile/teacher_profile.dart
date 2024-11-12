@@ -1,6 +1,6 @@
 import 'package:enlight/components/fixed_scaffold.dart';
 import 'package:enlight/models/account/account_data.dart';
-import 'package:enlight/models/teacher_data.dart';
+import 'package:enlight/models/teacher/teacher_data.dart';
 import 'package:enlight/pages/edit_account/edit_account.dart';
 import 'package:enlight/pages/edit_teacher_profile/edit_teacher_profile.dart';
 import 'package:enlight/pages/teacher_profile/util/show_subject_dialog.dart';
@@ -27,9 +27,7 @@ class _TeacherProfileState extends State<TeacherProfile> {
     final teacher = Provider.of<TeacherService>(context);
     if (account.loading || teacher.loading) {
       return const FixedScaffold(
-        title: "Account",
-        child: CircularProgressIndicator.adaptive()
-      );
+          title: "Account", child: CircularProgressIndicator.adaptive());
     }
     if (account.data is EmptyAccountData || teacher.data is EmptyTeacherData) {
       return const FixedScaffold(

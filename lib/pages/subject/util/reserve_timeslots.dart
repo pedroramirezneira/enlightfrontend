@@ -16,7 +16,9 @@ Future<void> reserveTimeslots({
   if (response.statusCode != 200 || !context.mounted) return;
   final messagingService =
       Provider.of<MessagingService>(context, listen: false);
-  if (messagingService.data.chats.where((e) => e.id == teacherId).isEmpty) {
+  if (messagingService.data.chats
+      .where((e) => e.account.id == teacherId)
+      .isEmpty) {
     await messagingService.createChat(context, teacherId);
   }
   if (!context.mounted) return;

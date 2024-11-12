@@ -1,5 +1,5 @@
 import 'package:enlight/components/fixed_scaffold.dart';
-import 'package:enlight/models/search_teacher_data.dart';
+import 'package:enlight/models/teacher/search_teacher_data.dart';
 import 'package:enlight/pages/teacher_profile/util/tags_container_from_search.dart';
 import 'package:enlight/services/teacher_service.dart';
 import 'package:flutter/material.dart';
@@ -42,9 +42,7 @@ class _TeacherProfileFromSearchState extends State<TeacherProfileFromSearch> {
     final hasImage = data.picture != null;
     if (loading) {
       return const FixedScaffold(
-        title: "Teacher",
-        child: CircularProgressIndicator.adaptive()
-      );
+          title: "Teacher", child: CircularProgressIndicator.adaptive());
     }
     if (data is EmptySearchTeacherData) {
       return const FixedScaffold(

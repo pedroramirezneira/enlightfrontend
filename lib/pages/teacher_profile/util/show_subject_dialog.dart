@@ -48,6 +48,7 @@ void _submit({
   )
       .then((response) {
     if (response.statusCode == 200) {
+      if (!context.mounted) return;
       Navigator.of(context).pop();
     }
   });

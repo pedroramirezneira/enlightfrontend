@@ -61,7 +61,7 @@ class _RateMenuState extends State<RatingMenu> {
                                     int.parse(rateController.text).toDouble();
                             if (result > 10 || result < 1) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
+                                const SnackBar(
                                   content: AwesomeSnackbarContent(
                                     title: "Error",
                                     message: "Rating should be from 1 to 10.",

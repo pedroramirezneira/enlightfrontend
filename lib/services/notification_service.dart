@@ -1,4 +1,4 @@
-import 'package:enlight/models/chats_data.dart';
+import 'package:enlight/models/chat/chats_data.dart';
 import 'package:enlight/services/messaging_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -17,7 +17,7 @@ class NotificationService {
     }
     final accountId = chats.accountId;
     final receiverIds = chats.chats.map(
-      (e) => e.id,
+      (e) => e.account.id,
     );
     try {
       await _platform.invokeMethod("startService", {

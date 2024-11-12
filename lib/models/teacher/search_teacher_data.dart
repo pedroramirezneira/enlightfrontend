@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:enlight/models/subject_data.dart';
-import 'package:enlight/models/teacher_data.dart';
+import 'package:enlight/models/teacher/teacher_data.dart';
 
 class SearchTeacherData extends TeacherData {
   final String name;

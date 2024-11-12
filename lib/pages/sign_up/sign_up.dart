@@ -212,7 +212,7 @@ class _SignUpState extends State<SignUp> {
                                       if (selectedValue == null) {
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(
-                                          SnackBar(
+                                          const SnackBar(
                                             content: AwesomeSnackbarContent(
                                               title: "Watch out",
                                               message: "Role cannot be empty.",
@@ -231,7 +231,8 @@ class _SignUpState extends State<SignUp> {
                                         address: addressController.text,
                                         role: selectedValue!.toLowerCase(),
                                       );
-                                      final response = await UnauthorizedService.register(
+                                      final response =
+                                          await UnauthorizedService.register(
                                         context,
                                         data,
                                       );

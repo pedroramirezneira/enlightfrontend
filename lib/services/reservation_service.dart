@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:enlight/models/reservation/create_reservation_data.dart';
 import 'package:enlight/models/reservation/reservation_data.dart';
+import 'package:enlight/models/reservation/reservation_data_dto.dart';
 import 'package:enlight/services/auth_service.dart';
 import 'package:enlight/util/web_client.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -26,10 +27,9 @@ class ReservationService extends ChangeNotifier {
         if (response.statusCode == 200) {
           final Map<String, dynamic> data = json.decode(response.body);
           final List<dynamic> reservations = data["reservations"];
-          _data = reservations
-              .map((json) => ReservationData.fromJson(json))
-              .toList();
-          accountId = data["account_id"];
+          final result =
+              reservations.map((e) => ReservationDataDto.fromJson(e));
+          _data = result.map((e) => e.toData()).toList();
         }
         _loading = false;
         notifyListeners();
@@ -38,6 +38,7 @@ class ReservationService extends ChangeNotifier {
         // Listen for changes
         ref.onValue.listen(
           (event) async {
+            if (!context.mounted) return;
             final response = await WebClient.get(
               context,
               "reservation",
@@ -46,8 +47,8 @@ class ReservationService extends ChangeNotifier {
             if (response.statusCode == 200) {
               final List<dynamic> data =
                   json.decode(response.body)["reservations"];
-              _data =
-                  data.map((json) => ReservationData.fromJson(json)).toList();
+              final result = data.map((e) => ReservationDataDto.fromJson(e));
+              _data = result.map((e) => e.toData()).toList();
             }
             _newReservations++;
             notifyListeners();
@@ -81,7 +82,8 @@ class ReservationService extends ChangeNotifier {
       final reload = await WebClient.get(context, "reservation", info: false);
       if (reload.statusCode == 200) {
         final List<dynamic> newData = json.decode(reload.body)["reservations"];
-        _data = newData.map((json) => ReservationData.fromJson(json)).toList();
+        final result = newData.map((json) => ReservationDataDto.fromJson(json));
+        _data = result.map((e) => e.toData()).toList();
         final reservationId = response.body;
         final reservation = _data.firstWhere(
           (e) => e.reservationId == int.parse(reservationId),

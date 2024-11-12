@@ -4,7 +4,8 @@ class SearchBox extends StatefulWidget {
   final String hintText;
   final Function(String) onSubmitted;
 
-  const SearchBox({super.key, required this.hintText, required this.onSubmitted});
+  const SearchBox(
+      {super.key, required this.hintText, required this.onSubmitted});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -20,7 +21,7 @@ class _SearchBoxState extends State<SearchBox> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: SizedBox(
-          width: MediaQuery.of(context).size.width/1.7,
+          width: MediaQuery.of(context).size.width / 1.7,
           child: TextField(
             controller: _controller,
             decoration: InputDecoration(

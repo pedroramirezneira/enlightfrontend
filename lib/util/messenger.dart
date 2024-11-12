@@ -2,7 +2,7 @@ import 'dart:typed_data';
 import 'package:enlight/components/confirm_picture_dialog.dart';
 import 'package:enlight/components/picture_menu.dart';
 import 'package:enlight/models/account/account_data.dart';
-import 'package:enlight/models/teacher_data.dart';
+import 'package:enlight/models/teacher/teacher_data.dart';
 import 'package:enlight/services/account_service.dart';
 import 'package:enlight/services/auth_service.dart';
 import 'package:enlight/services/reservation_service.dart';
@@ -98,6 +98,7 @@ class Messenger {
         if (value != true) {
           return;
         }
+        if (!context.mounted) return;
         final teacherService = Provider.of<TeacherService>(
           context,
           listen: false,
@@ -139,6 +140,7 @@ class Messenger {
         return;
       }
       onAccept();
+      if (!context.mounted) return;
       final reservationService = Provider.of<ReservationService>(
         context,
         listen: false,
@@ -160,6 +162,7 @@ class Messenger {
         return;
       }
       Uint8List? selected;
+      if (!context.mounted) return;
       if (value == "select") {
         selected = await _loadImage(
           context: context,
@@ -183,6 +186,7 @@ class Messenger {
         if (value == null || !value) {
           return;
         }
+        if (!context.mounted) return;
         _updatePicture(
           context: context,
           bytes: selected!,

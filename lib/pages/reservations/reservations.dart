@@ -29,9 +29,7 @@ class _TeacherReservations extends State<Reservations> {
 
     if (reservationService.loading) {
       return const FixedScaffold(
-        title: "Reservations",
-        child: CircularProgressIndicator.adaptive()
-      );
+          title: "Reservations", child: CircularProgressIndicator.adaptive());
     }
     if (reservationService.data.isEmpty && role == 1) {
       return const FixedScaffold(

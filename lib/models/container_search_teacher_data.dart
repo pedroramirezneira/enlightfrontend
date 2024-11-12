@@ -1,30 +1,18 @@
-class ConatinerSearchTeacherData {
+import 'package:json/json.dart';
+
+@JsonCodable()
+class ContainerSearchTeacherData {
   final int id;
   double rating;
   String name;
   String description;
   String? picture;
 
-  ConatinerSearchTeacherData({
+  ContainerSearchTeacherData({
     required this.rating,
     required this.id,
     required this.name,
     required this.description,
     this.picture,
   });
-
-  factory ConatinerSearchTeacherData.fromJson(Map<String, dynamic> json) {
-    String? picture = json["picture"];
-    double rating = 0.0;
-    if (json["rating"] != null) {
-      rating = double.parse(json["rating"].toString());
-    }
-    return ConatinerSearchTeacherData(
-      id: json["id"],
-      name: json["name"],
-      description: json["description"],
-      rating: rating,
-      picture: picture ?? "",
-    );
-  }
 }

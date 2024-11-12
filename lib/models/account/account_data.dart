@@ -1,6 +1,7 @@
-import 'dart:convert';
 import 'dart:typed_data';
+import 'package:enlight/macros/data_class.dart';
 
+@DataClass()
 class AccountData {
   final int? id;
   final String email;
@@ -8,50 +9,6 @@ class AccountData {
   String birthday;
   String address;
   Uint8List? picture;
-
-  AccountData({
-    required this.id,
-    required this.email,
-    required this.name,
-    required this.birthday,
-    required this.address,
-    this.picture,
-  });
-
-  factory AccountData.fromJson(Map<String, dynamic> json) {
-    final picture = json["picture"];
-    final decoded = picture is String ? base64.decode(picture) : null;
-    return AccountData(
-      id: json["id"],
-      email: json["email"],
-      name: json["name"],
-      birthday: (json["birthday"] as String).split("T")[0],
-      address: json["address"],
-      picture: decoded,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      "id": id,
-      "email": email,
-      "name": name,
-      "birthday": birthday,
-      "address": address,
-      "picture": picture,
-    };
-  }
-
-  static AccountData empty() {
-    return AccountData(
-      id: null,
-      email: "",
-      name: "",
-      birthday: "",
-      address: "",
-      picture: null,
-    );
-  }
 }
 
 class EmptyAccountData extends AccountData {

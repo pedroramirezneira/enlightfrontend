@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:enlight/models/account/account_data.dart';
+import 'package:enlight/models/account/account_data_dto.dart';
 import 'package:enlight/models/account/update_account_data.dart';
 import 'package:enlight/services/auth_service.dart';
 import 'package:enlight/util/web_client.dart';
@@ -22,7 +23,8 @@ class AccountService extends ChangeNotifier {
       );
       if (response.statusCode == 200) {
         Map<String, dynamic> data = json.decode(response.body);
-        _data = AccountData.fromJson(data);
+        final result = AccountDataDto.fromJson(data);
+        _data = result.toData();
       }
       _loading = false;
       notifyListeners();

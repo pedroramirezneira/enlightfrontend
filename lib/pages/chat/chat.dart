@@ -4,6 +4,7 @@ import 'package:enlight/components/message_bubble.dart';
 import 'package:enlight/components/message_input.dart';
 import 'package:enlight/models/account/account_data.dart';
 import 'package:enlight/models/message_data.dart';
+import 'package:enlight/models/message_data_dto.dart';
 import 'package:enlight/pages/profile_picture/profile_picture.dart';
 import 'package:enlight/services/messaging_service.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -91,9 +92,14 @@ class _ChatState extends State<Chat> {
               final data =
                   snapshot.data!.snapshot.value as Map<dynamic, dynamic>;
               final chatData = data[chatKey] as Map<dynamic, dynamic>;
-              messages = chatData.entries
-                  .map((entry) => MessageData.fromJson(entry.value))
-                  .toList()
+              messages = chatData.entries.map((entry) {
+                final data = Map<String, dynamic>.fromEntries(
+                  (entry.value as Map)
+                      .entries
+                      .map((e) => MapEntry(e.key.toString(), e.value)),
+                );
+                return MessageDataDto.fromJson(data).toData();
+              }).toList()
                 ..sort(((a, b) => b.timestamp.compareTo(a.timestamp)));
             } catch (error) {
               messages = [];
@@ -148,7 +154,7 @@ class _ChatState extends State<Chat> {
                     ),
                     MessageInput(
                       senderId: widget.senderId,
-                      onPressed: (MessageData message) {
+                      onPressed: (MessageDataDto message) {
                         final messageKey = chat.child("chatKey").push().key;
                         final Map<String, dynamic> updates = {};
                         updates["$chatKey/$messageKey"] = message.toJson();

@@ -17,7 +17,7 @@ class ChatBubble extends StatelessWidget {
   Widget build(BuildContext context) {
     final chatService = Provider.of<MessagingService>(context);
     final chat = chatService.data.chats[index];
-    final hasImage = chat.picture != null;
+    final hasImage = chat.account.picture != null;
     return InkWell(
       onTap: onTap,
       child: Padding(
@@ -26,10 +26,11 @@ class ChatBubble extends StatelessWidget {
           children: <Widget>[
             CircleAvatar(
               radius: 24,
-              backgroundImage: hasImage ? MemoryImage(chat.picture!) : null,
+              backgroundImage:
+                  hasImage ? MemoryImage(chat.account.picture!) : null,
             ),
             const SizedBox(width: 16),
-            Text(chat.name),
+            Text(chat.account.name),
             const SizedBox(width: 16),
             badges.Badge(
               showBadge: chat.newMessages > 0,

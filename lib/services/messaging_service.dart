@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:enlight/models/chats_data.dart';
-import 'package:enlight/models/message_data.dart';
+import 'package:enlight/models/chat/chats_data.dart';
+import 'package:enlight/models/chat/chats_data_dto.dart';
+import 'package:enlight/models/message_data_dto.dart';
 import 'package:enlight/util/web_client.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -22,9 +23,11 @@ class MessagingService extends ChangeNotifier {
       final response = await WebClient.get(context, "chat", info: false);
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
-        _data = ChatsData.fromJson(data);
+        final result = ChatsDataDto.fromJson(data);
+        _data = result.toData();
         final ref = database.child(_data.accountId.toString());
-        ref.onValue.listen((_) => refreshChats(context));
+        ref.onValue
+            .listen((_) => context.mounted ? refreshChats(context) : null);
       }
     });
   }
@@ -39,7 +42,8 @@ class MessagingService extends ChangeNotifier {
     final response = await WebClient.get(context, "chat", info: false);
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = json.decode(response.body);
-      _data = ChatsData.fromJson(data);
+      final result = ChatsDataDto.fromJson(data);
+      _data = result.toData();
       _loading = false;
       notifyListeners();
     }
@@ -47,7 +51,7 @@ class MessagingService extends ChangeNotifier {
     // Listen for changes
     _newMessages = -data.chats.length;
     for (final chat in data.chats) {
-      final list = [data.accountId, chat.id];
+      final list = [data.accountId, chat.account.id];
       list.sort();
       final chatKey = list.join("-");
       final ref = database.child(chatKey);
@@ -57,11 +61,10 @@ class MessagingService extends ChangeNotifier {
             if (newMessages >= 0) {
               try {
                 final data = event.snapshot.value as Map<dynamic, dynamic>;
-                final messages = data.entries
-                    .map(
-                      (e) => MessageData.fromJson(e.value),
-                    )
+                final result = data.entries
+                    .map((e) => MessageDataDto.fromJson(e.value))
                     .toList();
+                final messages = result.map((e) => e.toData()).toList();
                 messages.sort((a, b) => a.timestamp.compareTo(b.timestamp));
                 if (messages.last.senderId != this.data.accountId) {
                   chat.newMessages++;

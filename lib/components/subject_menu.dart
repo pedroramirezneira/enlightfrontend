@@ -213,7 +213,7 @@ class _SubjectMenuState extends State<SubjectMenu> {
                                                 in day.timeslots)
                                               Timeslot(
                                                 text:
-                                                    "${timeslot.startTime} - ${timeslot.endTime}",
+                                                    "${timeslot.start_time} - ${timeslot.end_time}",
                                                 onPressed: () {
                                                   setState(() {
                                                     day.timeslots
@@ -276,7 +276,7 @@ class _SubjectMenuState extends State<SubjectMenu> {
                             onPressed: () {
                               if (days.isEmpty) {
                                 messengerKey.currentState!.showSnackBar(
-                                  SnackBar(
+                                  const SnackBar(
                                     content: AwesomeSnackbarContent(
                                       title: "Watch out",
                                       message:

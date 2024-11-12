@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'package:enlight/models/search_teacher_data.dart';
+import 'package:enlight/models/teacher/search_teacher_data.dart';
 import 'package:enlight/models/subject_data.dart';
-import 'package:enlight/models/teacher_data.dart';
+import 'package:enlight/models/teacher/teacher_data.dart';
 import 'package:enlight/util/web_client.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

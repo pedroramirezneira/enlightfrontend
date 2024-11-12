@@ -13,10 +13,8 @@ class StudentProfile extends StatelessWidget {
   Widget build(BuildContext context) {
     final account = Provider.of<AccountService>(context);
     if (account.loading) {
-      return  const FixedScaffold(
-        title: "Account",
-        child: CircularProgressIndicator.adaptive()
-      );
+      return const FixedScaffold(
+          title: "Account", child: CircularProgressIndicator.adaptive());
     }
     if (account.data is EmptyAccountData) {
       return const FixedScaffold(
