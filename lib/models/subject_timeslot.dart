@@ -23,6 +23,7 @@ class EmptySubjectTimeSlotData extends SubjectTimeSlotData {
       : super(
           id: -1,
           category_name: "",
+          category_name: "",
           name: "",
           description: "",
           price: 0,
