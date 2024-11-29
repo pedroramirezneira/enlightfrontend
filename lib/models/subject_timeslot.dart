@@ -1,50 +1,33 @@
+import 'package:enlight/macros/data_class.dart';
 import 'package:enlight/models/day_data.dart';
-import 'package:enlight/models/subject_data.dart';
+import 'package:json/json.dart';
 
-class SubjectTimeSlotData extends SubjectData {
-  final int teacherId;
+@DataClass()
+@JsonCodable()
+class SubjectTimeSlotData {
+  // ignore: non_constant_identifier_names
+  final int teacher_id;
   final String modality;
   final int size;
-
-  SubjectTimeSlotData({
-    required super.id,
-    required super.categoryName,
-    required super.name,
-    required super.description,
-    required super.price,
-    required super.days,
-    required this.teacherId,
-    required this.modality,
-    required this.size,
-  });
-
-  factory SubjectTimeSlotData.fromJson(Map<String, dynamic> json) {
-    final List<dynamic>? days = json["days"];
-    return SubjectTimeSlotData(
-      id: json["id"],
-      categoryName: json["category_name"],
-      name: json["name"],
-      price: json["price"],
-      description: json["description"],
-      days:
-          days != null ? days.map((day) => DayData.fromJson(day)).toList() : [],
-      teacherId: json["teacher_id"],
-      modality: json["modality"],
-      size: json["size"],
-    );
-  }
+  final int id;
+  // ignore: non_constant_identifier_names
+  String category_name;
+  String name;
+  String description;
+  int price;
+  List<DayData> days;
 }
 
 class EmptySubjectTimeSlotData extends SubjectTimeSlotData {
   EmptySubjectTimeSlotData()
       : super(
           id: -1,
-          categoryName: "",
+          category_name: "",
           name: "",
           description: "",
           price: 0,
           days: [],
-          teacherId: -1,
+          teacher_id: -1,
           modality: "",
           size: -1,
         );

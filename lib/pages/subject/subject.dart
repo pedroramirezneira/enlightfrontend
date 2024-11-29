@@ -203,7 +203,7 @@ class _SubjectState extends State<Subject> {
                                 );
                                 await reserveTimeslots(
                                   context: context,
-                                  teacherId: this.data.teacherId,
+                                  teacherId: this.data.teacher_id,
                                   data: data,
                                 );
                                 setState(() => loading = false);

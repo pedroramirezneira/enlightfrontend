@@ -38,7 +38,7 @@ class _EditAccountState extends State<EditAccount> {
     if (!initialized) {
       setState(() {
         nameController.text = accountService.data.name;
-        birthdayController.text = accountService.data.birthday;
+        birthdayController.text = accountService.data.birthday.split("T")[0];
         addressController.text = accountService.data.address;
         initialized = true;
       });

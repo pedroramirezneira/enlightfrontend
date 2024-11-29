@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:enlight/macros/data_class.dart';
 import 'package:enlight/models/reservation/reservation_data.dart';
 import 'package:flutter/material.dart';
@@ -6,31 +8,31 @@ import 'package:json/json.dart';
 @DataClass()
 @JsonCodable()
 class ReservationDataDto {
-  final int reservationId;
-  final int timeslotId;
-  final String subjectName;
-  final int subjectId;
-  final String teacherName;
-  final int teacherId;
-  final String studentName;
-  final int studentId;
+  final int reservation_id;
+  final int timeslot_id;
+  final String subject_name;
+  final int subject_id;
+  final String teacher_name;
+  final int teacher_id;
+  final String student_name;
+  final int student_id;
   final String date;
-  final String startTime;
-  final String endTime;
+  final String start_time;
+  final String end_time;
 
   ReservationData toData() {
     return ReservationData(
-      reservationId: reservationId,
-      timeslotId: timeslotId,
-      subjectName: subjectName,
-      subjectId: subjectId,
-      teacherName: teacherName,
-      teacherId: teacherId,
-      studentName: studentName,
-      studentId: studentId,
+      reservationId: reservation_id,
+      timeslotId: timeslot_id,
+      subjectName: subject_name,
+      subjectId: subject_id,
+      teacherName: teacher_name,
+      teacherId: teacher_id,
+      studentName: student_name,
+      studentId: student_id,
       date: DateTime.parse(date),
-      startTime: _parseTimeOfDay(startTime),
-      endTime: _parseTimeOfDay(endTime),
+      startTime: _parseTimeOfDay(start_time),
+      endTime: _parseTimeOfDay(end_time),
     );
   }
 }
