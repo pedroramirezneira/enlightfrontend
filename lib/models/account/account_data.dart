@@ -5,14 +5,14 @@ import 'package:enlight/macros/data_class.dart';
 class AccountData {
   final int? id;
   final String email;
-  String name;
-  String birthday;
-  String address;
-  Uint8List? picture;
+  final String name;
+  final String birthday;
+  final String address;
+  final Uint8List? picture;
 }
 
 class EmptyAccountData extends AccountData {
-  EmptyAccountData()
+  const EmptyAccountData()
       : super(
           id: null,
           email: "",

@@ -28,7 +28,7 @@ class SubjectService {
       "subject/$id",
     );
     if (response.statusCode != 200) {
-      return EmptySubjectTimeSlotData();
+      return EmptySubjectData();
     }
     final data = json.decode(response.body);
     return SubjectData.fromJson(data);

@@ -1,10 +1,8 @@
+import 'package:enlight/macros/data_class.dart';
 import 'package:json/json.dart';
 
+@DataClass()
 @JsonCodable()
 class CategoryData {
-  String name;
-
-  CategoryData({
-    required this.name,
-  });
+  final String name;
 }

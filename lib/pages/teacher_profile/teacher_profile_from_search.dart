@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:enlight/components/fixed_scaffold.dart';
 import 'package:enlight/models/teacher/search_teacher_data.dart';
 import 'package:enlight/pages/teacher_profile/util/tags_container_from_search.dart';
@@ -72,8 +74,9 @@ class _TeacherProfileFromSearchState extends State<TeacherProfileFromSearch> {
                                 .surface
                                 .withOpacity(0.5),
                             radius: 50,
-                            backgroundImage:
-                                hasImage ? MemoryImage(data.picture!) : null,
+                            backgroundImage: hasImage
+                                ? MemoryImage(base64.decode(data.picture!))
+                                : null,
                             child: !hasImage
                                 ? Text(
                                     data.name[0].toUpperCase(),

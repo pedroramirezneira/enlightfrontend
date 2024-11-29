@@ -10,7 +10,7 @@ import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 
 class AccountService extends ChangeNotifier {
-  AccountData _data = EmptyAccountData();
+  AccountData _data = const EmptyAccountData();
   AccountData get data => _data;
   var _loading = true;
   bool get loading => _loading;
@@ -45,9 +45,11 @@ class AccountService extends ChangeNotifier {
       body: json.encode(newData.toJson()),
     );
     if (response.statusCode == 200) {
-      _data.name = newData.name;
-      _data.birthday = newData.birthday;
-      _data.address = newData.address;
+      _data = _data.copyWith(
+        name: newData.name,
+        birthday: newData.birthday,
+        address: newData.address,
+      );
       notifyListeners();
     }
     return response;
@@ -76,7 +78,7 @@ class AccountService extends ChangeNotifier {
       ),
     );
     if (response.statusCode == 200) {
-      _data.picture = bytes;
+      _data = _data.copyWith(picture: bytes);
       notifyListeners();
     }
   }

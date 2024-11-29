@@ -224,12 +224,12 @@ class _SearchTeachersState extends State<SearchTeachers> {
                           ),
                           const SizedBox(width: 20),
                           if (selectedValue == "Teacher")
-                            if (_searchResults.teacher!.isEmpty)
+                            if (_searchResults.teachers!.isEmpty)
                               const Center(
                                 child: Text("No data found"),
                               )
                             else
-                              for (var teacher in _searchResults.teacher!)
+                              for (var teacher in _searchResults.teachers!)
                                 if (teacher.rating >=
                                     double.parse(_ratingController.text))
                                   TeacherResultContainer(
@@ -240,12 +240,12 @@ class _SearchTeachersState extends State<SearchTeachers> {
                                     rating: teacher.rating,
                                   ),
                           if (selectedValue == "Tags")
-                            if (_searchResults.subject!.isEmpty)
+                            if (_searchResults.subjects!.isEmpty)
                               const Center(
                                 child: Text("No data found"),
                               )
                             else
-                              for (var subject in _searchResults.subject!)
+                              for (var subject in _searchResults.subjects!)
                                 if (subject.price <=
                                     double.parse(_priceController.text))
                                   SubjectResultContainer(

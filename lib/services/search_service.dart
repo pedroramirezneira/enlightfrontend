@@ -15,6 +15,6 @@ class SearchService {
       final data = json.decode(response.body);
       return SearchData.fromJson(data);
     }
-    return EmptySearchData();
+    return const EmptySearchData();
   }
 }

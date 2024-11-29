@@ -1,8 +1,10 @@
 // ignore_for_file: non_constant_identifier_names
 
-import 'package:json/json.dart';
+import 'package:enlight/macros/data_class.dart';
 import 'package:enlight/models/day_data.dart';
+import 'package:json/json.dart';
 
+@DataClass()
 @JsonCodable()
 class SubjectData {
   final int id;
@@ -11,13 +13,16 @@ class SubjectData {
   String description;
   int price;
   List<DayData> days;
+}
 
-  SubjectData({
-    required this.id,
-    required this.category_name,
-    required this.name,
-    required this.description,
-    required this.price,
-    required this.days,
-  });
+class EmptySubjectData extends SubjectData {
+  EmptySubjectData()
+      : super(
+          id: -1,
+          category_name: "",
+          name: "",
+          description: "",
+          price: 0,
+          days: [],
+        );
 }
