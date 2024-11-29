@@ -32,7 +32,7 @@ void _submit({
 }) {
   final data = SubjectData(
     id: -1,
-    categoryName: categoryName,
+    category_name: categoryName,
     name: name,
     description: description,
     price: price,

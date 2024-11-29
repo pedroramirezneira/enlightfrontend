@@ -1,8 +1,10 @@
+import 'package:json/json.dart';
 import 'package:enlight/models/day_data.dart';
 
+@JsonCodable()
 class SubjectData {
   final int id;
-  String categoryName;
+  String category_name;
   String name;
   String description;
   int price;
@@ -10,23 +12,10 @@ class SubjectData {
 
   SubjectData({
     required this.id,
-    required this.categoryName,
+    required this.category_name,
     required this.name,
     required this.description,
     required this.price,
     required this.days,
   });
-
-  factory SubjectData.fromJson(Map<String, dynamic> json) {
-    final List<dynamic>? days = json["days"];
-    return SubjectData(
-      id: json["id"],
-      categoryName: json["category_name"],
-      name: json["name"],
-      price: json["price"],
-      description: json["description"],
-      days:
-          days != null ? days.map((day) => DayData.fromJson(day)).toList() : [],
-    );
-  }
 }

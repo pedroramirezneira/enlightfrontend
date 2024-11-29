@@ -60,7 +60,7 @@ class TeacherService extends ChangeNotifier {
         "Content-Type": "application/json",
       },
       body: json.encode({
-        "category_name": data.categoryName,
+        "category_name": data.category_name,
         "name": data.name,
         "price": data.price,
         "description": data.description,

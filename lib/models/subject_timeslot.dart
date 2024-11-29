@@ -8,7 +8,7 @@ class SubjectTimeSlotData extends SubjectData {
 
   SubjectTimeSlotData({
     required super.id,
-    required super.categoryName,
+    required super.category_name,
     required super.name,
     required super.description,
     required super.price,
@@ -22,7 +22,7 @@ class SubjectTimeSlotData extends SubjectData {
     final List<dynamic>? days = json["days"];
     return SubjectTimeSlotData(
       id: json["id"],
-      categoryName: json["category_name"],
+      category_name: json["category_name"],
       name: json["name"],
       price: json["price"],
       description: json["description"],
@@ -39,7 +39,7 @@ class EmptySubjectTimeSlotData extends SubjectTimeSlotData {
   EmptySubjectTimeSlotData()
       : super(
           id: -1,
-          categoryName: "",
+          category_name: "",
           name: "",
           description: "",
           price: 0,
