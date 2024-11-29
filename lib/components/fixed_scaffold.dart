@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 class FixedScaffold extends StatelessWidget {
   final String title;
-  final Widget child;
+  final Widget body;
 
   const FixedScaffold({
     super.key,
     required this.title,
-    required this.child,
+    required this.body,
   });
 
   @override
@@ -16,7 +16,7 @@ class FixedScaffold extends StatelessWidget {
       appBar: AppBar(
         title: Text(title),
       ),
-      body: Center(child: child),
+      body: Center(child: body),
     );
   }
 }

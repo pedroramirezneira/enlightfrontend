@@ -17,20 +17,30 @@ class Chats extends StatelessWidget {
     final role = authService.role;
     if (chatsService.loading) {
       return const FixedScaffold(
-          title: "Chats", child: CircularProgressIndicator.adaptive());
+          title: "Chats", body: CircularProgressIndicator.adaptive());
     }
-    if (chatsService.data is EmptyChatsData && role == 1) {
-      return const FixedScaffold(
+    final isEmpty =
+        chatsService.data is EmptyChatsData || chatsService.data.chats.isEmpty;
+    if (isEmpty && role == 1) {
+      return FixedScaffold(
         title: "Chats",
-        child: Text(
-          "You have no chats. Make a reservation to start chatting with teachers!",
+        body: Padding(
+          padding: EdgeInsets.all(24),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "You have no chats. Make a reservation to start chatting with teachers!",
+              ),
+            ],
+          ),
         ),
       );
     }
-    if (chatsService.data is EmptyChatsData) {
+    if (isEmpty) {
       return const FixedScaffold(
         title: "Chats",
-        child: Text("You have no chats."),
+        body: Text("You have no chats."),
       );
     }
     return Scaffold(

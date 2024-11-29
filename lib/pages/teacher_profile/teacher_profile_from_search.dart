@@ -42,12 +42,12 @@ class _TeacherProfileFromSearchState extends State<TeacherProfileFromSearch> {
     final hasImage = data.picture != null;
     if (loading) {
       return const FixedScaffold(
-          title: "Teacher", child: CircularProgressIndicator.adaptive());
+          title: "Teacher", body: CircularProgressIndicator.adaptive());
     }
     if (data is EmptySearchTeacherData) {
       return const FixedScaffold(
         title: "Teacher",
-        child: Text("An error occurred while loading the teacher."),
+        body: Text("An error occurred while loading the teacher."),
       );
     }
     return Scaffold(

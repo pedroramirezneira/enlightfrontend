@@ -29,12 +29,12 @@ class _TeacherReservations extends State<Reservations> {
 
     if (reservationService.loading) {
       return const FixedScaffold(
-          title: "Reservations", child: CircularProgressIndicator.adaptive());
+          title: "Reservations", body: CircularProgressIndicator.adaptive());
     }
     if (reservationService.data.isEmpty && role == 1) {
       return const FixedScaffold(
         title: "Reservations",
-        child: Text(
+        body: Text(
           "You have no reservations. Search for teachers to make a reservation!",
         ),
       );
@@ -42,7 +42,7 @@ class _TeacherReservations extends State<Reservations> {
     if (reservationService.data.isEmpty) {
       return const FixedScaffold(
         title: "Reservations",
-        child: Text("You have no reservations."),
+        body: Text("You have no reservations."),
       );
     }
     return Scaffold(

@@ -27,12 +27,12 @@ class _TeacherProfileState extends State<TeacherProfile> {
     final teacher = Provider.of<TeacherService>(context);
     if (account.loading || teacher.loading) {
       return const FixedScaffold(
-          title: "Account", child: CircularProgressIndicator.adaptive());
+          title: "Account", body: CircularProgressIndicator.adaptive());
     }
     if (account.data is EmptyAccountData || teacher.data is EmptyTeacherData) {
       return const FixedScaffold(
         title: "Account",
-        child: Text("An error occurred while loading your account."),
+        body: Text("An error occurred while loading your account."),
       );
     }
     final hasImage = account.data.picture != null;

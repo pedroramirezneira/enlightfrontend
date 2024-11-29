@@ -14,12 +14,12 @@ class StudentProfile extends StatelessWidget {
     final account = Provider.of<AccountService>(context);
     if (account.loading) {
       return const FixedScaffold(
-          title: "Account", child: CircularProgressIndicator.adaptive());
+          title: "Account", body: CircularProgressIndicator.adaptive());
     }
     if (account.data is EmptyAccountData) {
       return const FixedScaffold(
         title: "Account",
-        child: Text("An error occurred while loading your account."),
+        body: Text("An error occurred while loading your account."),
       );
     }
     final hasImage = account.data.picture != null;

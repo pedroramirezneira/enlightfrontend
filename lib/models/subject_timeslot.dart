@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:enlight/models/day_data.dart';
 import 'package:enlight/models/subject_data.dart';
 
