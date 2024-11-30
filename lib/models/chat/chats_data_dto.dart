@@ -14,7 +14,7 @@ class ChatsDataDto {
     return ChatsData(
       accountId: id,
       chats: chats
-          .map((chat) => ChatData(newMessages: 0, account: chat.toData()))
+          .map((chat) => ChatData(newMessages: -1, account: chat.toData()))
           .toList(),
     );
   }

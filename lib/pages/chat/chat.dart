@@ -4,7 +4,6 @@ import 'package:enlight/components/message_bubble.dart';
 import 'package:enlight/components/message_input.dart';
 import 'package:enlight/models/account/account_data.dart';
 import 'package:enlight/models/message_data.dart';
-import 'package:enlight/models/message_data_dto.dart';
 import 'package:enlight/pages/profile_picture/profile_picture.dart';
 import 'package:enlight/services/messaging_service.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -43,6 +42,7 @@ class _ChatState extends State<Chat> {
 
   @override
   Widget build(BuildContext context) {
+    final messagingService = Provider.of<MessagingService>(context);
     final hasImage = widget.receiver.picture != null;
     return Scaffold(
       appBar: AppBar(
@@ -85,7 +85,28 @@ class _ChatState extends State<Chat> {
               context.read<MessagingService>().readMessages(widget.index);
             });
             if (snapshot.data!.snapshot.value == null) {
-              return const Placeholder();
+              return Center(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  width: 500,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      MessageInput(
+                        senderId: widget.senderId,
+                        onPressed: (MessageData message) {
+                          messagingService.sendMessage(
+                            receiverId: widget.receiver.id!,
+                            message: message,
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 20),
+                    ],
+                  ),
+                ),
+              );
             }
             List<MessageData> messages;
             try {
@@ -98,7 +119,7 @@ class _ChatState extends State<Chat> {
                       .entries
                       .map((e) => MapEntry(e.key.toString(), e.value)),
                 );
-                return MessageDataDto.fromJson(data).toData();
+                return MessageData.fromJson(data);
               }).toList()
                 ..sort(((a, b) => b.timestamp.compareTo(a.timestamp)));
             } catch (error) {
@@ -119,14 +140,16 @@ class _ChatState extends State<Chat> {
                           children: <Widget>[
                             () {
                               final timestamp =
-                                  messages[index].timestamp.toLocal();
+                                  DateTime.parse(messages[index].timestamp)
+                                      .toLocal();
                               final date =
                                   DateFormat("MMMM d, yyyy").format(timestamp);
                               if (index == messages.length - 1) {
                                 return Text(date);
                               }
                               final previous =
-                                  messages[index + 1].timestamp.toLocal();
+                                  DateTime.parse(messages[index + 1].timestamp)
+                                      .toLocal();
                               if (date !=
                                   DateFormat("MMMM d, yyyy").format(previous)) {
                                 return Text(date);
@@ -138,13 +161,13 @@ class _ChatState extends State<Chat> {
                             }(),
                             Align(
                               alignment:
-                                  messages[index].senderId == widget.senderId
+                                  messages[index].sender_id == widget.senderId
                                       ? Alignment.centerRight
                                       : Alignment.centerLeft,
                               child: MessageBubble(
                                 data: messages[index],
-                                isSender:
-                                    messages[index].senderId == widget.senderId,
+                                isSender: messages[index].sender_id ==
+                                    widget.senderId,
                               ),
                             ),
                             const SizedBox(height: 20),
@@ -154,11 +177,11 @@ class _ChatState extends State<Chat> {
                     ),
                     MessageInput(
                       senderId: widget.senderId,
-                      onPressed: (MessageDataDto message) {
-                        final messageKey = chat.child("chatKey").push().key;
-                        final Map<String, dynamic> updates = {};
-                        updates["$chatKey/$messageKey"] = message.toJson();
-                        chat.update(updates);
+                      onPressed: (MessageData message) {
+                        messagingService.sendMessage(
+                          receiverId: widget.receiver.id!,
+                          message: message,
+                        );
                       },
                     ),
                     const SizedBox(height: 20),

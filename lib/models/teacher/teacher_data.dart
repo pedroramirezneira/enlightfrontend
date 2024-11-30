@@ -8,7 +8,7 @@ import 'package:json/json.dart';
 class TeacherData {
   final int id;
   String description;
-  double rating;
+  num rating;
   List<SubjectData> subjects;
   List<CategoryData> categories;
 }

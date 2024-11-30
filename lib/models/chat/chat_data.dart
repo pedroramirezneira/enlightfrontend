@@ -3,6 +3,6 @@ import 'package:enlight/models/account/account_data.dart';
 
 @DataClass()
 class ChatData {
-  int newMessages = 0;
+  int newMessages = -1;
   final AccountData account;
 }

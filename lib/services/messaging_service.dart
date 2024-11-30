@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:enlight/models/chat/chat_data.dart';
 import 'package:enlight/models/chat/chats_data.dart';
 import 'package:enlight/models/chat/chats_data_dto.dart';
-import 'package:enlight/models/message_data_dto.dart';
+import 'package:enlight/models/message_data.dart';
 import 'package:enlight/util/web_client.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -17,72 +18,129 @@ class MessagingService extends ChangeNotifier {
   bool get loading => _loading;
   final _listeners = <StreamSubscription<DatabaseEvent>>[];
 
+  // MessagingService({required BuildContext context}) {
+  //   WidgetsBinding.instance.addPostFrameCallback((_) async {
+  //     final database = FirebaseDatabase.instance.ref("chat_update");
+  //     final chatRef = FirebaseDatabase.instance.ref("chat");
+  //     final response = await WebClient.get(context, "chat", info: false);
+  //     if (response.statusCode == 200) {
+  //       final Map<String, dynamic> data = json.decode(response.body);
+  //       final result = ChatsDataDto.fromJson(data);
+  //       _data = result.toData();
+  //       final ref = chatRef.child(_data.accountId.toString());
+  //       ref.onValue
+  //           .listen((_) => context.mounted ? refreshChats(context) : null);
+  //       for (final chat in _data.chats) {
+  //         final list = [_data.accountId, chat.account.id];
+  //         list.sort();
+  //         final chatKey = list.join("-");
+  //         // FirebaseMessaging.instance.subscribeToTopic(chatKey);
+  //         final ref = database.child(chatKey);
+  //         ref.onValue.listen(
+  //           (event) {
+  //             if (newMessages >= 0) {
+  //               try {
+  //                 final data = event.snapshot.value as Map<dynamic, dynamic>;
+  //                 final messages = data.entries
+  //                     .map(
+  //                       (e) => MessageData.fromJson(e.value),
+  //                     )
+  //                     .toList();
+  //                 messages.sort((a, b) => a.timestamp.compareTo(b.timestamp));
+  //                 if (messages.last.sender_id != _data.accountId) {
+  //                   chat.newMessages++;
+  //                   _newMessages++;
+  //                   notifyListeners();
+  //                 }
+  //               } catch (error) {
+  //                 null;
+  //               }
+  //             } else {
+  //               _newMessages++;
+  //               notifyListeners();
+  //             }
+  //           },
+  //           onError: (error) => null,
+  //         );
+  //       }
+  //     }
+  //   });
+  // }
+
   MessagingService({required BuildContext context}) {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final database = FirebaseDatabase.instance.ref("chat_update");
-      final response = await WebClient.get(context, "chat", info: false);
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> data = json.decode(response.body);
-        final result = ChatsDataDto.fromJson(data);
-        _data = result.toData();
-        final ref = database.child(_data.accountId.toString());
-        ref.onValue
-            .listen((_) => context.mounted ? refreshChats(context) : null);
-      }
+      await loadChats(context);
     });
   }
 
-  Future<void> refreshChats(BuildContext context) async {
-    for (var e in _listeners) {
+  void sendMessage({
+    required int receiverId,
+    required MessageData message,
+  }) {
+    final reference = FirebaseDatabase.instance.ref("chat");
+    final list = [message.sender_id, receiverId];
+    list.sort();
+    final chatKey = list.join("-");
+    final messageKey = reference.child(chatKey).push().key;
+    final Map<String, Map> updates = {};
+    final messageData = message.toJson();
+    updates['/$chatKey/$messageKey'] = messageData;
+    reference.update(updates);
+  }
+
+  Future<void> loadChats(BuildContext context) async {
+    for (final e in _listeners) {
       e.cancel();
+      _listeners.remove(e);
     }
-    _listeners.clear();
     // Fetch initial data
-    final database = FirebaseDatabase.instance.ref("chat");
     final response = await WebClient.get(context, "chat", info: false);
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = json.decode(response.body);
       final result = ChatsDataDto.fromJson(data);
       _data = result.toData();
       _loading = false;
+      _newMessages = -_data.chats.length;
       notifyListeners();
     }
     if (!context.mounted) return;
     // Listen for changes
-    _newMessages = -data.chats.length;
     for (final chat in data.chats) {
-      final list = [data.accountId, chat.account.id];
-      list.sort();
-      final chatKey = list.join("-");
-      final ref = database.child(chatKey);
-      _listeners.add(
-        ref.onValue.listen(
-          (event) {
-            if (newMessages >= 0) {
-              try {
-                final data = event.snapshot.value as Map<dynamic, dynamic>;
-                final result = data.entries
-                    .map((e) => MessageDataDto.fromJson(e.value))
-                    .toList();
-                final messages = result.map((e) => e.toData()).toList();
-                messages.sort((a, b) => a.timestamp.compareTo(b.timestamp));
-                if (messages.last.senderId != this.data.accountId) {
-                  chat.newMessages++;
-                  _newMessages++;
-                  notifyListeners();
-                }
-              } catch (error) {
-                null;
-              }
-            } else {
-              _newMessages++;
-              notifyListeners();
-            }
-          },
-          onError: (error) => null,
-        ),
-      );
+      _createListener(chat);
     }
+  }
+
+  void _createListener(ChatData chat) {
+    final database = FirebaseDatabase.instance.ref("chat");
+    final list = [data.accountId, chat.account.id];
+    list.sort();
+    final chatKey = list.join("-");
+    final ref = database.child(chatKey);
+    _listeners.add(
+      ref.onValue.listen(
+        (event) {
+          final data = event.snapshot.value as Map<Object?, Object?>;
+          final result = data.entries
+              .map((e) => MessageData.fromJson(
+                  (e.value as Map<Object?, Object?>).cast<String, Object?>()))
+              .toList();
+          final messages = result;
+          messages.sort((a, b) =>
+              _getDateTime(a.timestamp).compareTo(_getDateTime(b.timestamp)));
+          if (messages.last.sender_id != this.data.accountId) {
+            chat.newMessages++;
+            _newMessages++;
+            notifyListeners();
+          }
+        },
+        onError: (error) => null,
+      ),
+    );
+  }
+
+  DateTime _getDateTime(String timestamp) {
+    final date = DateTime.parse(timestamp);
+    return date;
   }
 
   void readMessages(int index) {
@@ -109,7 +167,7 @@ class MessagingService extends ChangeNotifier {
     if (response.statusCode == 200) {
       if (!context.mounted) return;
       _notifyFirebase(receiverId);
-      await refreshChats(context);
+      await loadChats(context);
       notifyListeners();
     }
   }
