@@ -134,6 +134,11 @@ class _TeacherReservations extends State<Reservations> {
                                           if (!context.mounted) {
                                             return;
                                           }
+                                          final getPayment = await reservationService.getPaymentInfo(
+                                            context,
+                                            reservation,
+                                          );
+                                          print(getPayment);
                                           final result =
                                               await showModalBottomSheet<
                                                   double>(

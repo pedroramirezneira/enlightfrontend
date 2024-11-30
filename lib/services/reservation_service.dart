@@ -62,6 +62,7 @@ class ReservationService extends ChangeNotifier {
     _newReservations = 0;
     notifyListeners();
   }
+  
 
   Future<Response> addReservation(
     BuildContext context,
@@ -130,6 +131,27 @@ class ReservationService extends ChangeNotifier {
       "rating?reservation_id=${data.reservationId}",
     );
     return response;
+  }
+
+  Future<String> getPaymentInfo(
+    BuildContext context,
+    ReservationData data,
+  ) async {
+    final response = await WebClient.post(
+      context,
+      "pay",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: json.encode(
+        {
+          "teacher_name": data.teacherName,
+          "subject_id": data.subjectId,
+        },
+      ),
+    );
+    final String url = json.decode(response.body);
+    return url;
   }
 
   Future<Response> rateTeacher(
