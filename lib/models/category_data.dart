@@ -1,8 +1,13 @@
-import 'package:enlight/macros/data_class.dart';
-import 'package:json/json.dart';
-
-@DataClass()
-@JsonCodable()
 class CategoryData {
   final String name;
+
+  CategoryData({
+    required this.name,
+  });
+
+  factory CategoryData.fromJson(Map<String, dynamic> json) {
+    return CategoryData(
+      name: json['name'],
+    );
+  }
 }
