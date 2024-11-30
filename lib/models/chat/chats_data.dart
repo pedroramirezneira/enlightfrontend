@@ -1,10 +1,13 @@
-import 'package:enlight/macros/data_class.dart';
 import 'package:enlight/models/chat/chat_data.dart';
 
-@DataClass()
 class ChatsData {
   final int accountId;
   final List<ChatData> chats;
+
+  const ChatsData({
+    required this.accountId,
+    required this.chats,
+  });
 }
 
 class EmptyChatsData extends ChatsData {

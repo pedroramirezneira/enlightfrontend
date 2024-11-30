@@ -1,9 +1,6 @@
-import 'package:json/json.dart';
-
-@JsonCodable()
 class ContainerSearchTeacherData {
   final int id;
-  double rating;
+  num rating;
   String name;
   String description;
   String? picture;
@@ -15,4 +12,14 @@ class ContainerSearchTeacherData {
     required this.description,
     this.picture,
   });
+
+  factory ContainerSearchTeacherData.fromJson(Map<String, dynamic> json) {
+    return ContainerSearchTeacherData(
+      id: json['id'],
+      name: json['name'],
+      description: json['description'],
+      picture: json['picture'],
+      rating: json['rating'],
+    );
+  }
 }

@@ -195,7 +195,7 @@ class _SubjectState extends State<Subject> {
                                 }
                                 setState(() => loading = true);
                                 final data = CreateReservationData(
-                                  timeslotId: selectedTimeslot!.id,
+                                  timeslot_id: selectedTimeslot!.id,
                                   date: selectedDay
                                       .toIso8601String()
                                       .split("T")[0],

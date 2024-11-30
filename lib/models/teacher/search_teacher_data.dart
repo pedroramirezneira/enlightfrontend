@@ -1,18 +1,34 @@
-import 'package:enlight/macros/data_class.dart';
-import 'package:enlight/models/category_data.dart';
 import 'package:enlight/models/subject_data.dart';
-import 'package:json/json.dart';
 
-@DataClass()
-@JsonCodable()
 class SearchTeacherData {
   final int id;
   String description;
-  double rating;
+  num rating;
   List<SubjectData> subjects;
-  List<CategoryData> categories;
   final String name;
   final String? picture;
+
+  SearchTeacherData({
+    required this.id,
+    required this.name,
+    required this.description,
+    required this.picture,
+    required this.rating,
+    required this.subjects,
+  });
+
+  factory SearchTeacherData.fromJson(Map<String, dynamic> json) {
+    return SearchTeacherData(
+      id: json['id'],
+      name: json['name'],
+      description: json['description'],
+      picture: json['picture'],
+      rating: json['rating'],
+      subjects: (json['subjects'] as List)
+          .map((e) => SubjectData.fromJson(e))
+          .toList(),
+    );
+  }
 }
 
 class EmptySearchTeacherData extends SearchTeacherData {
@@ -24,6 +40,5 @@ class EmptySearchTeacherData extends SearchTeacherData {
           picture: null,
           rating: -1,
           subjects: [],
-          categories: [],
         );
 }

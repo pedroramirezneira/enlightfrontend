@@ -1,11 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
-import 'package:enlight/macros/data_class.dart';
 import 'package:enlight/models/day_data.dart';
-import 'package:json/json.dart';
 
-@DataClass()
-@JsonCodable()
 class SubjectData {
   final int id;
   String category_name;
@@ -13,6 +9,28 @@ class SubjectData {
   String description;
   int price;
   List<DayData> days;
+
+  SubjectData({
+    required this.id,
+    required this.category_name,
+    required this.name,
+    required this.description,
+    required this.price,
+    required this.days,
+  });
+
+  factory SubjectData.fromJson(Map<String, dynamic> json) {
+    return SubjectData(
+      id: json['id'],
+      category_name: json['category_name'],
+      name: json['name'],
+      description: json['description'],
+      price: json['price'],
+      days: (json['days'] as List)
+          .map<DayData>((day) => DayData.fromJson(day))
+          .toList(),
+    );
+  }
 }
 
 class EmptySubjectData extends SubjectData {

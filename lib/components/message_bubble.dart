@@ -13,13 +13,14 @@ class MessageBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final timestamp = DateTime.parse(data.timestamp).toLocal();
     final theme = Theme.of(context);
     final surface = theme.navigationBarTheme.indicatorColor!;
-    var hour = data.timestamp.toLocal().hour.toString();
+    var hour = timestamp.hour.toString();
     while (hour.length < 2) {
       hour = "0$hour";
     }
-    var minute = data.timestamp.toLocal().minute.toString();
+    var minute = timestamp.minute.toString();
     while (minute.length < 2) {
       minute = "0$minute";
     }

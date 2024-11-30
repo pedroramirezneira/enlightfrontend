@@ -1,11 +1,11 @@
-import 'package:enlight/models/message_data_dto.dart';
+import 'package:enlight/models/message_data.dart';
 import 'package:enlight/util/device.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class MessageInput extends StatefulWidget {
   final int senderId;
-  final void Function(MessageDataDto message)? onPressed;
+  final void Function(MessageData message)? onPressed;
 
   const MessageInput({
     super.key,
@@ -82,7 +82,7 @@ class _MessageInputState extends State<MessageInput> {
 
   void _sendMessage() {
     if (widget.onPressed != null) {
-      final message = MessageDataDto(
+      final message = MessageData(
         sender_id: widget.senderId,
         message: controller.text.trim(),
         timestamp: DateTime.timestamp().toIso8601String(),

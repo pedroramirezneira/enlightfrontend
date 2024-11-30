@@ -34,15 +34,21 @@ class _TeacherReservations extends State<Reservations> {
     if (reservationService.data.isEmpty && role == 1) {
       return const FixedScaffold(
         title: "Reservations",
-        body: Text(
-          "You have no reservations. Search for teachers to make a reservation!",
+        body: Padding(
+          padding: EdgeInsets.all(24),
+          child: Text(
+            "You have no reservations. Search for teachers to make a reservation!",
+          ),
         ),
       );
     }
     if (reservationService.data.isEmpty) {
       return const FixedScaffold(
         title: "Reservations",
-        body: Text("You have no reservations."),
+        body: Padding(
+          padding: EdgeInsets.all(24),
+          child: Text("You have no reservations."),
+        ),
       );
     }
     return Scaffold(

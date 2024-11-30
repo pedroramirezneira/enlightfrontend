@@ -23,37 +23,46 @@ class ReservationService extends ChangeNotifier {
         // Fetch initial data
         final database = FirebaseDatabase.instance.ref("reservation");
         final response = await WebClient.get(context, "reservation");
-        int accountId = -1;
         if (response.statusCode == 200) {
           final Map<String, dynamic> data = json.decode(response.body);
           final List<dynamic> reservations = data["reservations"];
           final result =
               reservations.map((e) => ReservationDataDto.fromJson(e));
           _data = result.map((e) => e.toData()).toList();
+          final accountId = data["account_id"];
+          _loading = false;
+          notifyListeners();
+          if (!context.mounted) return;
+          final ref = database.child(accountId.toString());
+          // Listen for changes
+          _createListener(ref, context);
         }
-        _loading = false;
+      },
+    );
+  }
+
+  void _createListener(DatabaseReference ref, BuildContext context) {
+    ref.get().then((snapshot) {
+      if (!snapshot.exists) {
+        _newReservations++;
         notifyListeners();
+      }
+    });
+    ref.onValue.listen(
+      (event) async {
         if (!context.mounted) return;
-        final ref = database.child(accountId.toString());
-        // Listen for changes
-        ref.onValue.listen(
-          (event) async {
-            if (!context.mounted) return;
-            final response = await WebClient.get(
-              context,
-              "reservation",
-              info: false,
-            );
-            if (response.statusCode == 200) {
-              final List<dynamic> data =
-                  json.decode(response.body)["reservations"];
-              final result = data.map((e) => ReservationDataDto.fromJson(e));
-              _data = result.map((e) => e.toData()).toList();
-            }
-            _newReservations++;
-            notifyListeners();
-          },
+        final response = await WebClient.get(
+          context,
+          "reservation",
+          info: false,
         );
+        if (response.statusCode == 200) {
+          final List<dynamic> data = json.decode(response.body)["reservations"];
+          final result = data.map((e) => ReservationDataDto.fromJson(e));
+          _data = result.map((e) => e.toData()).toList();
+          _newReservations++;
+          notifyListeners();
+        }
       },
     );
   }

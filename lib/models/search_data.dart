@@ -1,16 +1,25 @@
-import 'package:enlight/macros/data_class.dart';
 import 'package:enlight/models/container_search_teacher_data.dart';
 import 'package:enlight/models/subject_data.dart';
-import 'package:json/json.dart';
 
 const List<ContainerSearchTeacherData> _teachers = [];
 const List<SubjectData> _subjects = [];
 
-@DataClass()
-@JsonCodable()
 class SearchData {
   final List<ContainerSearchTeacherData>? teachers;
   final List<SubjectData>? subjects;
+
+  const SearchData({this.teachers, this.subjects});
+
+  factory SearchData.fromJson(Map<String, dynamic> json) {
+    return SearchData(
+      teachers: (json['teachers'] as List)
+          .map((e) => ContainerSearchTeacherData.fromJson(e))
+          .toList(),
+      subjects: (json['subjects'] as List)
+          .map((e) => SubjectData.fromJson(e))
+          .toList(),
+    );
+  }
 }
 
 class EmptySearchData extends SearchData {
