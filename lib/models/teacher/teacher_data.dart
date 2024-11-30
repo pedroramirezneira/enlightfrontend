@@ -1,5 +1,6 @@
 import 'package:enlight/models/category_data.dart';
 import 'package:enlight/models/subject_data.dart';
+
 class TeacherData {
   final int id;
   String description;

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:enlight/models/account/account_data.dart';
+
 class AccountDataDto {
   final int? id;
   final String email;

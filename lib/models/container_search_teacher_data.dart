@@ -1,6 +1,6 @@
 class ContainerSearchTeacherData {
   final int id;
-  double rating;
+  num rating;
   String name;
   String description;
   String? picture;

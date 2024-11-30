@@ -7,7 +7,7 @@ class TeacherResultContainer extends StatelessWidget {
   final String name;
   final String description;
   final String? picture;
-  final double rating;
+  final num rating;
   final int id;
 
   const TeacherResultContainer({

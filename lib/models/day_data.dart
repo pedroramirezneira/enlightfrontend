@@ -1,4 +1,5 @@
 import 'package:enlight/models/timeslot_data.dart';
+
 class DayData {
   final String name;
   List<TimeslotData> timeslots;

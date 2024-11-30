@@ -1,11 +1,10 @@
-import 'package:enlight/models/category_data.dart';
 import 'package:enlight/models/subject_data.dart';
+
 class SearchTeacherData {
   final int id;
   String description;
-  double rating;
+  num rating;
   List<SubjectData> subjects;
-  List<CategoryData> categories;
   final String name;
   final String? picture;
 
@@ -16,7 +15,6 @@ class SearchTeacherData {
     required this.picture,
     required this.rating,
     required this.subjects,
-    required this.categories,
   });
 
   factory SearchTeacherData.fromJson(Map<String, dynamic> json) {
@@ -28,9 +26,6 @@ class SearchTeacherData {
       rating: json['rating'],
       subjects: (json['subjects'] as List)
           .map((e) => SubjectData.fromJson(e))
-          .toList(),
-      categories: (json['categories'] as List)
-          .map((e) => CategoryData.fromJson(e))
           .toList(),
     );
   }
@@ -45,6 +40,5 @@ class EmptySearchTeacherData extends SearchTeacherData {
           picture: null,
           rating: -1,
           subjects: [],
-          categories: [],
         );
 }
