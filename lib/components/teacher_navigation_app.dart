@@ -30,11 +30,7 @@ class _TeacherNavigationAppState extends State<TeacherNavigationApp> {
         onDestinationSelected: (value) {
           setState(() => index = value);
           if (index == 1) {
-            try {
-              context.read<ReservationService>().readReservations();
-            } catch (error) {
-              null;
-            }
+            context.read<ReservationService>().readReservations();
           }
         },
         selectedIndex: index,

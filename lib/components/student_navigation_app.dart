@@ -4,6 +4,7 @@ import 'package:enlight/pages/reservations/reservations.dart';
 import 'package:enlight/pages/search/search.dart';
 import 'package:enlight/pages/student_profile/student_profile.dart';
 import 'package:enlight/services/messaging_service.dart';
+import 'package:enlight/services/reservation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -28,7 +29,12 @@ class _StudentNavigationAppState extends State<StudentNavigationApp> {
       ][index],
       bottomNavigationBar: NavigationBar(
         height: 60,
-        onDestinationSelected: (value) => setState(() => index = value),
+        onDestinationSelected: (value) {
+          setState(() => index = value);
+          if (index == 1) {
+            context.read<ReservationService>().readReservations();
+          }
+        },
         selectedIndex: index,
         destinations: <Widget>[
           NavigationDestination(
@@ -45,8 +51,14 @@ class _StudentNavigationAppState extends State<StudentNavigationApp> {
             icon: Icon(Icons.search_rounded),
             label: "Search",
           ),
-          const NavigationDestination(
-            icon: Icon(Icons.bookmark_rounded),
+          NavigationDestination(
+            icon: Consumer<ReservationService>(
+              builder: (context, value, child) => badges.Badge(
+                badgeContent: Text(value.newReservations.toString()),
+                showBadge: value.newReservations > 0,
+                child: const Icon(Icons.bookmark_rounded),
+              ),
+            ),
             label: "Reservations",
           ),
           const NavigationDestination(

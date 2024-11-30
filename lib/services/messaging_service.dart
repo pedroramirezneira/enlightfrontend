@@ -18,58 +18,15 @@ class MessagingService extends ChangeNotifier {
   bool get loading => _loading;
   final _listeners = <StreamSubscription<DatabaseEvent>>[];
 
-  // MessagingService({required BuildContext context}) {
-  //   WidgetsBinding.instance.addPostFrameCallback((_) async {
-  //     final database = FirebaseDatabase.instance.ref("chat_update");
-  //     final chatRef = FirebaseDatabase.instance.ref("chat");
-  //     final response = await WebClient.get(context, "chat", info: false);
-  //     if (response.statusCode == 200) {
-  //       final Map<String, dynamic> data = json.decode(response.body);
-  //       final result = ChatsDataDto.fromJson(data);
-  //       _data = result.toData();
-  //       final ref = chatRef.child(_data.accountId.toString());
-  //       ref.onValue
-  //           .listen((_) => context.mounted ? refreshChats(context) : null);
-  //       for (final chat in _data.chats) {
-  //         final list = [_data.accountId, chat.account.id];
-  //         list.sort();
-  //         final chatKey = list.join("-");
-  //         // FirebaseMessaging.instance.subscribeToTopic(chatKey);
-  //         final ref = database.child(chatKey);
-  //         ref.onValue.listen(
-  //           (event) {
-  //             if (newMessages >= 0) {
-  //               try {
-  //                 final data = event.snapshot.value as Map<dynamic, dynamic>;
-  //                 final messages = data.entries
-  //                     .map(
-  //                       (e) => MessageData.fromJson(e.value),
-  //                     )
-  //                     .toList();
-  //                 messages.sort((a, b) => a.timestamp.compareTo(b.timestamp));
-  //                 if (messages.last.sender_id != _data.accountId) {
-  //                   chat.newMessages++;
-  //                   _newMessages++;
-  //                   notifyListeners();
-  //                 }
-  //               } catch (error) {
-  //                 null;
-  //               }
-  //             } else {
-  //               _newMessages++;
-  //               notifyListeners();
-  //             }
-  //           },
-  //           onError: (error) => null,
-  //         );
-  //       }
-  //     }
-  //   });
-  // }
-
   MessagingService({required BuildContext context}) {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await loadChats(context);
+      await _loadChats(context);
+      final updateRef = FirebaseDatabase.instance.ref("chat_update");
+      final ref = updateRef.child(_data.accountId.toString());
+      ref.onValue.listen((event) {
+        if (!context.mounted) return;
+        _loadChats(context);
+      });
     });
   }
 
@@ -88,25 +45,32 @@ class MessagingService extends ChangeNotifier {
     reference.update(updates);
   }
 
-  Future<void> loadChats(BuildContext context) async {
-    for (final e in _listeners) {
-      e.cancel();
-      _listeners.remove(e);
-    }
+  Future<void> _loadChats(BuildContext context) async {
     // Fetch initial data
     final response = await WebClient.get(context, "chat", info: false);
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = json.decode(response.body);
       final result = ChatsDataDto.fromJson(data);
-      _data = result.toData();
+      if (_data.chats.isEmpty) {
+        _data = result.toData();
+        _newMessages = -_data.chats.length;
+        for (final chat in _data.chats) {
+          _createListener(chat);
+        }
+      } else {
+        result.toData().chats.forEach((c) {
+          final index = _data.chats.indexWhere(
+            (e) => e.account.id == c.account.id,
+          );
+          if (index == -1) {
+            _data.chats.add(c);
+            _data.chats.last.newMessages = 0;
+            _createListener(c);
+          }
+        });
+      }
       _loading = false;
-      _newMessages = -_data.chats.length;
       notifyListeners();
-    }
-    if (!context.mounted) return;
-    // Listen for changes
-    for (final chat in data.chats) {
-      _createListener(chat);
     }
   }
 
@@ -167,7 +131,7 @@ class MessagingService extends ChangeNotifier {
     if (response.statusCode == 200) {
       if (!context.mounted) return;
       _notifyFirebase(receiverId);
-      await loadChats(context);
+      await _loadChats(context);
       notifyListeners();
     }
   }
