@@ -44,7 +44,7 @@ class _SearchTeachersState extends State<SearchTeachers> {
         const SnackBar(
           content: AwesomeSnackbarContent(
             title: "Error",
-            message: "Price has to equal or greater than 0",
+            message: "Price has to be equal or greater than 0",
             contentType: ContentType.failure,
           ),
         ),

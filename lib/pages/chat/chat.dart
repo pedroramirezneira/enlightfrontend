@@ -106,6 +106,7 @@ class _ChatState extends State<Chat> {
                 ),
               );
             }
+            messagingService.readMessages(widget.index);
             List<MessageData> messages;
             try {
               final data =
