@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:enlight/util/web_client.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
@@ -94,6 +96,10 @@ class _AuthServiceProviderState extends State<AuthServiceProvider> {
     if (context != null && context.mounted) WebClient.info(response, context);
     if (response.statusCode == _httpStatusOk) {
       final data = json.decode(response.body);
+      final id = data["account_id"].toString();
+      if (!kIsWeb) {
+        await FirebaseMessaging.instance.subscribeToTopic(id);
+      }
       await _setAccessToken(data["access_token"]);
       await _setRefreshToken(data["refresh_token"]);
       await _setRole(data["role"]);
@@ -109,6 +115,9 @@ class _AuthServiceProviderState extends State<AuthServiceProvider> {
       },
     );
     if (context != null && context.mounted) WebClient.info(response, context);
+    final data = json.decode(response.body);
+    final id = data["account_id"].toString();
+    await FirebaseMessaging.instance.subscribeToTopic(id);
     await _clearTokens();
     return response;
   }

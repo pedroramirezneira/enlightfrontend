@@ -5,11 +5,13 @@ import 'package:flutter/services.dart';
 
 class MessageInput extends StatefulWidget {
   final int senderId;
+  final int receiverId;
   final void Function(MessageData message)? onPressed;
 
   const MessageInput({
     super.key,
     required this.senderId,
+    required this.receiverId,
     this.onPressed,
   });
 
@@ -84,6 +86,7 @@ class _MessageInputState extends State<MessageInput> {
     if (widget.onPressed != null) {
       final message = MessageData(
         sender_id: widget.senderId,
+        receiver_id: widget.receiverId,
         message: controller.text.trim(),
         timestamp: DateTime.timestamp().toIso8601String(),
       );

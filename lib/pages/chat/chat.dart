@@ -81,9 +81,6 @@ class _ChatState extends State<Chat> {
         stream: chat.onValue,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              context.read<MessagingService>().readMessages(widget.index);
-            });
             if (snapshot.data!.snapshot.value == null) {
               return Center(
                 child: Container(
@@ -95,9 +92,10 @@ class _ChatState extends State<Chat> {
                     children: <Widget>[
                       MessageInput(
                         senderId: widget.senderId,
+                        receiverId: widget.receiver.id!,
                         onPressed: (MessageData message) {
                           messagingService.sendMessage(
-                            receiverId: widget.receiver.id!,
+                            context: context,
                             message: message,
                           );
                         },
@@ -121,7 +119,11 @@ class _ChatState extends State<Chat> {
                 );
                 return MessageData.fromJson(data);
               }).toList()
-                ..sort(((a, b) => b.timestamp.compareTo(a.timestamp)));
+                ..sort(
+                  ((a, b) => DateTime.parse(b.timestamp).compareTo(
+                        DateTime.parse(a.timestamp),
+                      )),
+                );
             } catch (error) {
               messages = [];
             }
@@ -177,9 +179,10 @@ class _ChatState extends State<Chat> {
                     ),
                     MessageInput(
                       senderId: widget.senderId,
+                      receiverId: widget.receiver.id!,
                       onPressed: (MessageData message) {
                         messagingService.sendMessage(
-                          receiverId: widget.receiver.id!,
+                          context: context,
                           message: message,
                         );
                       },
