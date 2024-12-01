@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:enlight/models/chat/chat_data.dart';
+import 'package:enlight/models/chat/chat_unread_count.dart';
 import 'package:enlight/models/chat/chats_data.dart';
 import 'package:enlight/models/chat/chats_data_dto.dart';
 import 'package:enlight/models/message_data.dart';
@@ -30,6 +31,34 @@ class MessagingService extends ChangeNotifier {
     });
   }
 
+  Future<void> _loadChats(BuildContext context) async {
+    final chats = await _fetchChatsFromServer(context);
+    _updateLocalChats(chats);
+    _loading = false;
+    notifyListeners();
+  }
+
+  Future<ChatsData> _fetchChatsFromServer(BuildContext context) async {
+    final response = await WebClient.get(context, "chat", info: false);
+    if (response.statusCode != 200) return EmptyChatsData();
+    final Map<String, dynamic> data = json.decode(response.body);
+    return ChatsDataDto.fromJson(data).toData();
+  }
+
+  void _updateLocalChats(ChatsData newChats) {
+    if (_data.chats.isEmpty) {
+      _data = newChats;
+      _data.chats.forEach(_createListener);
+    } else {
+      for (final c in newChats.chats) {
+        if (_data.chats.indexWhere((e) => e.account.id == c.account.id) == -1) {
+          _data.chats.add(c);
+          _createListener(c);
+        }
+      }
+    }
+  }
+
   void sendMessage({
     required BuildContext context,
     required MessageData message,
@@ -43,6 +72,12 @@ class MessagingService extends ChangeNotifier {
     final messageData = message.toJson();
     updates['/$chatKey/$messageKey'] = messageData;
     reference.update(updates);
+    final unread = FirebaseDatabase.instance.ref("chat_unread_count");
+    final field = list.first == message.sender_id
+        ? "second_unread_count"
+        : "first_unread_count";
+    final count = unread.child(chatKey).child(field);
+    _increaseCount(count);
     WebClient.post(
       context,
       "chat/message",
@@ -54,37 +89,21 @@ class MessagingService extends ChangeNotifier {
     );
   }
 
-  Future<void> _loadChats(BuildContext context) async {
-    // Fetch initial data
-    final response = await WebClient.get(context, "chat", info: false);
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> data = json.decode(response.body);
-      final result = ChatsDataDto.fromJson(data);
-      if (_data.chats.isEmpty) {
-        _data = result.toData();
-        _newMessages = -_data.chats.length;
-        for (final chat in _data.chats) {
-          _createListener(chat);
-        }
-      } else {
-        result.toData().chats.forEach((c) {
-          final index = _data.chats.indexWhere(
-            (e) => e.account.id == c.account.id,
-          );
-          if (index == -1) {
-            _data.chats.add(c);
-            _data.chats.last.newMessages = 0;
-            _createListener(c);
-          }
-        });
+  void _increaseCount(DatabaseReference count) {
+    count.runTransaction((value) {
+      if (value == null || value is! int || value == 0) {
+        return Transaction.success(1);
       }
-      _loading = false;
-      notifyListeners();
-    }
+      return Transaction.success((value) + 1);
+    });
+  }
+
+  void _resetCount(DatabaseReference count) {
+    count.set(0);
   }
 
   void _createListener(ChatData chat) {
-    final database = FirebaseDatabase.instance.ref("chat");
+    final database = FirebaseDatabase.instance.ref("chat_unread_count");
     final list = [data.accountId, chat.account.id];
     list.sort();
     final chatKey = list.join("-");
@@ -93,34 +112,34 @@ class MessagingService extends ChangeNotifier {
       ref.onValue.listen(
         (event) {
           final data = event.snapshot.value as Map<Object?, Object?>;
-          final result = data.entries
-              .map((e) => MessageData.fromJson(
-                  (e.value as Map<Object?, Object?>).cast<String, Object?>()))
-              .toList();
-          final messages = result;
-          messages.sort((a, b) =>
-              _getDateTime(a.timestamp).compareTo(_getDateTime(b.timestamp)));
-          if (messages.last.sender_id != this.data.accountId) {
-            chat.newMessages++;
-            _newMessages++;
-            notifyListeners();
+          final result = ChatUnreadCount.fromJson(data.cast<String, dynamic>());
+          final int unreadCount;
+          if (_data.accountId < chat.account.id) {
+            unreadCount = result.first_unread_count;
+          } else {
+            unreadCount = result.second_unread_count;
           }
+          chat.newMessages = unreadCount;
+          _newMessages = _data.chats.fold<int>(
+            0,
+            (previousValue, element) => previousValue + element.newMessages,
+          );
+          notifyListeners();
         },
         onError: (error) => null,
       ),
     );
   }
 
-  DateTime _getDateTime(String timestamp) {
-    final date = DateTime.parse(timestamp);
-    return date;
-  }
-
   void readMessages(int index) {
-    final messages = data.chats[index].newMessages;
-    data.chats[index].newMessages = 0;
-    _newMessages -= messages;
-    notifyListeners();
+    final unread = FirebaseDatabase.instance.ref("chat_unread_count");
+    final list = [_data.accountId, _data.chats[index].account.id]..sort();
+    final chatKey = list.join("-");
+    final field = list.first == _data.accountId
+        ? "first_unread_count"
+        : "second_unread_count";
+    final count = unread.child(chatKey).child(field);
+    _resetCount(count);
   }
 
   Future<void> createChat(BuildContext context, int receiverId) async {

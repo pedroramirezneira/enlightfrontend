@@ -67,7 +67,6 @@ class ReservationService extends ChangeNotifier {
     _newReservations = 0;
     notifyListeners();
   }
-  
 
   Future<Response> addReservation(
     BuildContext context,

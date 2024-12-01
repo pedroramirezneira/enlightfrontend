@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 class AccountData {
-  final int? id;
+  final int id;
   final String email;
   final String name;
   final String birthday;
@@ -39,7 +39,7 @@ class AccountData {
 class EmptyAccountData extends AccountData {
   const EmptyAccountData()
       : super(
-          id: null,
+          id: -1,
           email: "",
           name: "",
           birthday: "",

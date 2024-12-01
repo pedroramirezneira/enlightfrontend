@@ -3,6 +3,7 @@ import 'package:enlight/pages/teacher_profile/teacher_profile.dart';
 import 'package:enlight/pages/reservations/reservations.dart';
 import 'package:enlight/services/messaging_service.dart';
 import 'package:enlight/services/reservation_service.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:badges/badges.dart' as badges;
@@ -16,6 +17,12 @@ class TeacherNavigationApp extends StatefulWidget {
 
 class _TeacherNavigationAppState extends State<TeacherNavigationApp> {
   int index = 2;
+
+  @override
+  void initState() {
+    super.initState();
+    FirebaseMessaging.instance.requestPermission();
+  }
 
   @override
   Widget build(BuildContext context) {

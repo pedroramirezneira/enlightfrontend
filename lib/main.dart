@@ -9,7 +9,6 @@ import 'package:enlight/services/reservation_service.dart';
 import 'package:enlight/services/teacher_service.dart';
 import 'package:enlight/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +20,6 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  await FirebaseMessaging.instance.requestPermission();
   runApp(const MyApp());
 }
 

@@ -92,7 +92,7 @@ class _ChatState extends State<Chat> {
                     children: <Widget>[
                       MessageInput(
                         senderId: widget.senderId,
-                        receiverId: widget.receiver.id!,
+                        receiverId: widget.receiver.id,
                         onPressed: (MessageData message) {
                           messagingService.sendMessage(
                             context: context,
@@ -180,7 +180,7 @@ class _ChatState extends State<Chat> {
                     ),
                     MessageInput(
                       senderId: widget.senderId,
-                      receiverId: widget.receiver.id!,
+                      receiverId: widget.receiver.id,
                       onPressed: (MessageData message) {
                         messagingService.sendMessage(
                           context: context,

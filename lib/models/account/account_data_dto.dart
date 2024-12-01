@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:enlight/models/account/account_data.dart';
 
 class AccountDataDto {
-  final int? id;
+  final int id;
   final String email;
   final String name;
   final String birthday;
@@ -11,7 +11,7 @@ class AccountDataDto {
   final String? picture;
 
   const AccountDataDto({
-    this.id,
+    required this.id,
     required this.email,
     required this.name,
     required this.birthday,
