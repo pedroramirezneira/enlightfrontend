@@ -1,5 +1,7 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:enlight/components/fixed_scaffold.dart';
 import 'package:enlight/components/rating_menu.dart';
+import 'package:enlight/pages/reservations/payment_page.dart';
 import 'package:enlight/services/auth_service.dart';
 import 'package:enlight/services/reservation_service.dart';
 import 'package:enlight/util/messenger.dart';
@@ -140,33 +142,68 @@ class _TeacherReservations extends State<Reservations> {
                                           if (!context.mounted) {
                                             return;
                                           }
-                                          final getPayment = await reservationService.getPaymentInfo(
-                                            context,
-                                            reservation,
-                                          );
-                                          print(getPayment);
-                                          final result =
-                                              await showModalBottomSheet<
-                                                  double>(
-                                            context: context,
-                                            builder: (context) => RatingMenu(
-                                              context: context,
-                                            ),
-                                          );
-                                          if (!context.mounted) {
-                                            return;
+                                          try {
+                                            final getPayment =
+                                                await reservationService
+                                                    .getPaymentInfo(
+                                              context,
+                                              reservation,
+                                            );
+
+                                            if (!context.mounted) return;
+
+                                            final paymentResult = await Navigator
+                                                    .of(context)
+                                                .push(MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        PaymentPage(
+                                                            url: getPayment)));
+
+                                            if (paymentResult == true) {
+                                              final result =
+                                                  await showModalBottomSheet<
+                                                      double>(
+                                                context: context,
+                                                builder: (context) =>
+                                                    RatingMenu(
+                                                  context: context,
+                                                ),
+                                              );
+                                              if (!context.mounted) {
+                                                return;
+                                              }
+                                              if (result == null) {
+                                                return;
+                                              }
+                                              setState(() => loading = true);
+                                              await reservationService
+                                                  .rateTeacher(
+                                                context,
+                                                reservation.reservationId,
+                                                reservation.teacherId,
+                                                result,
+                                              );
+                                            }
+
+                                            setState(() => loading = false);
+                                          } catch (e) {
+                                            if (context.mounted) {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                const SnackBar(
+                                                  content:
+                                                      AwesomeSnackbarContent(
+                                                    title: "Error",
+                                                    message:
+                                                        "Please add at least one timeslot",
+                                                    contentType:
+                                                        ContentType.help,
+                                                  ),
+                                                ),
+                                              );
+                                            }
+                                            setState(() => loading = false);
                                           }
-                                          if (result == null) {
-                                            return;
-                                          }
-                                          setState(() => loading = true);
-                                          await reservationService.rateTeacher(
-                                            context,
-                                            reservation.reservationId,
-                                            reservation.teacherId,
-                                            result,
-                                          );
-                                          setState(() => loading = false);
                                         },
                                         child: const Text("Complete"),
                                       ),
