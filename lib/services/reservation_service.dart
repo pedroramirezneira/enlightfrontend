@@ -12,32 +12,28 @@ import 'package:http/http.dart';
 class ReservationService extends ChangeNotifier {
   List<ReservationData> _data = [];
   List<ReservationData> get data => _data;
-  int _newReservations = -1;
+  int _newReservations = 0;
   int get newReservations => _newReservations;
   var _loading = true;
   bool get loading => _loading;
+  int _accountId = -1;
 
   ReservationService({required BuildContext context}) {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) async {
-        // Fetch initial data
         final database = FirebaseDatabase.instance.ref("reservation");
         final response = await WebClient.get(context, "reservation");
-        if (response.statusCode == 200) {
-          final Map<String, dynamic> data = json.decode(response.body);
-          final List<dynamic> reservations = data["reservations"];
-          final result =
-              reservations.map((e) => ReservationDataDto.fromJson(e));
-          _data = result.map((e) => e.toData()).toList();
-          final accountId = data["account_id"];
-          _loading = false;
-          if (!context.mounted) return;
-          final ref = database.child(accountId.toString());
-          // Listen for changes
-          _createListener(ref, context);
-          _loading = false;
-          notifyListeners();
-        }
+        if (response.statusCode != 200) return;
+        final Map<String, dynamic> data = json.decode(response.body);
+        final List<dynamic> reservations = data["reservations"];
+        final result = reservations.map((e) => ReservationDataDto.fromJson(e));
+        _data = result.map((e) => e.toData()).toList();
+        _accountId = data["account_id"];
+        _loading = false;
+        if (!context.mounted) return;
+        final ref = database.child(_accountId.toString());
+        _createListener(ref, context);
+        notifyListeners();
       },
     );
   }
@@ -45,26 +41,31 @@ class ReservationService extends ChangeNotifier {
   void _createListener(DatabaseReference ref, BuildContext context) {
     ref.onValue.listen(
       (event) async {
-        if (loading) return;
         if (!context.mounted) return;
         final response = await WebClient.get(
           context,
           "reservation",
           info: false,
         );
-        if (response.statusCode == 200) {
-          final List<dynamic> data = json.decode(response.body)["reservations"];
-          final result = data.map((e) => ReservationDataDto.fromJson(e));
-          _data = result.map((e) => e.toData()).toList();
-          _newReservations++;
-          notifyListeners();
+        if (response.statusCode != 200) return;
+        final List<dynamic> data = json.decode(response.body)["reservations"];
+        final result = data.map((e) => ReservationDataDto.fromJson(e));
+        _data = result.map((e) => e.toData()).toList();
+        final count = event.snapshot.value;
+        if (count == null || count is! int || count == 0) {
+          _newReservations = 0;
+        } else {
+          _newReservations = count;
         }
+        notifyListeners();
       },
     );
   }
 
   void readReservations() {
-    _newReservations = 0;
+    final ref = FirebaseDatabase.instance.ref("reservation");
+    final count = ref.child(_accountId.toString());
+    _resetCount(count);
     notifyListeners();
   }
 
@@ -191,9 +192,19 @@ class ReservationService extends ChangeNotifier {
   void _notifyFirebase(int id) {
     final database = FirebaseDatabase.instance.ref("reservation");
     final ref = database.child(id.toString());
-    final key = ref.push().key!;
-    final Map<String, dynamic> updates = {};
-    updates[key] = "si";
-    ref.update(updates);
+    _increaseCount(ref);
+  }
+
+  void _increaseCount(DatabaseReference count) {
+    count.runTransaction((value) {
+      if (value == null || value is! int || value == 0) {
+        return Transaction.success(1);
+      }
+      return Transaction.success((value) + 1);
+    });
+  }
+
+  void _resetCount(DatabaseReference count) {
+    count.set(0);
   }
 }
