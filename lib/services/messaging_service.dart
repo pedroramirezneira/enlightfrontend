@@ -31,11 +31,11 @@ class MessagingService extends ChangeNotifier {
   }
 
   void sendMessage({
-    required int receiverId,
+    required BuildContext context,
     required MessageData message,
   }) {
     final reference = FirebaseDatabase.instance.ref("chat");
-    final list = [message.sender_id, receiverId];
+    final list = [message.sender_id, message.receiver_id];
     list.sort();
     final chatKey = list.join("-");
     final messageKey = reference.child(chatKey).push().key;
@@ -43,6 +43,15 @@ class MessagingService extends ChangeNotifier {
     final messageData = message.toJson();
     updates['/$chatKey/$messageKey'] = messageData;
     reference.update(updates);
+    WebClient.post(
+      context,
+      "chat/message",
+      body: json.encode(messageData),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      info: false,
+    );
   }
 
   Future<void> _loadChats(BuildContext context) async {

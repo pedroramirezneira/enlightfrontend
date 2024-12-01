@@ -31,25 +31,21 @@ class ReservationService extends ChangeNotifier {
           _data = result.map((e) => e.toData()).toList();
           final accountId = data["account_id"];
           _loading = false;
-          notifyListeners();
           if (!context.mounted) return;
           final ref = database.child(accountId.toString());
           // Listen for changes
           _createListener(ref, context);
+          _loading = false;
+          notifyListeners();
         }
       },
     );
   }
 
   void _createListener(DatabaseReference ref, BuildContext context) {
-    ref.get().then((snapshot) {
-      if (!snapshot.exists) {
-        _newReservations++;
-        notifyListeners();
-      }
-    });
     ref.onValue.listen(
       (event) async {
+        if (loading) return;
         if (!context.mounted) return;
         final response = await WebClient.get(
           context,

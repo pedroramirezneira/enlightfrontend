@@ -33,9 +33,5 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-        <service
-            android:name=".messaging.NotificationService"
-            android:foregroundServiceType="remoteMessaging"
-            android:exported="false" />
     </application>
 </manifest>

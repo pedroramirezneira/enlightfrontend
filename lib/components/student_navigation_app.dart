@@ -20,6 +20,7 @@ class _StudentNavigationAppState extends State<StudentNavigationApp> {
 
   @override
   Widget build(BuildContext context) {
+    final reservationService = Provider.of<ReservationService>(context);
     return Scaffold(
       body: <Widget>[
         const Chats(),
@@ -31,8 +32,8 @@ class _StudentNavigationAppState extends State<StudentNavigationApp> {
         height: 60,
         onDestinationSelected: (value) {
           setState(() => index = value);
-          if (index == 1) {
-            context.read<ReservationService>().readReservations();
+          if (index == 2) {
+            reservationService.readReservations();
           }
         },
         selectedIndex: index,
