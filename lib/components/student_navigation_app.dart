@@ -1,3 +1,5 @@
+import 'package:app_links/app_links.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:enlight/pages/chats/chats.dart';
 import 'package:enlight/pages/reservations/reservations.dart';
@@ -18,11 +20,72 @@ class StudentNavigationApp extends StatefulWidget {
 
 class _StudentNavigationAppState extends State<StudentNavigationApp> {
   int index = 3;
+  late AppLinks _appLinks;
 
   @override
   void initState() {
     super.initState();
     FirebaseMessaging.instance.requestPermission();
+    _initAppLinks(context);
+  }
+
+  void _initAppLinks(BuildContext context) async {
+    _appLinks = AppLinks();
+    final Uri? initialLink = await _appLinks.getInitialLink();
+    if (!context.mounted) return;
+    if (initialLink != null) {
+      _handleDeepLink(context, initialLink);
+    }
+
+    _appLinks.uriLinkStream.listen(
+      (Uri uri) {
+        if (!context.mounted) return;
+        _handleDeepLink(context, uri);
+      },
+      onError: (err) {
+        debugPrint('Failed to process deep link: $err');
+      },
+    );
+  }
+
+  void _handleDeepLink(BuildContext context, Uri uri) {
+    debugPrint("Deep link: $uri");
+    if (uri.path.contains("/success")) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: AwesomeSnackbarContent(
+            title: "Success",
+            message: "Your payment was successful",
+            contentType: ContentType.success,
+          ),
+          duration: Duration(seconds: 5),
+        ),
+      );
+    }
+    if (uri.path.contains("/failure")) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: AwesomeSnackbarContent(
+            title: "Error",
+            message: "Your payment was unsuccessful",
+            contentType: ContentType.failure,
+          ),
+          duration: Duration(seconds: 5),
+        ),
+      );
+    }
+    if (uri.path.contains("/pending")) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: AwesomeSnackbarContent(
+            title: "Warning",
+            message: "Your payment is pending",
+            contentType: ContentType.help,
+          ),
+          duration: Duration(seconds: 5),
+        ),
+      );
+    }
   }
 
   @override

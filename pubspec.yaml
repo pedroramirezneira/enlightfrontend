@@ -54,6 +54,7 @@ dependencies:
   badges: ^3.1.2
   firebase_messaging: ^15.1.5
   flutter_custom_tabs: ^2.1.0
+  app_links: ^6.3.2
 
 dev_dependencies:
   flutter_test:

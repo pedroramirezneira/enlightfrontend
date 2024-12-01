@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 
-void launchURL(BuildContext context, String uri) async {
+Future<void> launchURL(BuildContext context, String uri) async {
   try {
     await launchUrl(
       Uri.parse(uri),
