@@ -117,7 +117,7 @@ class _AuthServiceProviderState extends State<AuthServiceProvider> {
     if (context != null && context.mounted) WebClient.info(response, context);
     final data = json.decode(response.body);
     final id = data["account_id"].toString();
-    await FirebaseMessaging.instance.subscribeToTopic(id);
+    await FirebaseMessaging.instance.unsubscribeFromTopic(id);
     await _clearTokens();
     return response;
   }
