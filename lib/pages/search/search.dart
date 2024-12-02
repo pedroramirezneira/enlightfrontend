@@ -22,26 +22,36 @@ class _SearchTeachersState extends State<SearchTeachers> {
     'Tags',
   ];
   String? selectedValue = 'Teacher';
-  late final TextEditingController _priceController = TextEditingController();
-  late final TextEditingController _ratingController = TextEditingController();
+  late final TextEditingController _priceController;
+  late final TextEditingController _ratingController;
   var loading = false;
 
+  @override
+  void initState() {
+    super.initState();
+    _priceController = TextEditingController(); 
+    _ratingController = TextEditingController(); 
+  }
+
+  @override
+  void dispose() {
+    _priceController.dispose();
+    _ratingController.dispose();
+    super.dispose();
+  }
+
   void _performSearch(String query) async {
-    if (_priceController.text.isEmpty || _ratingController.text.isEmpty) {
+    final double maxPrice = _priceController.text.isNotEmpty
+        ? double.parse(_priceController.text)
+        : double.infinity; 
+
+    final double minRating = _ratingController.text.isNotEmpty
+        ? double.parse(_ratingController.text)
+        : 0.0; 
+
+    if (maxPrice < 0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: AwesomeSnackbarContent(
-            title: "Error",
-            message: "Fill the price and rating fields",
-            contentType: ContentType.failure,
-          ),
-        ),
-      );
-      return;
-    }
-    if (int.parse(_priceController.text) < 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: AwesomeSnackbarContent(
             title: "Error",
             message: "Price has to be equal or greater than 0",
@@ -51,10 +61,9 @@ class _SearchTeachersState extends State<SearchTeachers> {
       );
       return;
     }
-    if ((int.parse(_ratingController.text) < 0 ||
-        int.parse(_ratingController.text) > 10)) {
+    if (minRating < 0 || minRating > 10) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: AwesomeSnackbarContent(
             title: "Error",
             message: "Rating has to be between 0 and 10",
@@ -64,9 +73,11 @@ class _SearchTeachersState extends State<SearchTeachers> {
       );
       return;
     }
+
     setState(() {
       loading = true;
     });
+
     final result = await SearchService.search(context, query);
     setState(() {
       _searchResults = result;
@@ -231,7 +242,9 @@ class _SearchTeachersState extends State<SearchTeachers> {
                             else
                               for (var teacher in _searchResults.teachers!)
                                 if (teacher.rating >=
-                                    double.parse(_ratingController.text))
+                                    (_ratingController.text.isNotEmpty
+                                        ? double.parse(_ratingController.text)
+                                        : 0.0))
                                   TeacherResultContainer(
                                     name: teacher.name,
                                     description: teacher.description,
@@ -247,7 +260,9 @@ class _SearchTeachersState extends State<SearchTeachers> {
                             else
                               for (var subject in _searchResults.subjects!)
                                 if (subject.price <=
-                                    double.parse(_priceController.text))
+                                    (_priceController.text.isNotEmpty
+                                        ? double.parse(_priceController.text)
+                                        : double.infinity))
                                   SubjectResultContainer(
                                     price: subject.price,
                                     subjectId: subject.id,
