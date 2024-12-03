@@ -24,6 +24,10 @@ jobs:
       - name: Install Dependencies
         run: flutter pub get
 
+      # Create .env file
+      - name: Create .env File
+        run: echo "SERVER=${{ secrets.SERVER }}" > .env
+
       # Build the Flutter web project
       - name: Build Flutter Web
         run: flutter build web
