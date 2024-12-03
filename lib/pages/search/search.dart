@@ -29,8 +29,8 @@ class _SearchTeachersState extends State<SearchTeachers> {
   @override
   void initState() {
     super.initState();
-    _priceController = TextEditingController(); 
-    _ratingController = TextEditingController(); 
+    _priceController = TextEditingController();
+    _ratingController = TextEditingController();
   }
 
   @override
@@ -43,11 +43,11 @@ class _SearchTeachersState extends State<SearchTeachers> {
   void _performSearch(String query) async {
     final double maxPrice = _priceController.text.isNotEmpty
         ? double.parse(_priceController.text)
-        : double.infinity; 
+        : double.infinity;
 
     final double minRating = _ratingController.text.isNotEmpty
         ? double.parse(_ratingController.text)
-        : 0.0; 
+        : 0.0;
 
     if (maxPrice < 0) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -150,7 +150,7 @@ class _SearchTeachersState extends State<SearchTeachers> {
                                           });
                                         },
                                         buttonStyleData: ButtonStyleData(
-                                          height: 55,
+                                          height: 48,
                                           width: double.infinity,
                                           padding: const EdgeInsets.all(8),
                                           decoration: BoxDecoration(
@@ -206,7 +206,7 @@ class _SearchTeachersState extends State<SearchTeachers> {
                           ),
                           const SizedBox(height: 10),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                             child: Row(
                               children: [
                                 Expanded(
