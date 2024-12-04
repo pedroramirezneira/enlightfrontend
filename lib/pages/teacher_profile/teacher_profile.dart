@@ -20,6 +20,13 @@ class TeacherProfile extends StatefulWidget {
 
 class _TeacherProfileState extends State<TeacherProfile> {
   var loading = false;
+  String stars(int rating) {
+    var stars = "";
+    for (var i = 0; i < rating; i+=2) {
+      stars += "⭐";
+    }
+    return stars;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -149,7 +156,7 @@ class _TeacherProfileState extends State<TeacherProfile> {
                                 style: const TextStyle(fontSize: 30),
                               ),
                               Text(
-                                "${teacher.data.rating}/10.0",
+                                stars(teacher.data.rating.toInt()),
                                 style: const TextStyle(fontSize: 18),
                               )
                             ],

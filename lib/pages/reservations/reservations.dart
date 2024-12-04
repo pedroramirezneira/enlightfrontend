@@ -64,20 +64,20 @@ class _TeacherReservations extends State<Reservations> {
           SliverList(
             delegate: SliverChildListDelegate(
               [
-                Center(
-                  child: Column(
-                    children: [
-                      for (var reservation in reservationService.data)
-                        Center(
-                          child: Container(
-                            width: MediaQuery.of(context).size.width * 0.5,
-                            margin: const EdgeInsets.symmetric(vertical: 10),
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.grey),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Column(
+                Column(
+                  children: [
+                    for (var reservation in reservationService.data)
+                      Container(
+                        width: 360,
+                        margin: const EdgeInsets.symmetric(vertical: 10),
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Column(
+                          children: [
+                            Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Center(
