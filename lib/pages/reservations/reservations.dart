@@ -279,11 +279,11 @@ class _TeacherReservations extends State<Reservations> {
                                   ),
                               ],
                             ),
-                          ),
-                        )
-                    ],
-                  ),
-                )
+                          ],
+                        ),
+                      ),
+                  ],
+                ),
               ],
             ),
           ),
