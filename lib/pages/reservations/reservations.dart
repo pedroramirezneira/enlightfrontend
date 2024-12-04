@@ -6,6 +6,7 @@ import 'package:enlight/services/auth_service.dart';
 import 'package:enlight/services/reservation_service.dart';
 import 'package:enlight/util/messenger.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class Reservations extends StatefulWidget {
@@ -64,147 +65,137 @@ class _TeacherReservations extends State<Reservations> {
           SliverList(
             delegate: SliverChildListDelegate(
               [
-                Center(
-                  child: Column(
-                    children: [
-                      for (var reservation in reservationService.data)
-                        Center(
-                          child: Container(
-                            width: MediaQuery.of(context).size.width * 0.5,
-                            margin: const EdgeInsets.symmetric(vertical: 10),
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.grey),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Column(
+                Column(
+                  children: [
+                    for (var reservation in reservationService.data)
+                      Container(
+                        width: 360,
+                        margin: const EdgeInsets.symmetric(vertical: 10),
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Column(
+                          children: [
+                            Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Center(
-                                  child: Column(
-                                    children: [
-                                      Text(
-                                          "Subject: ${reservation.subjectName}"),
-                                      if (role == 1)
-                                        Text(
-                                            "Teacher: ${reservation.teacherName}"),
-                                      if (role == 2)
-                                        Text(
-                                            "Student: ${reservation.studentName}"),
-                                      Text(
-                                          "Date: ${reservation.date.toLocal().toString().split(' ')[0]}"),
-                                      Text(
-                                          "Start Time: ${reservation.startTime.format(context)}"),
-                                      Text(
-                                          "End Time: ${reservation.endTime.format(context)}"),
-                                    ],
-                                  ),
-                                ),
-                                const SizedBox(height: 10),
-                                SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.5,
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      Messenger.showCancelReservation(
-                                        context: context,
-                                        reservationId:
-                                            reservation.reservationId,
-                                        onAccept: () =>
-                                            setState(() => loading = true),
-                                        onResponse: () {
-                                          setState(() {
-                                            loading = false;
-                                          });
-                                        },
-                                      );
-                                    },
-                                    child: const Text("Cancel"),
-                                  ),
-                                ),
+                                Text("Subject: ${reservation.subjectName}"),
                                 if (role == 1)
-                                  Column(
-                                    children: [
-                                      const SizedBox(height: 10),
-                                      ElevatedButton(
-                                        onPressed: () async {
-                                          setState(() => loading = true);
-                                          final response =
-                                              await reservationService
-                                                  .completeReservation(
-                                            context,
-                                            reservation,
-                                          );
-                                          setState(() => loading = false);
-                                          if (response.statusCode != 200) {
-                                            return;
-                                          }
-                                          if (!context.mounted) {
-                                            return;
-                                          }
-                                          try {
-                                            final getPayment =
-                                                await reservationService
-                                                    .getPaymentInfo(
-                                              context,
-                                              reservation,
-                                            );
-                                            if (!context.mounted) return;
-                                            await launchURL(
-                                                context, getPayment);
-                                            if (!context.mounted) return;
-                                            final result =
-                                                await showModalBottomSheet<
-                                                    double>(
-                                              context: context,
-                                              builder: (context) => RatingMenu(
-                                                context: context,
-                                              ),
-                                            );
-                                            if (!context.mounted) {
-                                              return;
-                                            }
-                                            if (result == null) {
-                                              return;
-                                            }
-                                            setState(() => loading = true);
-                                            await reservationService
-                                                .rateTeacher(
-                                              context,
-                                              reservation.reservationId,
-                                              reservation.teacherId,
-                                              result,
-                                            );
-                                            setState(() => loading = false);
-                                          } catch (e) {
-                                            if (context.mounted) {
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                const SnackBar(
-                                                  content:
-                                                      AwesomeSnackbarContent(
-                                                    title: "Error",
-                                                    message:
-                                                        "Please add at least one timeslot",
-                                                    contentType:
-                                                        ContentType.help,
-                                                  ),
-                                                ),
-                                              );
-                                            }
-                                            setState(() => loading = false);
-                                          }
-                                        },
-                                        child: const Text("Complete"),
-                                      ),
-                                    ],
-                                  ),
+                                  Text("Teacher: ${reservation.teacherName}"),
+                                if (role == 2)
+                                  Text("Student: ${reservation.studentName}"),
+                                Text(
+                                    "Date: ${DateFormat('MMMM d yyyy').format(reservation.date)}"),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                        "Start Time: ${reservation.startTime.format(context)}"),
+                                    SizedBox(width: 8),
+                                    Text("-"),
+                                    SizedBox(width: 8),
+                                    Text(
+                                        "End Time: ${reservation.endTime.format(context)}"),
+                                  ],
+                                ),
                               ],
                             ),
-                          ),
-                        )
-                    ],
-                  ),
+                            const SizedBox(height: 10),
+                            SizedBox(
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  Messenger.showCancelReservation(
+                                    context: context,
+                                    reservationId: reservation.reservationId,
+                                    onAccept: () =>
+                                        setState(() => loading = true),
+                                    onResponse: () {
+                                      setState(() {
+                                        loading = false;
+                                      });
+                                    },
+                                  );
+                                },
+                                child: const Text("Cancel"),
+                              ),
+                            ),
+                            if (role == 1)
+                              Column(
+                                children: [
+                                  const SizedBox(height: 10),
+                                  ElevatedButton(
+                                    onPressed: () async {
+                                      setState(() => loading = true);
+                                      final response = await reservationService
+                                          .completeReservation(
+                                        context,
+                                        reservation,
+                                      );
+                                      setState(() => loading = false);
+                                      if (response.statusCode != 200) {
+                                        return;
+                                      }
+                                      if (!context.mounted) {
+                                        return;
+                                      }
+                                      try {
+                                        final getPayment =
+                                            await reservationService
+                                                .getPaymentInfo(
+                                          context,
+                                          reservation,
+                                        );
+                                        if (!context.mounted) return;
+                                        await launchURL(context, getPayment);
+                                        if (!context.mounted) return;
+                                        final result =
+                                            await showModalBottomSheet<double>(
+                                          context: context,
+                                          builder: (context) => RatingMenu(
+                                            context: context,
+                                          ),
+                                        );
+                                        if (!context.mounted) {
+                                          return;
+                                        }
+                                        if (result == null) {
+                                          return;
+                                        }
+                                        setState(() => loading = true);
+                                        await reservationService.rateTeacher(
+                                          context,
+                                          reservation.reservationId,
+                                          reservation.teacherId,
+                                          result,
+                                        );
+                                        setState(() => loading = false);
+                                      } catch (e) {
+                                        if (context.mounted) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                              content: AwesomeSnackbarContent(
+                                                title: "Error",
+                                                message:
+                                                    "Please add at least one timeslot",
+                                                contentType: ContentType.help,
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                        setState(() => loading = false);
+                                      }
+                                    },
+                                    child: const Text("Complete"),
+                                  ),
+                                ],
+                              ),
+                          ],
+                        ),
+                      )
+                  ],
                 )
               ],
             ),
