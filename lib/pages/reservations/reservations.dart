@@ -1,11 +1,11 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:enlight/components/fixed_scaffold.dart';
-import 'package:enlight/components/rating_menu.dart';
 import 'package:enlight/pages/reservations/launch_url.dart';
 import 'package:enlight/services/auth_service.dart';
 import 'package:enlight/services/reservation_service.dart';
 import 'package:enlight/util/messenger.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
 
 class Reservations extends StatefulWidget {
@@ -136,12 +136,15 @@ class _TeacherReservations extends State<Reservations> {
                                             reservation,
                                           );
                                           setState(() => loading = false);
+
                                           if (response.statusCode != 200) {
                                             return;
                                           }
+
                                           if (!context.mounted) {
                                             return;
                                           }
+
                                           try {
                                             final getPayment =
                                                 await reservationService
@@ -149,33 +152,108 @@ class _TeacherReservations extends State<Reservations> {
                                               context,
                                               reservation,
                                             );
+
                                             if (!context.mounted) return;
                                             await launchURL(
                                                 context, getPayment);
+
                                             if (!context.mounted) return;
-                                            final result =
-                                                await showModalBottomSheet<
-                                                    double>(
-                                              context: context,
-                                              builder: (context) => RatingMenu(
+                                            if (context.mounted) {
+                                              double rating = 0;
+
+                                              await showDialog(
                                                 context: context,
-                                              ),
-                                            );
-                                            if (!context.mounted) {
-                                              return;
+                                                barrierDismissible:
+                                                    false, 
+                                                builder: (context) {
+                                                  return AlertDialog(
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              20.0),
+                                                    ),
+                                                    content: Column(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        const Text(
+                                                          "Please, leave a rating:",
+                                                          style: TextStyle(
+                                                              fontSize: 18),
+                                                        ),
+                                                        const SizedBox(
+                                                            height: 16),
+                                                        RatingBar.builder(
+                                                          initialRating: 0,
+                                                          minRating: 0,
+                                                          direction:
+                                                              Axis.horizontal,
+                                                          allowHalfRating: true,
+                                                          itemCount: 5,
+                                                          itemSize: 32,
+                                                          itemPadding:
+                                                              const EdgeInsets
+                                                                  .symmetric(
+                                                                  horizontal:
+                                                                      4.0),
+                                                          itemBuilder:
+                                                              (context, _) =>
+                                                                  const Icon(
+                                                            Icons.star,
+                                                            color: Colors.amber,
+                                                          ),
+                                                          onRatingUpdate:
+                                                              (value) {
+                                                            rating = value;
+                                                          },
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    actions: [
+                                                      ElevatedButton(
+                                                        onPressed: () {
+                                                          if (rating == 0) {
+                                                            ScaffoldMessenger
+                                                                    .of(context)
+                                                                .showSnackBar(
+                                                              const SnackBar(
+                                                                content: Text(
+                                                                    "Please, rate from 1 to 10."),
+                                                              ),
+                                                            );
+                                                          } else {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop(
+                                                                    rating);
+                                                          }
+                                                        },
+                                                        child: const Text(
+                                                            "Send"),
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
+                                              ).then((result) async {
+                                                if (result != null) {
+                                                  final double ratingResult =
+                                                      result *
+                                                          2; 
+                                                  setState(
+                                                      () => loading = true);
+                                                  await reservationService
+                                                      .rateTeacher(
+                                                    context,
+                                                    reservation.reservationId,
+                                                    reservation.teacherId,
+                                                    ratingResult,
+                                                  );
+                                                  setState(
+                                                      () => loading = false);
+                                                }
+                                              });
                                             }
-                                            if (result == null) {
-                                              return;
-                                            }
-                                            setState(() => loading = true);
-                                            await reservationService
-                                                .rateTeacher(
-                                              context,
-                                              reservation.reservationId,
-                                              reservation.teacherId,
-                                              result,
-                                            );
-                                            setState(() => loading = false);
                                           } catch (e) {
                                             if (context.mounted) {
                                               ScaffoldMessenger.of(context)
