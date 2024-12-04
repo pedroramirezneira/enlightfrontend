@@ -61,14 +61,14 @@ class _TeacherProfileFromSearchState extends State<TeacherProfileFromSearch> {
           SliverList(
             delegate: SliverChildListDelegate(
               [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: CircleAvatar(
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          CircleAvatar(
                             backgroundColor: Theme.of(context)
                                 .colorScheme
                                 .surface
@@ -86,76 +86,61 @@ class _TeacherProfileFromSearchState extends State<TeacherProfileFromSearch> {
                                   )
                                 : null,
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 0, horizontal: 26),
-                          child: Column(
+                          const SizedBox(
+                            width: 24,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Text(
                                 data.name,
-                                style: const TextStyle(fontSize: 30),
+                                style: const TextStyle(fontSize: 20),
                               ),
                               Text(
-                                "${data.rating}/10",
-                                style: const TextStyle(fontSize: 18),
+                                "Rating: ${data.rating}/10",
+                                style: const TextStyle(fontSize: 16),
                               )
                             ],
                           ),
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 0, horizontal: 10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            "Description:",
-                            style: TextStyle(
-                              decoration: TextDecoration.underline,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                            ),
-                          ),
-                          Text(
-                            data.description,
-                            style: const TextStyle(fontSize: 18),
-                          ),
-                          const Text(
-                            "Tags:",
-                            style: TextStyle(
-                              fontSize: 20,
-                              decoration: TextDecoration.underline,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          )
                         ],
                       ),
-                    ),
-                    Column(
-                      mainAxisSize: MainAxisSize.max,
-                      children: <Widget>[
-                        const SizedBox(
-                          height: 10,
+                      const SizedBox(height: 16),
+                      const Text(
+                        "Description:",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
                         ),
-                        for (var tag in data.subjects)
-                          Column(
-                            children: [
-                              TagContainerFromSearch(
-                                  subjectId: tag.id,
-                                  name: tag.name,
-                                  price: tag.price,
-                                  description: tag.description),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                            ],
-                          ),
-                      ],
-                    ),
-                  ],
+                      ),
+                      Text(
+                        data.description,
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                      const SizedBox(height: 24),
+                      const Text(
+                        "Tags:",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 16,
+                      ),
+                      for (var tag in data.subjects)
+                        Column(
+                          children: [
+                            TagContainerFromSearch(
+                              subjectId: tag.id,
+                              name: tag.name,
+                              price: tag.price,
+                              description: tag.description,
+                            ),
+                            SizedBox(height: 24),
+                          ],
+                        ),
+                    ],
+                  ),
                 ),
               ],
             ),
