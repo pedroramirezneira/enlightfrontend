@@ -100,13 +100,13 @@ class _TeacherReservations extends State<Reservations> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.start,
                                           children: [
-                                            Text(
-                                                "Start Time: ${reservation.startTime.format(context)}"),
+                                            Text(reservation.startTime
+                                                .format(context)),
                                             SizedBox(width: 8),
                                             Text("-"),
                                             SizedBox(width: 8),
-                                            Text(
-                                                "End Time: ${reservation.endTime.format(context)}"),
+                                            Text(reservation.endTime
+                                                .format(context)),
                                           ],
                                         ),
                                       ],

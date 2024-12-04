@@ -31,50 +31,48 @@ class TeacherResultContainer extends StatelessWidget {
       },
       child: Container(
         width: double.infinity,
+        padding: EdgeInsets.all(8),
         decoration: BoxDecoration(
           color: const Color.fromARGB(255, 71, 129, 118),
           borderRadius: BorderRadius.circular(24),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+        child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: CircleAvatar(
-                backgroundColor:
-                    Theme.of(context).colorScheme.surface.withOpacity(0.5),
-                radius: 35,
-                backgroundImage: MemoryImage(base64.decode(picture ?? "")),
-              ),
-            ),
-            const SizedBox(width: 10),
-            Column(
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text(
-                  name,
-                  style: const TextStyle(
-                    fontFamily: 'Montserrat',
-                    fontSize: 20,
-                    letterSpacing: 0,
-                  ),
+                CircleAvatar(
+                  backgroundColor:
+                      Theme.of(context).colorScheme.surface.withOpacity(0.5),
+                  radius: 35,
+                  backgroundImage: MemoryImage(base64.decode(picture ?? "")),
                 ),
-                Text(
-                  "${rating.toStringAsFixed(1)}/10.0",
-                  style: const TextStyle(
-                    fontFamily: 'Montserrat',
-                    fontSize: 15,
-                    letterSpacing: 0,
-                  ),
+                const SizedBox(width: 10),
+                Column(
+                  children: [
+                    Text(
+                      name,
+                      style: const TextStyle(
+                        fontFamily: 'Montserrat',
+                        fontSize: 20,
+                      ),
+                    ),
+                    Text(
+                      "${rating.toStringAsFixed(1)}/10.0",
+                      style: const TextStyle(
+                        fontFamily: 'Montserrat',
+                        fontSize: 15,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-            const SizedBox(width: 20),
             Text(
               description,
               style: const TextStyle(
                 fontFamily: 'Montserrat',
                 fontSize: 15,
-                letterSpacing: 0,
               ),
             ),
           ],

@@ -31,6 +31,7 @@ class _SubjectResultContainer extends State<SubjectResultContainer> {
         ),
       ),
       child: Container(
+        padding: EdgeInsets.all(8),
         decoration: BoxDecoration(
           color: const Color.fromARGB(255, 71, 129, 118),
           borderRadius: BorderRadius.circular(24),
@@ -38,26 +39,25 @@ class _SubjectResultContainer extends State<SubjectResultContainer> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Column(
-              children: [
-                Text(
-                  widget.name,
-                  style: const TextStyle(
-                    fontFamily: 'Montserrat',
-                    fontSize: 20,
-                    letterSpacing: 0,
+            Expanded(
+              child: Column(
+                children: [
+                  Text(
+                    widget.name,
+                    style: const TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontSize: 20,
+                      letterSpacing: 0,
+                    ),
                   ),
-                ),
-                Text(
-                  "\$${widget.price.toStringAsFixed(2)}",
-                  style: const TextStyle(
-                    fontFamily: 'Montserrat',
-                    fontSize: 20,
+                  Text(
+                    "\$${widget.price.toStringAsFixed(2)}",
+                    style: const TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontSize: 20,
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(8, 0, 0, 0),
-                  child: Text(
+                  Text(
                     maxLines: 2,
                     widget.description,
                     style: const TextStyle(
@@ -65,8 +65,8 @@ class _SubjectResultContainer extends State<SubjectResultContainer> {
                       fontSize: 16,
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ),
