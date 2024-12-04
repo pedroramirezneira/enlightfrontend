@@ -20,6 +20,13 @@ class TeacherProfile extends StatefulWidget {
 
 class _TeacherProfileState extends State<TeacherProfile> {
   var loading = false;
+  String stars(int rating) {
+    var stars = "";
+    for (var i = 0; i < rating; i += 2) {
+      stars += "⭐";
+    }
+    return stars;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -104,14 +111,14 @@ class _TeacherProfileState extends State<TeacherProfile> {
           SliverList(
             delegate: SliverChildListDelegate(
               [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: InkWell(
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          InkWell(
                             borderRadius: BorderRadius.circular(100),
                             onTap: () {
                               Messenger.showPictureMenu(
@@ -138,90 +145,70 @@ class _TeacherProfileState extends State<TeacherProfile> {
                                   : null,
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 0, horizontal: 26),
-                          child: Column(
+                          SizedBox(width: 24),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Text(
                                 account.data.name,
-                                style: const TextStyle(fontSize: 30),
+                                style: const TextStyle(fontSize: 20),
                               ),
                               Text(
-                                "${teacher.data.rating}/10.0",
+                                stars(teacher.data.rating.toInt()),
                                 style: const TextStyle(fontSize: 18),
                               )
                             ],
                           ),
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 0, horizontal: 10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            "Description:",
-                            style: TextStyle(
-                              decoration: TextDecoration.underline,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                            ),
-                          ),
-                          Text(
-                            teacher.data.description,
-                            style: const TextStyle(fontSize: 18),
-                          ),
-                          const Text(
-                            "Tags:",
-                            style: TextStyle(
-                              fontSize: 20,
-                              decoration: TextDecoration.underline,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          )
                         ],
                       ),
-                    ),
-                    Column(
-                      mainAxisSize: MainAxisSize.max,
-                      children: <Widget>[
-                        const SizedBox(
-                          height: 10,
+                      SizedBox(height: 16),
+                      const Text(
+                        "Description:",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
                         ),
-                        for (var tag in teacher.data.subjects)
-                          Column(
-                            children: [
-                              TagContainer(
-                                name: tag.name,
-                                description: tag.description,
-                                price: tag.price,
-                                deleteSubject: () {
-                                  Messenger.showDeleteSubjectDialog(
-                                    context: context,
-                                    data: teacher.data,
-                                    subjectId: tag.id,
-                                    onAccept: () =>
-                                        setState(() => loading = true),
-                                    onResponse: () {
-                                      setState(() {
-                                        loading = false;
-                                      });
-                                    },
-                                  );
-                                },
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                            ],
-                          ),
-                      ],
-                    ),
-                  ],
+                      ),
+                      Text(
+                        teacher.data.description,
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                      const SizedBox(height: 24),
+                      const Text(
+                        "Tags:",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 16),
+                      for (var tag in teacher.data.subjects)
+                        Column(
+                          children: [
+                            TagContainer(
+                              name: tag.name,
+                              description: tag.description,
+                              price: tag.price,
+                              deleteSubject: () {
+                                Messenger.showDeleteSubjectDialog(
+                                  context: context,
+                                  data: teacher.data,
+                                  subjectId: tag.id,
+                                  onAccept: () =>
+                                      setState(() => loading = true),
+                                  onResponse: () {
+                                    setState(() {
+                                      loading = false;
+                                    });
+                                  },
+                                );
+                              },
+                            ),
+                            const SizedBox(height: 24),
+                          ],
+                        ),
+                    ],
+                  ),
                 ),
               ],
             ),

@@ -109,7 +109,9 @@ class StudentProfile extends StatelessWidget {
                 Text(
                   account.data.name,
                   style: const TextStyle(
-                      fontSize: 25, fontWeight: FontWeight.bold),
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const Spacer(),
               ],

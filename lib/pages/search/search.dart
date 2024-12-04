@@ -1,5 +1,4 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:enlight/components/loading_indicator.dart';
 import 'package:enlight/pages/search/util/subject_result_container.dart';
 import 'package:enlight/pages/search/util/search_box.dart';
@@ -29,8 +28,8 @@ class _SearchTeachersState extends State<SearchTeachers> {
   @override
   void initState() {
     super.initState();
-    _priceController = TextEditingController(); 
-    _ratingController = TextEditingController(); 
+    _priceController = TextEditingController(text: "${double.infinity}");
+    _ratingController = TextEditingController(text: "0.0");
   }
 
   @override
@@ -43,11 +42,11 @@ class _SearchTeachersState extends State<SearchTeachers> {
   void _performSearch(String query) async {
     final double maxPrice = _priceController.text.isNotEmpty
         ? double.parse(_priceController.text)
-        : double.infinity; 
+        : double.infinity;
 
     final double minRating = _ratingController.text.isNotEmpty
         ? double.parse(_ratingController.text)
-        : 0.0; 
+        : 0.0;
 
     if (maxPrice < 0) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -92,148 +91,109 @@ class _SearchTeachersState extends State<SearchTeachers> {
         Scaffold(
           body: CustomScrollView(
             slivers: [
-              const SliverAppBar(
+              SliverAppBar(
                 title: Text("Search"),
+                actions: [
+                  SegmentedButton(
+                    selected: {selectedValue},
+                    segments: [
+                      ButtonSegment(
+                        label: Text("Teacher"),
+                        value: "Teacher",
+                      ),
+                      ButtonSegment(
+                        label: Text("Tags"),
+                        value: "Tags",
+                      )
+                    ],
+                    onSelectionChanged: (p0) {
+                      setState(() {
+                        selectedValue = p0.first;
+                      });
+                    },
+                  ),
+                  SizedBox(width: 24),
+                ],
               ),
               SliverList(
                 delegate: SliverChildListDelegate(
                   [
-                    Center(
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
+                          SizedBox(height: 8),
+                          SearchBox(
+                            hintText: "Search...",
+                            onSubmitted: _performSearch,
+                          ),
+                          const SizedBox(height: 16),
                           Row(
-                            children: <Widget>[
-                              SearchBox(
-                                hintText: "Search...",
-                                onSubmitted: _performSearch,
-                              ),
-                              Center(
-                                child: DropdownButtonHideUnderline(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(10),
-                                    child: SizedBox(
-                                      width:
-                                          (MediaQuery.of(context).size.width -
-                                                  MediaQuery.of(context)
-                                                          .size
-                                                          .width /
-                                                      1.7) /
-                                              1.5,
-                                      child: DropdownButton2<String>(
-                                        isExpanded: true,
-                                        hint: const Row(
-                                          children: [
-                                            SizedBox(
-                                              width: 4,
-                                            ),
-                                          ],
-                                        ),
-                                        items: items
-                                            .map((String item) =>
-                                                DropdownMenuItem<String>(
-                                                  value: item,
-                                                  child: Text(
-                                                    item,
-                                                    style: const TextStyle(
-                                                      color: Colors.white,
-                                                    ),
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                  ),
-                                                ))
-                                            .toList(),
-                                        value: selectedValue,
-                                        onChanged: (String? value) {
-                                          setState(() {
-                                            selectedValue = value!;
-                                          });
-                                        },
-                                        buttonStyleData: ButtonStyleData(
-                                          height: 55,
-                                          width: double.infinity,
-                                          padding: const EdgeInsets.all(8),
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            border: Border.all(
-                                              color: Colors.white,
-                                            ),
-                                            color: const Color.fromARGB(
-                                                255, 43, 57, 68),
-                                          ),
-                                        ),
-                                        iconStyleData: const IconStyleData(
-                                          icon: Icon(
-                                            Icons.arrow_drop_down,
-                                          ),
-                                          iconSize: 14,
-                                          iconEnabledColor: Colors.white,
-                                          iconDisabledColor: Colors.grey,
-                                        ),
-                                        dropdownStyleData: DropdownStyleData(
-                                          maxHeight: 200,
-                                          width: 100,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(14),
-                                            color: const Color.fromARGB(
-                                                255, 43, 57, 68),
-                                          ),
-                                          offset: const Offset(0, 0),
-                                          scrollbarTheme: ScrollbarThemeData(
-                                            radius: const Radius.circular(40),
-                                            thickness:
-                                                WidgetStateProperty.all<double>(
-                                                    6),
-                                            thumbVisibility:
-                                                WidgetStateProperty.all<bool>(
-                                                    true),
-                                          ),
-                                        ),
-                                        menuItemStyleData:
-                                            const MenuItemStyleData(
-                                          height: 40,
-                                          padding: EdgeInsets.only(
-                                              left: 14, right: 14),
-                                        ),
-                                      ),
-                                    ),
+                            children: [
+                              Expanded(
+                                child: DropdownButtonFormField<double>(
+                                  decoration: const InputDecoration(
+                                    labelText: "Max Price",
+                                    border: OutlineInputBorder(),
                                   ),
+                                  value: _priceController.text.isNotEmpty
+                                      ? double.parse(_priceController.text)
+                                      : double.infinity,
+                                  items: [
+                                    {"label": "< \$500", "value": 500.0},
+                                    {"label": "< \$1000", "value": 1000.0},
+                                    {"label": "< \$5000", "value": 5000.0},
+                                    {"label": "< \$10000", "value": 10000.0},
+                                    {"label": "Any", "value": double.infinity},
+                                  ].map((option) {
+                                    return DropdownMenuItem<double>(
+                                      value: option["value"] as double,
+                                      child: Text(option["label"] as String),
+                                    );
+                                  }).toList(),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _priceController.text =
+                                          value == double.infinity
+                                              ? 'Any'
+                                              : value!.toString();
+                                    });
+                                  },
+                                ),
+                              ),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: DropdownButtonFormField<double>(
+                                  decoration: const InputDecoration(
+                                    labelText: "Min Rating",
+                                    border: OutlineInputBorder(),
+                                  ),
+                                  value: _ratingController.text.isNotEmpty
+                                      ? double.parse(_ratingController.text)
+                                      : null,
+                                  items: [
+                                    {"label": "Any", "value": 0.0},
+                                    {"label": "> 2", "value": 2.0},
+                                    {"label": "> 4", "value": 4.0},
+                                    {"label": "> 6", "value": 6.0},
+                                    {"label": "> 8", "value": 8.0},
+                                  ].map((option) {
+                                    return DropdownMenuItem<double>(
+                                      value: option["value"] as double,
+                                      child: Text(option["label"] as String),
+                                    );
+                                  }).toList(),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _ratingController.text = value.toString();
+                                    });
+                                  },
                                 ),
                               ),
                             ],
                           ),
-                          const SizedBox(height: 10),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: TextField(
-                                    controller: _priceController,
-                                    keyboardType: TextInputType.number,
-                                    decoration: const InputDecoration(
-                                      labelText: "Max Price",
-                                      border: OutlineInputBorder(),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 10),
-                                Expanded(
-                                  child: TextField(
-                                    controller: _ratingController,
-                                    keyboardType: TextInputType.number,
-                                    decoration: const InputDecoration(
-                                      labelText: "Min Rating",
-                                      border: OutlineInputBorder(),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 20),
+                          const SizedBox(height: 16),
                           if (selectedValue == "Teacher")
                             if (_searchResults.teachers!.isEmpty)
                               const Center(
@@ -245,12 +205,17 @@ class _SearchTeachersState extends State<SearchTeachers> {
                                     (_ratingController.text.isNotEmpty
                                         ? double.parse(_ratingController.text)
                                         : 0.0))
-                                  TeacherResultContainer(
-                                    name: teacher.name,
-                                    description: teacher.description,
-                                    picture: teacher.picture,
-                                    id: teacher.id,
-                                    rating: teacher.rating,
+                                  Column(
+                                    children: [
+                                      TeacherResultContainer(
+                                        name: teacher.name,
+                                        description: teacher.description,
+                                        picture: teacher.picture,
+                                        id: teacher.id,
+                                        rating: teacher.rating,
+                                      ),
+                                      const SizedBox(height: 16),
+                                    ],
                                   ),
                           if (selectedValue == "Tags")
                             if (_searchResults.subjects!.isEmpty)
@@ -263,11 +228,16 @@ class _SearchTeachersState extends State<SearchTeachers> {
                                     (_priceController.text.isNotEmpty
                                         ? double.parse(_priceController.text)
                                         : double.infinity))
-                                  SubjectResultContainer(
-                                    price: subject.price,
-                                    subjectId: subject.id,
-                                    name: subject.name,
-                                    description: subject.description,
+                                  Column(
+                                    children: [
+                                      SubjectResultContainer(
+                                        price: subject.price,
+                                        subjectId: subject.id,
+                                        name: subject.name,
+                                        description: subject.description,
+                                      ),
+                                      const SizedBox(height: 16),
+                                    ],
                                   ),
                         ],
                       ),
