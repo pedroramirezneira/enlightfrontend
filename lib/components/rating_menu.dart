@@ -17,7 +17,8 @@ class _RatingMenuState extends State<RatingMenu> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.0),
       ),
-      child: Material( // Ensures proper rendering of interactive widgets
+      child: Material(
+        // Ensures proper rendering of interactive widgets
         color: Colors.transparent,
         child: Padding(
           padding: const EdgeInsets.all(16.0),

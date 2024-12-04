@@ -22,7 +22,7 @@ class _TeacherProfileState extends State<TeacherProfile> {
   var loading = false;
   String stars(int rating) {
     var stars = "";
-    for (var i = 0; i < rating; i+=2) {
+    for (var i = 0; i < rating; i += 2) {
       stars += "⭐";
     }
     return stars;

@@ -67,203 +67,229 @@ class _TeacherReservations extends State<Reservations> {
               [
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: Column(
-                    children: [
-                      for (var reservation in reservationService.data)
-                        Container(
-                          margin: const EdgeInsets.symmetric(vertical: 10),
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Column(
+                  child: SizedBox(
+                    width: 10,
+                    child: Column(
+                      children: [
+                        for (var reservation in reservationService.data)
+                          Column(
                             children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("Subject: ${reservation.subjectName}"),
-                                  if (role == 1)
-                                    Text("Teacher: ${reservation.teacherName}"),
-                                  if (role == 2)
-                                    Text("Student: ${reservation.studentName}"),
-                                  Text(
-                                      "Date: ${DateFormat('MMMM d yyyy').format(reservation.date)}"),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                          "Start Time: ${reservation.startTime.format(context)}"),
-                                      SizedBox(width: 8),
-                                      Text("-"),
-                                      SizedBox(width: 8),
-                                      Text(
-                                          "End Time: ${reservation.endTime.format(context)}"),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 10),
-                              SizedBox(
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    Messenger.showCancelReservation(
-                                      context: context,
-                                      reservationId: reservation.reservationId,
-                                      onAccept: () =>
-                                          setState(() => loading = true),
-                                      onResponse: () {
-                                        setState(() {
-                                          loading = false;
-                                        });
-                                      },
-                                    );
-                                  },
-                                  child: const Text("Cancel"),
+                              Container(
+                                padding: const EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.grey),
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
-                              ),
-                              if (role == 1)
-                                Column(
+                                child: Column(
                                   children: [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                            "Subject: ${reservation.subjectName}"),
+                                        if (role == 1)
+                                          Text(
+                                              "Teacher: ${reservation.teacherName}"),
+                                        if (role == 2)
+                                          Text(
+                                              "Student: ${reservation.studentName}"),
+                                        Text(
+                                            "Date: ${DateFormat('MMMM d yyyy').format(reservation.date)}"),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                                "Start Time: ${reservation.startTime.format(context)}"),
+                                            SizedBox(width: 8),
+                                            Text("-"),
+                                            SizedBox(width: 8),
+                                            Text(
+                                                "End Time: ${reservation.endTime.format(context)}"),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                     const SizedBox(height: 10),
-                                    ElevatedButton(
-                                      onPressed: () async {
-                                        setState(() => loading = true);
-                                        final response =
-                                            await reservationService
-                                                .completeReservation(
-                                          context,
-                                          reservation,
-                                        );
-                                        setState(() => loading = false);
-                                        if (response.statusCode != 200) {
-                                          return;
-                                        }
-                                        if (!context.mounted) {
-                                          return;
-                                        }
-                                        try {
-                                          final getPayment =
-                                              await reservationService
-                                                  .getPaymentInfo(
-                                            context,
-                                            reservation,
-                                          );
-                                          if (!context.mounted) return;
-                                          await launchURL(context, getPayment);
-                                          if (!context.mounted) return;
-                                          double rating = 0;
-
-                                          await showDialog(
+                                    SizedBox(
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          Messenger.showCancelReservation(
                                             context: context,
-                                            barrierDismissible: false,
-                                            builder: (context) {
-                                              return AlertDialog(
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          20.0),
-                                                ),
-                                                content: Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  children: [
-                                                    const Text(
-                                                      "Please, leave a rating:",
-                                                      style: TextStyle(
-                                                          fontSize: 18),
-                                                    ),
-                                                    const SizedBox(height: 16),
-                                                    RatingBar.builder(
-                                                      initialRating: 0,
-                                                      minRating: 0,
-                                                      direction:
-                                                          Axis.horizontal,
-                                                      allowHalfRating: true,
-                                                      itemCount: 5,
-                                                      itemSize: 32,
-                                                      itemPadding:
-                                                          const EdgeInsets
-                                                              .symmetric(
-                                                              horizontal: 4.0),
-                                                      itemBuilder:
-                                                          (context, _) =>
-                                                              const Icon(
-                                                        Icons.star,
-                                                        color: Colors.amber,
-                                                      ),
-                                                      onRatingUpdate: (value) {
-                                                        rating = value;
-                                                      },
-                                                    ),
-                                                  ],
-                                                ),
-                                                actions: [
-                                                  ElevatedButton(
-                                                    onPressed: () {
-                                                      if (rating == 0) {
-                                                        ScaffoldMessenger.of(
-                                                                context)
-                                                            .showSnackBar(
-                                                          const SnackBar(
-                                                            content: Text(
-                                                                "Please, rate from 1 to 10."),
-                                                          ),
-                                                        );
-                                                      } else {
-                                                        Navigator.of(context)
-                                                            .pop(rating);
-                                                      }
-                                                    },
-                                                    child: const Text("Send"),
-                                                  ),
-                                                ],
-                                              );
-                                            },
-                                          ).then((result) async {
-                                            if (!context.mounted) return;
-                                            if (result != null) {
-                                              final double ratingResult =
-                                                  result * 2;
-                                              setState(() => loading = true);
-                                              await reservationService
-                                                  .rateTeacher(
-                                                context,
+                                            reservationId:
                                                 reservation.reservationId,
-                                                reservation.teacherId,
-                                                ratingResult,
+                                            onAccept: () =>
+                                                setState(() => loading = true),
+                                            onResponse: () {
+                                              setState(() {
+                                                loading = false;
+                                              });
+                                            },
+                                          );
+                                        },
+                                        child: const Text("Cancel"),
+                                      ),
+                                    ),
+                                    if (role == 1)
+                                      Column(
+                                        children: [
+                                          const SizedBox(height: 10),
+                                          ElevatedButton(
+                                            onPressed: () async {
+                                              setState(() => loading = true);
+                                              final response =
+                                                  await reservationService
+                                                      .completeReservation(
+                                                context,
+                                                reservation,
                                               );
                                               setState(() => loading = false);
-                                            }
-                                          });
-                                          setState(() => loading = false);
-                                        } catch (e) {
-                                          if (context.mounted) {
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              const SnackBar(
-                                                content: AwesomeSnackbarContent(
-                                                  title: "Error",
-                                                  message:
-                                                      "Please add at least one timeslot",
-                                                  contentType: ContentType.help,
-                                                ),
-                                              ),
-                                            );
-                                          }
-                                          setState(() => loading = false);
-                                        }
-                                      },
-                                      child: const Text("Complete"),
-                                    ),
+                                              if (response.statusCode != 200) {
+                                                return;
+                                              }
+                                              if (!context.mounted) {
+                                                return;
+                                              }
+                                              try {
+                                                final getPayment =
+                                                    await reservationService
+                                                        .getPaymentInfo(
+                                                  context,
+                                                  reservation,
+                                                );
+                                                if (!context.mounted) return;
+                                                await launchURL(
+                                                    context, getPayment);
+                                                if (!context.mounted) return;
+                                                double rating = 0;
+
+                                                await showDialog(
+                                                  context: context,
+                                                  barrierDismissible: false,
+                                                  builder: (context) {
+                                                    return AlertDialog(
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(20.0),
+                                                      ),
+                                                      content: Column(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: [
+                                                          const Text(
+                                                            "Please, leave a rating:",
+                                                            style: TextStyle(
+                                                                fontSize: 18),
+                                                          ),
+                                                          const SizedBox(
+                                                              height: 16),
+                                                          RatingBar.builder(
+                                                            initialRating: 0,
+                                                            minRating: 0,
+                                                            direction:
+                                                                Axis.horizontal,
+                                                            allowHalfRating:
+                                                                true,
+                                                            itemCount: 5,
+                                                            itemSize: 32,
+                                                            itemPadding:
+                                                                const EdgeInsets
+                                                                    .symmetric(
+                                                                    horizontal:
+                                                                        4.0),
+                                                            itemBuilder:
+                                                                (context, _) =>
+                                                                    const Icon(
+                                                              Icons.star,
+                                                              color:
+                                                                  Colors.amber,
+                                                            ),
+                                                            onRatingUpdate:
+                                                                (value) {
+                                                              rating = value;
+                                                            },
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      actions: [
+                                                        ElevatedButton(
+                                                          onPressed: () {
+                                                            if (rating == 0) {
+                                                              ScaffoldMessenger
+                                                                      .of(context)
+                                                                  .showSnackBar(
+                                                                const SnackBar(
+                                                                  content: Text(
+                                                                      "Please, rate from 1 to 10."),
+                                                                ),
+                                                              );
+                                                            } else {
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop(rating);
+                                                            }
+                                                          },
+                                                          child: const Text(
+                                                              "Send"),
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                ).then((result) async {
+                                                  if (!context.mounted) return;
+                                                  if (result != null) {
+                                                    final double ratingResult =
+                                                        result * 2;
+                                                    setState(
+                                                        () => loading = true);
+                                                    await reservationService
+                                                        .rateTeacher(
+                                                      context,
+                                                      reservation.reservationId,
+                                                      reservation.teacherId,
+                                                      ratingResult,
+                                                    );
+                                                    setState(
+                                                        () => loading = false);
+                                                  }
+                                                });
+                                                setState(() => loading = false);
+                                              } catch (e) {
+                                                if (context.mounted) {
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    const SnackBar(
+                                                      content:
+                                                          AwesomeSnackbarContent(
+                                                        title: "Error",
+                                                        message:
+                                                            "Please add at least one timeslot",
+                                                        contentType:
+                                                            ContentType.help,
+                                                      ),
+                                                    ),
+                                                  );
+                                                }
+                                                setState(() => loading = false);
+                                              }
+                                            },
+                                            child: const Text("Complete"),
+                                          ),
+                                        ],
+                                      ),
                                   ],
                                 ),
+                              ),
+                              SizedBox(height: 16),
                             ],
                           ),
-                        )
-                    ],
+                      ],
+                    ),
                   ),
-                )
+                ),
               ],
             ),
           ),

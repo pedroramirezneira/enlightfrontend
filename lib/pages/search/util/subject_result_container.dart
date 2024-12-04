@@ -30,50 +30,45 @@ class _SubjectResultContainer extends State<SubjectResultContainer> {
           ),
         ),
       ),
-      child: Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 20),
-        child: Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 71, 129, 118),
-            borderRadius: BorderRadius.circular(24),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Column(
-                children: [
-                  Text(
-                    widget.name,
+      child: Container(
+        decoration: BoxDecoration(
+          color: const Color.fromARGB(255, 71, 129, 118),
+          borderRadius: BorderRadius.circular(24),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Column(
+              children: [
+                Text(
+                  widget.name,
+                  style: const TextStyle(
+                    fontFamily: 'Montserrat',
+                    fontSize: 20,
+                    letterSpacing: 0,
+                  ),
+                ),
+                Text(
+                  "\$${widget.price.toStringAsFixed(2)}",
+                  style: const TextStyle(
+                    fontFamily: 'Montserrat',
+                    fontSize: 20,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(8, 0, 0, 0),
+                  child: Text(
+                    maxLines: 2,
+                    widget.description,
                     style: const TextStyle(
                       fontFamily: 'Montserrat',
-                      fontSize: 20,
-                      letterSpacing: 0,
+                      fontSize: 16,
                     ),
                   ),
-                  Text(
-                    "\$${widget.price.toStringAsFixed(2)}",
-                    style: const TextStyle(
-                      fontFamily: 'Montserrat',
-                      fontSize: 20,
-                      letterSpacing: 0,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(8, 0, 0, 0),
-                    child: Text(
-                      widget.description,
-                      style: const TextStyle(
-                        fontFamily: 'Montserrat',
-                        fontSize: 16,
-                        letterSpacing: 0,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
