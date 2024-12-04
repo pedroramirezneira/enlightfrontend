@@ -26,6 +26,14 @@ class _TeacherProfileFromSearchState extends State<TeacherProfileFromSearch> {
     _fetchData();
   }
 
+  String stars(int rating) {
+    var stars = "";
+    for (var i = 0; i < rating; i+=2) {
+      stars += "⭐";
+    }
+    return stars;
+  }
+
   Future<void> _fetchData() async {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final data = await TeacherService.getTeacherFromSearch(
@@ -97,8 +105,8 @@ class _TeacherProfileFromSearchState extends State<TeacherProfileFromSearch> {
                                 style: const TextStyle(fontSize: 20),
                               ),
                               Text(
-                                "Rating: ${data.rating}/10",
-                                style: const TextStyle(fontSize: 16),
+                                stars(data.rating.toInt()),
+                                style: const TextStyle(fontSize: 18),
                               )
                             ],
                           ),
